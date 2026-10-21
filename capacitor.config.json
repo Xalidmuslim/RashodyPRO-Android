@@ -1,0 +1,11 @@
+{
+  "appId": "ru.rashody.pro",
+  "appName": "Расходы PRO",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
