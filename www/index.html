@@ -2089,6 +2089,11 @@ html.rashody-native-android .sheet #dialog-title:focus{outline:none}
 @media (prefers-reduced-motion:reduce){
  html.rashody-native-android .overlay:not([hidden]) .sheet{animation:none!important}
 }
+
+/* Native modal remains a fixed sheet. Prevent scroll chaining without
+   changing the page's overflow, height, or scroll coordinates. */
+html.rashody-native-android .overlay{overscroll-behavior:contain;touch-action:none}
+html.rashody-native-android .overlay .sheet{overscroll-behavior:contain;touch-action:pan-y}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2532,10 +2537,14 @@ function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toa
 function openModal(){
  lastFocus=document.activeElement;
  if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
- // Avoid opening the Android keyboard while the dialog is animating:
- // focusing an input on launch causes a visual-viewport resize and jump.
+ // Native Android: do not focus an input or lock body overflow.
+ // Either operation causes Android WebView to resize/clamp the page when '+' is tapped.
+ if(nativeAndroid)lastFocus?.blur?.();
  const overlay=document.getElementById('overlay');
  overlay.hidden=false;
+ const modal=document.getElementById('modal');
+ modal.scrollTop=0;
+ if(nativeAndroid)return;
  document.body.style.overflow='hidden';
  requestAnimationFrame(()=>{
   if(overlay.hidden)return;
@@ -2543,12 +2552,21 @@ function openModal(){
   if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
  });
 }
-function hideModal(){document.getElementById('overlay').hidden=true;document.body.style.overflow='';draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet');modalHistoryOpen=false;if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true})}
+function hideModal(){
+ const modal=document.getElementById('modal');
+ if(nativeAndroid&&modal?.contains(document.activeElement))document.activeElement.blur?.();
+ document.getElementById('overlay').hidden=true;
+ if(!nativeAndroid)document.body.style.overflow='';
+ draft=null;catDraft=null;
+ modal.classList.remove('tx-sheet','cat-sheet');
+ modalHistoryOpen=false;
+ if(!nativeAndroid&&lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
+}
 function closeModal(){
  if(catDraft&&txDraftBeforeCategory){
   draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
-  document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
+  if(!nativeAndroid)document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
  }
  const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
