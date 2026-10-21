@@ -2072,6 +2072,12 @@ html.rashody-native-android .workspace>.storage-banner.r104-compact-error .stora
 html.rashody-native-android .workspace>.storage-banner.r104-compact-error .storage-actions button {padding:7px 9px!important;min-height:34px!important;}
 html.rashody-native-android .workspace>.storage-banner.r104-compact-error #storageBannerText {font-size:12px!important;}
 @media(prefers-reduced-motion:reduce){html.rashody-native-android body.matte-editorial *{transition:none!important;animation:none!important}}
+
+/* 1.0.5 — stable Android navigation: no browser scroll anchoring or entrance translations. */
+html.rashody-native-android, html.rashody-native-android body,
+html.rashody-native-android #page {scroll-behavior:auto!important;overflow-anchor:none;}
+html.rashody-native-android #page {position:relative;min-width:0;}
+html.rashody-native-android body.matte-editorial #page > * {animation:none!important;}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2354,12 +2360,26 @@ function summaryMoney(n){
 function axisMoney(n){const v=F.money(Number(n)||0);if(v<10000)return currencyFormat.format(v);const x=v>=1e12?[1e12,'трлн']:v>=1e9?[1e9,'млрд']:v>=1e6?[1e6,'м']:v>=1e3?[1e3,'к']:[1,''];return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:v/x[0]>100?0:1}).format(v/x[0])+x[1]}
 function currentSummary(){return F.summarizeMonth(data.transactions,monthKey(month))}
 function navData(){return [['dashboard','Обзор','dashboard'],['transactions','Операции','transactions'],['analytics','Аналитика','analytics'],['settings','Настройки','settings']]}
-function renderNav(){document.getElementById('sidebar').innerHTML=`<div class="brand"><div class="brand-mark">${svg('wallet',24)}</div><div><div class="brand-label">расходы<span >.</span></div><div class="brand-tag">ЛИЧНЫЕ ФИНАНСЫ</div></div></div><div class="navlist">${navData().map(([id,label,ico])=>`<button class="navitem ${view===id?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${svg(ico,21)}<span>${label}</span></button>`).join('')}</div><button type="button" class="sidebar-add" data-action="new-expense">${svg('plus',18)} Добавить расход</button><div class="sidebar-foot">${svg('shield',14)} Данные хранятся только<br>на вашем устройстве.</div>`;
+function renderNav(){
+ const sidebar=document.getElementById('sidebar');
+ const mobile=document.getElementById('mobile-nav');
+ if(!mobile.hasChildNodes()){
+ sidebar.innerHTML=`<div class="brand"><div class="brand-mark">${svg('wallet',24)}</div><div><div class="brand-label">расходы<span >.</span></div><div class="brand-tag">ЛИЧНЫЕ ФИНАНСЫ</div></div></div><div class="navlist">${navData().map(([id,label,ico])=>`<button class="navitem ${view===id?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${svg(ico,21)}<span>${label}</span></button>`).join('')}</div><button type="button" class="sidebar-add" data-action="new-expense">${svg('plus',18)} Добавить расход</button><div class="sidebar-foot">${svg('shield',14)} Данные хранятся только<br>на вашем устройстве.</div>`;
  const tabs=['dashboard','transactions','new','analytics','settings'];const labels={dashboard:'Обзор',transactions:'История',analytics:'Аналитика',settings:'Настройки'};
- document.getElementById('mobile-nav').innerHTML=tabs.map(id=>id==='new'?`<button class="fab" data-action="new-expense" aria-label="Добавить операцию">${svg('plus',27)}</button>`:`<button class="${view===id||(id==='analytics'&&view==='analytics')?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${svg(id==='transactions'?'transactions':id,20)}<span>${labels[id]}</span></button>`).join('');
+ mobile.innerHTML=tabs.map(id=>id==='new'?`<button class="fab" data-action="new-expense" aria-label="Добавить операцию">${svg('plus',27)}</button>`:`<button class="${view===id||(id==='analytics'&&view==='analytics')?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${svg(id==='transactions'?'transactions':id,20)}<span>${labels[id]}</span></button>`).join('');
+ }
+ // Keep the native navigation controls mounted, preserving focus and avoiding repaint jumps.
+ for(const button of [...sidebar.querySelectorAll('[data-view]'),...mobile.querySelectorAll('[data-view]')]){
+  const active=button.dataset.view===view;
+  button.classList.toggle('active',active);
+  if(active)button.setAttribute('aria-current','page');
+  else button.removeAttribute('aria-current');
+ }
 }
 function renderTop(){let heading=view==='dashboard'?'':view==='transactions'?'История':view==='analytics'?'Аналитика':'Настройки';document.getElementById('topbar').className=`topbar ${view==='dashboard'?'dashboard-topbar':'subpage-topbar'}`;document.getElementById('topbar').innerHTML=(view==='dashboard'||view==='analytics')?'':`<div class="topbar-heading"><button class="icon-btn screen-back" data-action="navigate-back" aria-label="Назад">${svg('chevronLeft',22)}</button><div><div class="topline">ФИНАНСОВЫЙ ДНЕВНИК</div><h1>${heading}</h1></div></div><div class="topbar-right">${view==='transactions'?`<button type="button" class="header-csv" data-action="export-csv" aria-label="Экспортировать операции в CSV">${svg('download',16)}<span>CSV</span></button>`:''}<button class="primary-btn add-desktop" data-action="new-expense">${svg('plus',17)} Добавить</button></div>`}
-function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;}
+function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();const originalY=window.scrollY;document.getElementById('page').innerHTML=html;
+ if(originalY>0)window.scrollTo({top:originalY,behavior:'instant'});
+}
 function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
@@ -2367,16 +2387,21 @@ function softNavEnter(){
  if(content?.animate)content.animate([{opacity:.78},{opacity:1}],{duration:225,easing:'cubic-bezier(.2,0,.2,1)'});
 }
 function navState(v,guard=true,modal=false){return {__rashodyNavV3:true,view:v,guard,modal}}
-function initNavigation(){try{history.replaceState(navState('dashboard',false),'');history.pushState(navState('dashboard'),'');navReady=true}catch(e){console.info('История недоступна:',e.message)}
- window.addEventListener('popstate',ev=>{const state=ev.state;if(!document.getElementById('overlay').hidden){hideModal()}
-  if(state?.__rashodyNavV3){if(view!==state.view){view=state.view;render();scrollTop();softNavEnter()}if(!state.guard){try{history.pushState(navState('dashboard'),'')}catch(e){}view='dashboard';render();scrollTop();softNavEnter()}}
-  else if(view!=='dashboard'){view='dashboard';render();scrollTop();softNavEnter()}
+function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}
+ try{history.replaceState(navState('dashboard',false),'');history.pushState(navState('dashboard'),'');navReady=true}catch(e){console.info('История недоступна:',e.message)}
+ window.addEventListener('popstate',ev=>{const state=ev.state;if(!document.getElementById('overlay').hidden)hideModal();
+  if(state?.__rashodyNavV3&&!state.guard){try{history.pushState(navState('dashboard'),'')}catch(e){}}
+  const target=state?.__rashodyNavV3?(state.guard?state.view:'dashboard'):'dashboard';
+  if(view!==target){
+   // Reset scroll on the outgoing page, before replacing its DOM, to avoid WebView height-clamp bounce.
+   scrollTop();view=target;render();softNavEnter();
+  }
  });
  let edge=null;document.addEventListener('touchstart',e=>{if(nativeAndroid)return;if(e.touches.length!==1){edge=null;return}const t=e.touches[0];edge=t.clientX<=34?{x:t.clientX,y:t.clientY,when:Date.now()}:null},{passive:true});
  document.addEventListener('touchend',e=>{if(nativeAndroid||!edge||e.changedTouches.length!==1)return;const p=e.changedTouches[0],dx=p.clientX-edge.x,dy=Math.abs(p.clientY-edge.y);if(dx>85&&dx>dy*1.4&&Date.now()-edge.when<750)navigateBack();edge=null},{passive:true});
 }
-function go(v){if(v===view)return;if(!['dashboard','transactions','analytics','settings'].includes(v))return;view=v;if(navReady){try{history.pushState(navState(v),'')}catch(e){}}render();scrollTop();softNavEnter()}
-function navigateBack(){if(!document.getElementById('overlay').hidden){closeModal();return}if(view==='dashboard')return;if(navReady){history.back()}else{view='dashboard';render();scrollTop();softNavEnter()}}
+function go(v){if(v===view)return;if(!['dashboard','transactions','analytics','settings'].includes(v))return;scrollTop();view=v;if(navReady){try{history.pushState(navState(v),'')}catch(e){}}render();softNavEnter()}
+function navigateBack(){if(!document.getElementById('overlay').hidden){closeModal();return}if(view==='dashboard')return;if(navReady){history.back()}else{scrollTop();view='dashboard';render();softNavEnter()}}
 function compactMoney(n){const value=F.money(Number(n)||0);if(value>=1e6){const out=Math.round(value/1e5)/10;return String(out).replace(/\.0$/,'')+' млн'}if(value>=1e3){const out=Math.round(value/100)/10;return String(out).replace(/\.0$/,'')+'к'}return currencyFormat.format(value)}
 function monthExpenseMap(items){const map={};for(const t of items){if(t.type==='expense')map[t.date]=F.money((map[t.date]||0)+t.amount)}return map}
 function weekRangeFor(dateStr){const base=new Date(dateStr+'T12:00:00');const mondayOffset=(base.getDay()+6)%7;const start=new Date(base);start.setDate(base.getDate()-mondayOffset);return Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return dateLocal(d)})}
