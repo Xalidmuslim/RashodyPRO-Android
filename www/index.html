@@ -1942,6 +1942,111 @@ body.matte-editorial .storage-banner[role=alert]{line-height:1.4}
 html.rashody-native-android body.matte-editorial .shell {
   padding-top: calc(max(var(--safe-area-inset-top, 0px), env(safe-area-inset-top, 0px), 26px) + 10px) !important;
 }
+
+/* 1.0.3 — Stable chart layout, readable text and non-bouncing navigation. */
+html{scroll-behavior:auto!important}
+body.matte-editorial #page .analytics-trend-panel{min-width:0!important;overflow:hidden!important}
+body.matte-editorial #page .r103-plot{
+ display:grid!important;grid-template-columns:46px minmax(0,1fr)!important;
+ column-gap:8px!important;align-items:start!important;margin-top:12px!important;
+ padding:1px 0 0!important;width:100%;overflow:hidden;
+}
+body.matte-editorial #page .r103-plot .studio-bar-axis{
+ position:static!important;inset:auto!important;top:auto!important;left:auto!important;
+ width:46px!important;height:156px!important;min-height:156px!important;
+ margin:0!important;padding:0 0 0 1px!important;
+ color:#6A7979!important;font-size:calc(10.5px * var(--font-scale,1))!important;
+ line-height:1.12!important;white-space:nowrap!important;
+ display:flex!important;flex-direction:column!important;justify-content:space-between!important;
+ overflow:visible!important;pointer-events:none!important;
+}
+body.matte-editorial #page .r103-plot .studio-trend-bars,
+body.matte-editorial #page .r103-plot .studio-trend-bars.dense{
+ display:grid!important;margin:0!important;padding:0!important;min-height:0!important;
+ height:191px!important;width:100%!important;max-width:100%!important;
+ align-items:start!important;overflow:hidden!important;gap:2px!important;
+ grid-template-columns:repeat(8,minmax(0,1fr))!important;
+ background-size:100% 156px!important;background-position:0 0!important;
+}
+body.matte-editorial #page .r103-plot .studio-trend-bars.dense{
+ grid-template-columns:repeat(31,minmax(0,1fr))!important;padding:0 7px!important;
+}
+body.matte-editorial #page .r103-plot .studio-trend-bars .compare-col{
+ min-height:0!important;height:190px!important;padding:0!important;
+ display:grid!important;grid-template-rows:156px 30px!important;
+ align-content:start!important;gap:3px!important;overflow:visible!important;
+ background:transparent!important;transform:none!important;
+}
+body.matte-editorial #page .r103-plot .studio-trend-bars .compare-track{
+ box-sizing:border-box!important;height:156px!important;min-height:156px!important;
+ padding:0 1px!important;overflow:hidden!important;display:flex!important;
+ align-items:flex-end!important;justify-content:center!important;flex-direction:row!important;
+}
+body.matte-editorial #page .r103-plot .studio-trend-bars .compare-stick{
+ display:block!important;max-height:100%!important;min-height:0!important;
+ width:min(95%,28px)!important;flex:none!important;transform:none!important;
+ transition:background-color .18s ease,opacity .18s ease!important;
+}
+body.matte-editorial #page .r103-plot .studio-trend-bars .compare-label{
+ display:block!important;height:30px!important;line-height:22px!important;
+ margin:0!important;padding:0!important;overflow:hidden!important;
+ text-overflow:clip!important;white-space:nowrap!important;
+ font-size:calc(10px * var(--font-scale,1))!important;text-align:center!important;
+}
+body.matte-editorial #page .r103-plot .studio-trend-bars.dense .compare-label{
+ width:max-content!important;max-width:none!important;overflow:visible!important;
+ position:relative!important;left:50%!important;transform:translateX(-50%)!important;
+}
+body.matte-editorial .shell,body.matte-editorial .workspace,
+body.matte-editorial #page,body.matte-editorial #page .panel,
+body.matte-editorial #page .compare-col,body.matte-editorial #page .color-category-card,
+body.matte-editorial .mobile-nav button{scroll-behavior:auto!important}
+body.matte-editorial #page .compare-col:active,
+body.matte-editorial #page .color-category-card:active,
+body.matte-editorial #page .week-day:active,
+body.matte-editorial .mobile-nav button:active{transform:none!important}
+body.matte-editorial .mobile-nav button,
+body.matte-editorial #page .trend-mode-toggle button,
+body.matte-editorial #page .period-toggle button,
+body.matte-editorial #page .week-day,
+body.matte-editorial #page .r49-filter-btn{
+ transition:background-color .18s ease,color .18s ease,opacity .18s ease!important;
+}
+body.matte-editorial #modal .r103-add-category{
+ display:inline-flex!important;gap:5px!important;align-items:center!important;
+ justify-content:center!important;background:#E7F0ED!important;color:#285F5D!important;
+ border:0!important;border-radius:11px!important;padding:8px 10px!important;
+ margin-left:auto!important;font-size:calc(11px * var(--font-scale,1))!important;
+ min-height:39px!important;max-width:100%!important;white-space:nowrap!important;
+}
+body.matte-editorial #modal .r103-add-category svg{width:16px;height:16px;flex:none}
+body.matte-editorial #modal .tx-section-title{
+ display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:wrap!important;
+}
+body.matte-editorial #modal .tx-section-title .tx-selected-category{
+ margin-left:0!important;min-width:0!important;
+}
+body.matte-editorial #page .record-meta,
+body.matte-editorial #page .section-caption,
+body.matte-editorial #page .setting-expl,
+body.matte-editorial .mobile-nav button span{
+ font-size:max(11.5px,calc(10.5px * var(--font-scale,1)))!important;
+}
+@media(max-width:365px){
+ body.matte-editorial #page .r103-plot{grid-template-columns:41px minmax(0,1fr)!important;gap:5px!important}
+ body.matte-editorial #page .r103-plot .studio-bar-axis{
+ width:41px!important;font-size:calc(9.5px * var(--font-scale,1))!important;
+ }
+ body.matte-editorial #modal .r103-add-category{
+ font-size:calc(10px * var(--font-scale,1))!important;padding:7px 8px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.matte-editorial .mobile-nav button,body.matte-editorial #page .trend-mode-toggle button,
+ body.matte-editorial #page .period-toggle button,body.matte-editorial #page .week-day,
+ body.matte-editorial #page .r49-filter-btn,
+ body.matte-editorial #page .r103-plot .compare-stick{transition:none!important}
+}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2346,16 +2451,22 @@ function analytics(){
  <div class="period-controls analytics-controls"><div class="period-toggle">${[['day','День'],['week','Неделя'],['month','Месяц']].map(([id,label])=>`<button data-analytics-period="${id}" aria-pressed="${period===id}" class="${period===id?'active':''}">${label}</button>`).join('')}</div><div class="period-navigation"><button class="icon-btn" data-action="analytics-prev" aria-label="Предыдущий период">${svg('chevronLeft',20)}</button><strong class="period-caption">${esc(rangeLabel(s.range,period))}</strong><button class="icon-btn" data-action="analytics-next" aria-label="Следующий период">${svg('chevronRight',20)}</button><button class="today-btn" data-action="analytics-today">К текущему</button></div></div>
  <div class="compare-metrics studio-stats"><div class="compare-metric main"><span class="soft-stat-symbol">${svg('chart',22)}</span><div class="compare-caption">Всего расходов</div><strong class="num" title="${esc(money(s.expense))}">${summaryMoney(s.expense)}</strong><small>${esc(deltaLabel)}</small></div><div class="compare-metric"><span class="soft-stat-symbol">${svg('wallet',22)}</span><div class="compare-caption">Средний расход в день</div><strong class="num" title="${esc(money(avg))}">${summaryMoney(avg)}</strong><small>${expItems.length} ${pluralOperations(expItems.length)}${showIncome?` · доходы ${money(s.income)}`:''}</small></div><div class="compare-metric"><span class="soft-stat-symbol">${svg('spark',22)}</span><div class="compare-caption">Больше всего потрачено</div><strong class="stat-category">${firstCat?esc(firstCat.name):'—'}</strong><small>${first?Math.round(first[1]/s.expense*100)+'% от всех расходов':'Нет расходов'}</small></div></div>
  <section class="panel analytics-ring-panel"><div class="ring-panel-head"><h2>Структура расходов</h2><span>${esc(periodTitle)}</span></div>${s.expense?`<div class="chart-flex">${circleChart(cats,s.expense)}<div class="legend">${legended(cats,s.expense,6)}</div></div><div id="chartSelectionInfo">${chartDetail(cats,s.expense)}</div>`:panelEmpty('Нет расходов за выбранный период','Выберите другой период или добавьте новую операцию.')}</section>
- <section class="panel analytics-trend-panel"><div class="section-heading studio-trend-heading"><div><h2>Динамика расходов</h2><div class="section-caption">Нажмите на столбец для просмотра периода</div></div><div class="trend-mode-toggle">${[['day','По дням'],['week','По неделям'],['month','По месяцам']].map(([id,label])=>`<button type="button" data-trend-mode="${id}" class="${analyticsTrendMode===id?'active':''}" aria-pressed="${analyticsTrendMode===id}">${label}</button>`).join('')}</div></div>${chartSeries.every(item=>item.value===0)?`<div class="r49-empty-trend" role="status">За эти периоды расходов нет. Выберите другой период или добавьте расход.</div>`:`<div class="studio-bar-axis"><span title="${esc(money(max))}">${axisMoney(max)}</span><span title="${esc(money(max/2))}">${axisMoney(max/2)}</span><span>0</span></div><div class="compare-bars studio-trend-bars ${analyticsTrendMode==='day'?'dense':''}">${chartSeries.map((item,i)=>{const selected=item.date===analyticsAnchor;return `<button class="compare-col ${selected?'selected':''}" type="button" data-trend-date="${item.date}" aria-pressed="${selected}" aria-label="${esc(item.label)}: ${esc(money(item.value))}"><span class="compare-track"><span class="compare-stick" style="height:${item.value?Math.max(4,item.value/max*100):0}%"></span></span><span class="compare-label">${item.marked?esc(item.label):''}</span></button>`}).join('')}</div>`}</section>
+ <section class="panel analytics-trend-panel"><div class="section-heading studio-trend-heading"><div><h2>Динамика расходов</h2><div class="section-caption">Нажмите на столбец для просмотра периода</div></div><div class="trend-mode-toggle">${[['day','По дням'],['week','По неделям'],['month','По месяцам']].map(([id,label])=>`<button type="button" data-trend-mode="${id}" class="${analyticsTrendMode===id?'active':''}" aria-pressed="${analyticsTrendMode===id}">${label}</button>`).join('')}</div></div>${chartSeries.every(item=>item.value===0)?`<div class="r49-empty-trend" role="status">За эти периоды расходов нет. Выберите другой период или добавьте расход.</div>`:`<div class="r103-plot"><div class="studio-bar-axis"><span title="${esc(money(max))}">${axisMoney(max)}</span><span title="${esc(money(max/2))}">${axisMoney(max/2)}</span><span>0</span></div><div class="compare-bars studio-trend-bars ${analyticsTrendMode==='day'?'dense':''}">${chartSeries.map((item,i)=>{const selected=item.date===analyticsAnchor;return `<button class="compare-col ${selected?'selected':''}" type="button" data-trend-date="${item.date}" aria-pressed="${selected}" aria-label="${esc(item.label)}: ${esc(money(item.value))}"><span class="compare-track"><span class="compare-stick" style="height:${item.value?Math.max(4,item.value/max*100):0}%"></span></span><span class="compare-label">${item.marked?esc(item.label):''}</span></button>`}).join('')}</div></div>`}</section>
  ${s.expense?`<section class="panel analytics-category-grid"><div class="section-heading"><h2>Топ категорий</h2><button class="ghost-btn" data-chart-open data-category="${esc(activeCategory(cats))}">Все категории →</button></div><div class="color-category-grid">${ranked.slice(0,3).map(([id,value],i)=>{const c=getCat(id);return `<button class="color-category-card" style="background-color:${categoryCardColor(id)}!important;background-image:none!important" type="button" data-chart-category="${esc(id)}" aria-label="${esc(c.name)}, ${esc(money(value))}"><span class="color-category-icon">${svg(c.icon,23)}</span><span class="category-name">${esc(c.name)}</span><strong class="num" title="${esc(money(value))}">${summaryMoney(value)}</strong><small>${Math.round(value/s.expense*100)}% всех расходов</small></button>`}).join('')}</div></section>`:''}`;
 }
-function settings(){const c=data.settings;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Новая</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><button class="mini-action" data-action="load-demo">${svg('spark',16)} Загрузить пример данных</button><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 4.9 · Matte Stable · Локальные данные</p>`}
+function settings(){const c=data.settings;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Добавить категорию</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><button class="mini-action" data-action="load-demo">${svg('spark',16)} Загрузить пример данных</button><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 4.9 · Matte Stable · Локальные данные</p>`}
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
 function openModal(){lastFocus=document.activeElement;if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}document.getElementById('overlay').hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>{const modal=document.getElementById('modal');(modal.classList.contains('tx-sheet')?document.getElementById('txAmount'):modal.classList.contains('cat-sheet')?document.getElementById('catName'):modal.querySelector('input:not([type=hidden]),button'))?.focus({preventScroll:true})})}
 function hideModal(){document.getElementById('overlay').hidden=true;document.body.style.overflow='';draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet');modalHistoryOpen=false;if(lastFocus?.isConnected)lastFocus.focus()}
-function closeModal(){const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
+function closeModal(){
+ if(catDraft&&txDraftBeforeCategory){
+  draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
+  document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
+  document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
+ }
+ const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
-function startTx(type='expense',existing=null,preferredDay=null){if(type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён в настройках');const last=type==='expense'?sortTx(data.transactions.filter(t=>t.type==='expense'))[0]:null;draft=existing?{...existing}:{id:null,type,category:type==='income'?'salary':(last&&data.categories.some(c=>c.id===last.category&&c.type==='expense')?last.category:'food'),amount:'',note:'',date:preferredDay&&F.isDate(preferredDay)?preferredDay:dateLocal(),time:timeLocal()};renderTxModal();openModal()}
+function startTx(type='expense',existing=null,preferredDay=null){txDraftBeforeCategory=null;if(type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён в настройках');const last=type==='expense'?sortTx(data.transactions.filter(t=>t.type==='expense'))[0]:null;draft=existing?{...existing}:{id:null,type,category:type==='income'?'salary':(last&&data.categories.some(c=>c.id===last.category&&c.type==='expense')?last.category:'food'),amount:'',note:'',date:preferredDay&&F.isDate(preferredDay)?preferredDay:dateLocal(),time:timeLocal()};renderTxModal();openModal()}
 function collectDraft(){if(!draft)return;const amount=document.getElementById('txAmount'),note=document.getElementById('txNote'),date=document.getElementById('txDate'),time=document.getElementById('txTime');if(amount)draft.amount=amount.value;if(note)draft.note=note.value;if(date)draft.date=date.value;if(time)draft.time=time.value}
 function renderTxModal(){
  const edit=!!draft.id,icons=data.categories.filter(c=>c.type===draft.type);
@@ -2365,7 +2476,7 @@ function renderTxModal(){
  document.getElementById('modal').innerHTML=`<div class="sheet-header"><div><p class="tx-eyebrow">ФИНАНСОВЫЙ ДНЕВНИК</p><h2 id="dialog-title">${edit?'Изменить операцию':draft.type==='income'?'Новый доход':'Новый расход'}</h2></div><button type="button" class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div>
  <div class="type-switch ${data.settings.incomeEnabled?'':'expense-only'}"><button type="button" class="${draft.type==='expense'?'active':''}" data-tx-type="expense">${svg('arrowUp',16)} Расход</button>${data.settings.incomeEnabled?`<button type="button" class="${draft.type==='income'?'active':''}" data-tx-type="income">${svg('arrowDown',16)} Доход</button>`:''}</div>
  <section class="tx-amount-block"><label class="amount-label" for="txAmount">СУММА ${draft.type==='income'?'ДОХОДА':'РАСХОДА'}</label><div class="amount-entry"><input id="txAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0" value="${esc(draft.amount||'')}" maxlength="18" aria-label="Сумма ${draft.type==='income'?'дохода':'расхода'}"><span class="tx-currency">${esc(data.settings.currency)}</span><button type="button" class="tx-check" id="txSubmit" data-action="save-tx" aria-label="${edit?'Сохранить изменения':'Добавить операцию'}" title="${edit?'Сохранить изменения':'Добавить операцию'}" ${good?'':'disabled'}>${svg('check',25)}</button></div><div class="tx-quick-amount" aria-label="Быстрый ввод суммы">${[100,300,500,1000].map(v=>`<button type="button" data-quick-amount="${v}">${v.toLocaleString('ru-RU')}</button>`).join('')}<button type="button" class="tx-erase" data-action="tx-clear-amount" aria-label="Очистить сумму">${svg('x',16)}</button></div></section>
- <section class="tx-form-section"><div class="tx-section-title"><h3>Категория</h3><span class="tx-selected-category" id="txSelectedCategory">${esc(getCat(draft.category).name)}</span></div><input type="search" class="tx-category-search" id="txCategorySearch" placeholder="Найти категорию" autocomplete="off" aria-label="Найти категорию"><div class="category-picker" id="txCategories">${icons.map(c=>`<button type="button" class="cat-choice ${c.id===draft.category?'active':''}" data-tx-category="${esc(c.id)}" aria-pressed="${c.id===draft.category}">${categoryIcon(c,18)}<span class="truncate">${esc(c.name)}</span></button>`).join('')}</div><button type="button" class="r49-more-categories" data-action="tx-more-categories" id="txMoreCategories" aria-expanded="false">Все категории ↓</button><p class="tx-search-empty" id="txSearchEmpty" hidden>Категория не найдена</p></section>
+ <section class="tx-form-section"><div class="tx-section-title"><h3>Категория</h3><button type="button" class="r103-add-category" data-action="tx-add-category" aria-label="Добавить категорию">${svg('plus',16)}<span>Добавить категорию</span></button><span class="tx-selected-category" id="txSelectedCategory">${esc(getCat(draft.category).name)}</span></div><input type="search" class="tx-category-search" id="txCategorySearch" placeholder="Найти категорию" autocomplete="off" aria-label="Найти категорию"><div class="category-picker" id="txCategories">${icons.map(c=>`<button type="button" class="cat-choice ${c.id===draft.category?'active':''}" data-tx-category="${esc(c.id)}" aria-pressed="${c.id===draft.category}">${categoryIcon(c,18)}<span class="truncate">${esc(c.name)}</span></button>`).join('')}</div><button type="button" class="r49-more-categories" data-action="tx-more-categories" id="txMoreCategories" aria-expanded="false">Все категории ↓</button><p class="tx-search-empty" id="txSearchEmpty" hidden>Категория не найдена</p></section>
  <section class="tx-form-section tx-details"><div class="field"><label for="txNote">Комментарий <span class="tx-optional">необязательно</span></label><input id="txNote" type="text" maxlength="200" placeholder="Например, покупки в магазине" value="${esc(draft.note||'')}"></div><div class="two-fields"><div class="field"><label for="txDate">Дата</label><div class="tx-date-control"><input id="txDate" type="date" value="${esc(draft.date)}"><button type="button" data-action="tx-today" aria-label="Установить сегодняшнюю дату" title="Сегодня">Сегодня</button></div></div><div class="field"><label for="txTime">Время</label><input id="txTime" type="time" value="${esc(draft.time||'')}"></div></div></section>
  <p class="r49-save-hint">Для сохранения нажмите галочку справа от суммы.</p>
   ${edit?`<div class="tx-edit-actions"><button type="button" class="mini-action" data-action="repeat-tx">${svg('repeat',16)} Повторить</button><button type="button" class="mini-action danger-btn" data-action="delete-tx">${svg('trash',16)} Удалить</button></div>`:''}`;
@@ -2385,10 +2496,28 @@ function quickRepeatLast(){
 function repeatTx(){collectDraft();draft.id=null;draft.date=dateLocal();draft.time=timeLocal();renderTxModal();toast('Копия готова. Нажмите «Сохранить операцию»')}
 async function deleteTx(){if(!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
 const ICON_OPTIONS=['cart','coffee','car','home','heart','film','shirt','box','banknote','gift','briefcase','book','phone','fuel','plane','music','tool','drop','sun','wallet','salary'];
+let txDraftBeforeCategory=null;
+function startCatFromTx(){
+ if(!draft)return;collectDraft();txDraftBeforeCategory={...draft};draft=null;
+ catDraft={id:null,name:'',icon:'box',type:'expense'};
+ const modal=document.getElementById('modal');modal.classList.remove('tx-sheet');
+ renderCatModal();document.getElementById('catName')?.focus({preventScroll:true});
+}
 function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',type:'expense'};renderCatModal();openModal()}
 function collectCat(){const n=document.getElementById('catName');if(n)catDraft.name=n.value}
 function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
-async function saveCat(){collectCat();const name=catDraft.name.trim();if(!name)return toast('Укажите название категории');if(catDraft.id){const c=data.categories.find(x=>x.id===catDraft.id);if(c)Object.assign(c,{name,icon:catDraft.icon})}else{data.categories.push({id:'cat-'+newId().replace(/[^a-zA-Z0-9_-]/g,''),type:'expense',name,icon:catDraft.icon})}closeModal();render();await saveFeedback('Категория сохранена')}
+async function saveCat(){
+ collectCat();const name=catDraft.name.trim();if(!name)return toast('Укажите название категории');
+ let savedId=catDraft.id;
+ if(savedId){const c=data.categories.find(x=>x.id===savedId);if(c)Object.assign(c,{name,icon:catDraft.icon})}
+ else{savedId='cat-'+newId().replace(/[^a-zA-Z0-9_-]/g,'');data.categories.push({id:savedId,type:'expense',name,icon:catDraft.icon})}
+ if(txDraftBeforeCategory){
+  draft={...txDraftBeforeCategory,category:savedId};txDraftBeforeCategory=null;catDraft=null;
+  document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();render();
+  await saveFeedback('Категория добавлена');return;
+ }
+ closeModal();render();await saveFeedback('Категория сохранена');
+}
 async function deleteCat(){if(!catDraft.id||expenseDefaults.some(c=>c.id===catDraft.id))return;if(!confirm('Удалить категорию? Все её расходы перейдут в «Прочее».'))return;data.transactions.forEach(t=>{if(t.category===catDraft.id)t.category='other'});delete data.settings.categoryBudgets[catDraft.id];data.categories=data.categories.filter(c=>c.id!==catDraft.id);closeModal();render();await saveFeedback('Категория удалена')}
 function openLegacyCSV(){document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">Перенос старых расходов</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><p class="sub" style="line-height:1.8;margin-bottom:16px">Откройте старую версию, в настройках нажмите «Скопировать расходы (CSV)». Вставьте скопированный текст сюда. Данные будут добавлены к текущей истории.</p><div class="field"><label for="oldCsvText">Скопированный текст CSV</label><textarea id="oldCsvText" placeholder="Дата;Время;Категория;Сумма;Заметка…" rows="7"></textarea></div><div class="modal-actions"><button class="primary-btn" data-action="confirm-old-csv">${svg('upload',17)} Перенести операции</button></div>`;openModal()}
 async function importLegacyCSV(){try{const rows=F.parseLegacyCSV(document.getElementById('oldCsvText').value);if(!confirm(`Добавить ${rows.length} расходов? Существующие записи останутся без изменений. Повторный импорт создаст дубликаты.`))return;rows.forEach(x=>x.id=newId());data.transactions.push(...rows);closeModal();render();await saveFeedback(`Перенесено расходов: ${rows.length}`)}catch(e){toast(e.message||'Не удалось обработать CSV')}}
@@ -2416,7 +2545,7 @@ async function loadDemo(){if(data.transactions.length){toast('Пример до�
 async function clearData(){if(!data.transactions.length)return toast('История уже пуста');if(!confirm(`Безвозвратно удалить ${data.transactions.length} операций? Сначала сохраните JSON-копию, если она нужна.`))return;data.transactions=[];render();await saveFeedback('История очищена')}
 function actions(a){switch(a){case 'navigate-back':return navigateBack();case 'week-prev':return changeWeek(-1);case 'week-next':return changeWeek(1);case 'week-today':return resetWeek();case 'history-prev':return historyStep(-1);case 'history-next':return historyStep(1);case 'history-today':return historyToday();case 'history-reset-filters':filters={type:'all',category:'all',search:'',allDates:false};return render();case 'toggle-history-filters':historyFiltersOpen=!historyFiltersOpen;return render();case 'view-focus-day':historyPeriod='day';historyAnchor=(dashboardFocusDay&&F.isDate(dashboardFocusDay)?dashboardFocusDay:dateLocal());filters={type:'expense',category:'all',search:'',allDates:false};return go('transactions');case 'analytics-prev':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,-1);chartSelection=null;return render();case 'analytics-next':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,1);chartSelection=null;return render();case 'analytics-today':analyticsAnchor=dateLocal();chartSelection=null;return render();case 'prev-month':return changeMonth(-1);case 'next-month':return changeMonth(1);case 'new-expense':return startTx('expense');case 'new-expense-day':return startTx('expense',null,dashboardFocusDay);case 'new-income':return startTx('income');case 'close-modal':return closeModal();case 'tx-clear-amount':{const input=document.getElementById('txAmount');if(input){input.value='';if(draft)draft.amount='';updateTxConfirm();input.focus({preventScroll:true})}return}
 case 'tx-more-categories':{const picker=document.getElementById('txCategories');if(!picker)return;const on=picker.classList.toggle('expanded');const b=document.getElementById('txMoreCategories');if(b){b.setAttribute('aria-expanded',String(on));b.textContent=on?'Свернуть ↑':'Все категории ↓'}return}case 'tx-today':{const el=document.getElementById('txDate');if(el){el.value=dateLocal();if(draft)draft.date=el.value}return}
-case 'save-tx':return saveTx();case 'delete-tx':return deleteTx();case 'repeat-tx':return repeatTx();case 'quick-repeat':return quickRepeatLast();case 'reset-corrupt':return resetCorruptStorage();case 'storage-dismiss':storagePartialDismissed=true;storageWarning(null);return;case 'new-category':return startCat();case 'save-category':return saveCat();case 'delete-category':return deleteCat();case 'export-json':return exportJSON();case 'export-csv':return exportCSV();case 'import-json':return document.getElementById('importFile').click();case 'import-old-csv':return openLegacyCSV();case 'confirm-old-csv':return importLegacyCSV();case 'load-demo':return loadDemo();case 'clear-data':return clearData()}}
+case 'save-tx':return saveTx();case 'delete-tx':return deleteTx();case 'repeat-tx':return repeatTx();case 'quick-repeat':return quickRepeatLast();case 'reset-corrupt':return resetCorruptStorage();case 'storage-dismiss':storagePartialDismissed=true;storageWarning(null);return;case 'new-category':return startCat();case 'tx-add-category':return startCatFromTx();case 'save-category':return saveCat();case 'delete-category':return deleteCat();case 'export-json':return exportJSON();case 'export-csv':return exportCSV();case 'import-json':return document.getElementById('importFile').click();case 'import-old-csv':return openLegacyCSV();case 'confirm-old-csv':return importLegacyCSV();case 'load-demo':return loadDemo();case 'clear-data':return clearData()}}
 document.addEventListener('click',e=>{const dayPiece=e.target.closest('[data-day-chart-category]');if(dayPiece){updateDayChartSelection(dayPiece.dataset.dayChartCategory);return}if(e.target.closest('[data-day-chart-reset]')){dayChartSelection=null;render();return}const slice=e.target.closest('.ring-slice');if(slice){updateChartSelection(slice.dataset.chartCategory);slice.blur?.();return}const btn=e.target.closest('button');if(!btn)return;
  if(btn.dataset.jumpDay){dayChartSelection=null;dashboardFocusDay=btn.dataset.jumpDay;dashboardWeekAnchor=btn.dataset.jumpDay;return view==='dashboard'?render():undefined}
  if(btn.hasAttribute('data-chart-open')){const id=btn.dataset.category;filters={type:'expense',category:id,search:'',allDates:false};historyPeriod=view==='analytics'?analyticsPeriod:'month';historyAnchor=view==='analytics'?analyticsAnchor:dateLocal(month);go('transactions');return render()}
@@ -2446,7 +2575,7 @@ document.addEventListener('change',e=>{if(e.target.id==='historyJump'&&F.isDate(
 document.getElementById('importFile').addEventListener('change',e=>importJSONFile(e.target.files?.[0]));
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal()});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.day-donut-sector')){e.preventDefault();updateDayChartSelection(e.target.dataset.dayChartCategory);return}if((e.key==='Enter'||e.key===' ')&&e.target.matches('.ring-slice')){e.preventDefault();updateChartSelection(e.target.dataset.chartCategory);return}if(e.key==='Enter'&&e.target.id==='txAmount'){e.preventDefault();if(F.parseAmount(e.target.value))void saveTx();return}const ov=document.getElementById('overlay');if(e.key==='Escape'){if(!ov.hidden){e.preventDefault();closeModal()}else if(view!=='dashboard'){e.preventDefault();navigateBack()}}if(e.key==='Tab'&&!ov.hidden){const els=Array.from(document.getElementById('modal').querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled)')).filter(x=>x.getClientRects().length);if(!els.length)return;const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
-function applyFontScale(){document.documentElement.style.setProperty('--font-scale',String(data.settings.fontScale))}
+function applyFontScale(){document.documentElement.style.setProperty('--font-scale',String(Math.round(data.settings.fontScale*1.12*1000)/1000))}
 // A blocked IndexedDB request must never prevent the dashboard from opening.
 function withStorageTimeout(task,ms,label){
  let timer;
