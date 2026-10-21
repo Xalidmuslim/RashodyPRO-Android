@@ -2036,7 +2036,7 @@ var FinCore = (function(){
       if(p && !p.children.length && !document.getElementById('startupNotice')){
         var m=document.createElement('div');m.id='startupNotice';
         m.style.cssText='margin:20px;padding:20px;border-radius:16px;background:#fff7ed;color:#263943;font:15px/1.5 system-ui;white-space:normal';
-        m.textContent='Приложение не смогло прочитать хранилище браузера. Попробуйте открыть файл в Chrome или Firefox. Не удаляйте резервную копию расходов.';
+        m.textContent='Приложение запускается слишком долго. Закройте и откройте его снова. Если экран не появился, сообщите об ошибке запуска; существующие расходы не удаляйте.';
         p.appendChild(m);
       }
     },5000);
@@ -2072,7 +2072,7 @@ const monthKey=d=>dateLocal(d).slice(0,7);
 const dateFromMonth=s=>new Date(+s.slice(0,4),+s.slice(5,7)-1,1);
 const newId=()=>typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():'t-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
 // Native integration: no visual changes. Browser retains its previous dual-storage behavior.
-const nativeAndroid=Boolean(window.Capacitor?.isNativePlatform?.() && window.Capacitor?.getPlatform?.()==='android');
+const nativeAndroid=Boolean(window.Capacitor?.isNativePlatform?.() || window.Capacitor?.getPlatform?.()==='android');
 function financeNative(){return window.Capacitor?.Plugins?.FinanceStorage||null}
 function registerAndroidBack(){
  if(!nativeAndroid)return;
@@ -2130,7 +2130,7 @@ function persist(){
  try{localStorage.setItem(STORAGE,snapshot);localOk=localStorage.getItem(STORAGE)===snapshot}catch(e){}
  const job=storageWriteQueue.catch(()=>{}).then(async()=>{
   let dbOk=false,nativeOk=false;
-  try{await writeBackupDB(snapshot);dbOk=true}catch(e){}
+  if(!nativeAndroid){try{await withStorageTimeout(writeBackupDB(snapshot),3500,'Запись IndexedDB');dbOk=true}catch(e){console.warn('Браузерная копия:',e)}}
   if(nativeAndroid){
     try{const plugin=financeNative();if(!plugin)throw new Error('FinanceStorage не зарегистрирован');await plugin.writeSnapshot({snapshot});nativeOk=true}catch(e){console.error('SQLite: запись не сохранена:',e)}
   }
@@ -2439,18 +2439,29 @@ document.getElementById('importFile').addEventListener('change',e=>importJSONFil
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal()});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.day-donut-sector')){e.preventDefault();updateDayChartSelection(e.target.dataset.dayChartCategory);return}if((e.key==='Enter'||e.key===' ')&&e.target.matches('.ring-slice')){e.preventDefault();updateChartSelection(e.target.dataset.chartCategory);return}if(e.key==='Enter'&&e.target.id==='txAmount'){e.preventDefault();if(F.parseAmount(e.target.value))void saveTx();return}const ov=document.getElementById('overlay');if(e.key==='Escape'){if(!ov.hidden){e.preventDefault();closeModal()}else if(view!=='dashboard'){e.preventDefault();navigateBack()}}if(e.key==='Tab'&&!ov.hidden){const els=Array.from(document.getElementById('modal').querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled)')).filter(x=>x.getClientRects().length);if(!els.length)return;const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 function applyFontScale(){document.documentElement.style.setProperty('--font-scale',String(data.settings.fontScale))}
+// A blocked IndexedDB request must never prevent the dashboard from opening.
+function withStorageTimeout(task,ms,label){
+ let timer;
+ return Promise.race([Promise.resolve(task),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label+' — превышено время ожидания')),ms)})]).finally(()=>clearTimeout(timer));
+}
 async function bootstrap(){
  let rawLocal=null,rawDB=null,rawNative=null,localReadable=true,dbReadable=true,nativeReadable=true;
  try{rawLocal=localStorage.getItem(STORAGE)}catch(e){localReadable=false}
- try{rawDB=await loadBackupDB()}catch(e){dbReadable=false}
  if(nativeAndroid){
-  try{const plugin=financeNative();if(!plugin)throw new Error('FinanceStorage plugin отсутствует');const result=await plugin.readSnapshot();rawNative=result?.snapshot??null}
-  catch(e){nativeReadable=false;console.error('Не удалось прочитать Android SQLite:',e)}
+  // APK reads SQLite first. Never wait for the WebView's IndexedDB on the native path.
+  try{
+   const plugin=financeNative();
+   if(!plugin)throw new Error('FinanceStorage plugin отсутствует');
+   const result=await withStorageTimeout(plugin.readSnapshot(),4500,'Чтение Android SQLite');
+   rawNative=result?.snapshot??null;
+  }catch(e){nativeReadable=false;console.error('Не удалось прочитать Android SQLite:',e)}
+ }else{
+  try{rawDB=await withStorageTimeout(loadBackupDB(),3500,'Чтение IndexedDB')}catch(e){dbReadable=false;console.warn('IndexedDB недоступна:',e)}
  }
  const validLocal=readSnapshot(rawLocal),validDB=readSnapshot(rawDB),validNative=readSnapshot(rawNative);
- // SQLite is the source of truth once populated. This avoids silently restoring stale WebView caches.
+ // Preserve verified SQLite data as authoritative. Do not overwrite a damaged or unreadable native DB.
  const chosen=(nativeAndroid&&validNative)?validNative:snapshotChoice(validLocal,validDB);
- if(nativeAndroid&&(!nativeReadable || (rawNative!==null&&!validNative)))recoveryLocked=true;
+ if(nativeAndroid&&(!nativeReadable||(rawNative!==null&&!validNative)))recoveryLocked=true;
  if(chosen){data=chosen.state;storageRevision=chosen.revision}
  else if(rawLocal!=null||rawDB!=null||rawNative!=null){
   recoveryLocked=true;
@@ -2465,11 +2476,23 @@ async function bootstrap(){
  const notice=document.getElementById('storageBanner'),content=document.getElementById('page');
  if(notice&&content&&notice.parentElement!==content.parentElement)content.before(notice);
  initNeutralAppearance();applyFontScale();initNavigation();registerAndroidBack();render();
- if(recoveryLocked)storageWarning('Не удалось проверить или восстановить основное хранилище. Автозапись заблокирована; экспортируйте JSON и проверьте базу.');
- else if(!nativeAndroid&&!localReadable&&!dbReadable){unsavedChanges=true;storageWarning('Хранилища браузера недоступны. Записи могут пропасть после закрытия! Скачайте JSON-копию.');}
- else await persist();
+ if(recoveryLocked){
+  storageWarning(nativeAndroid?'Не удалось проверить Android SQLite. Данные не перезаписаны. Попробуйте перезапустить приложение; перед сбросом сохраните резервную копию.':'Не удалось восстановить хранилище. Автозапись заблокирована, чтобы не потерять расходы.');
+ }else if(!nativeAndroid&&!localReadable&&!dbReadable){
+  unsavedChanges=true;
+  storageWarning('Хранилища браузера недоступны. Записи могут пропасть после закрытия! Скачайте JSON-копию.');
+ }else await persist();
 }
-bootstrap();
+bootstrap().catch(error=>{
+ console.error('Ошибка запуска Расходы PRO:',error);
+ recoveryLocked=true;
+ if(!data){data={transactions:[],settings:F.normalizeSettings({}),categories:mergeCategories([])}}
+ try{initNeutralAppearance();applyFontScale();render();storageWarning('Не удалось завершить запуск. Существующие данные не перезаписаны. Перезапустите приложение.')}catch(renderError){
+  console.error('Ошибка отрисовки:',renderError);
+  const page=document.getElementById('page');
+  if(page)page.textContent='Ошибка запуска интерфейса. Попробуйте закрыть и открыть приложение ещё раз. Данные не удаляйте.';
+ }
+});
 
 })();
 </script>
