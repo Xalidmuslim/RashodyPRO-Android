@@ -1935,6 +1935,13 @@ body.matte-editorial #page .studio-settings-title{margin-bottom:8px!important}
 body.matte-editorial .storage-banner[role=alert]{line-height:1.4}
 @media(max-width:370px){body.matte-editorial #page .r49-history-toolbar>.search{flex-basis:100%}body.matte-editorial #page .r49-history-toolbar>.r49-filter-btn{margin-left:auto}}
 
+
+/* Android 15/16 edge-to-edge: honor the system status bar inset.
+   Capacitor 8 SystemBars injects --safe-area-inset-top on affected WebViews.
+   The floor also covers older WebViews returning a zero safe-area inset. */
+html.rashody-native-android body.matte-editorial .shell {
+  padding-top: calc(max(var(--safe-area-inset-top, 0px), env(safe-area-inset-top, 0px), 26px) + 10px) !important;
+}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2073,6 +2080,7 @@ const dateFromMonth=s=>new Date(+s.slice(0,4),+s.slice(5,7)-1,1);
 const newId=()=>typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():'t-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
 // Native integration: no visual changes. Browser retains its previous dual-storage behavior.
 const nativeAndroid=Boolean(window.Capacitor?.isNativePlatform?.() || window.Capacitor?.getPlatform?.()==='android');
+if (nativeAndroid) document.documentElement.classList.add('rashody-native-android');
 function financeNative(){return window.Capacitor?.Plugins?.FinanceStorage||null}
 function registerAndroidBack(){
  if(!nativeAndroid)return;
