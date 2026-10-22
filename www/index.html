@@ -2094,6 +2094,24 @@ html.rashody-native-android .sheet #dialog-title:focus{outline:none}
    changing the page's overflow, height, or scroll coordinates. */
 html.rashody-native-android .overlay{overscroll-behavior:contain;touch-action:none}
 html.rashody-native-android .overlay .sheet{overscroll-behavior:contain;touch-action:pan-y}
+
+/* 1.0.7 native modal: fixed overlay, stable scroll position, opacity-only entry. */
+html.rashody-native-android .overlay:not([hidden]) {
+  position:fixed!important;inset:0!important;
+  overflow:hidden!important;
+  overscroll-behavior:contain!important;
+}
+html.rashody-native-android .overlay:not([hidden]) .sheet {
+  will-change:opacity;
+  transform:none!important;
+  transition-property:opacity,background-color!important;
+  transition-duration:220ms!important;
+  transition-timing-function:cubic-bezier(.2,0,.2,1)!important;
+}
+html.rashody-native-android .mobile-nav .fab:focus,
+html.rashody-native-android .mobile-nav .fab:active {
+  transform:none!important;
+}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2536,10 +2554,12 @@ function settings(){const c=data.settings;return `<div class="settings-grid"><se
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
 function openModal(){
  lastFocus=document.activeElement;
- if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
- // Native Android: do not focus an input or lock body overflow.
- // Either operation causes Android WebView to resize/clamp the page when '+' is tapped.
- if(nativeAndroid)lastFocus?.blur?.();
+ // Android uses the native backButton listener: pushing a browser history entry
+ // here can cause WebView to restore scroll and make the underlying screen jump.
+ // Also never shift focus on opening; focus can launch the Android keyboard.
+ if(!nativeAndroid && navReady){
+  try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}
+ }else if(nativeAndroid){modalHistoryOpen=false}
  const overlay=document.getElementById('overlay');
  overlay.hidden=false;
  const modal=document.getElementById('modal');
@@ -2568,7 +2588,7 @@ function closeModal(){
   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
   if(!nativeAndroid)document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
  }
- const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
+ const shouldBack=!nativeAndroid&&modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
 function startTx(type='expense',existing=null,preferredDay=null){txDraftBeforeCategory=null;if(type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён в настройках');const last=type==='expense'?sortTx(data.transactions.filter(t=>t.type==='expense'))[0]:null;draft=existing?{...existing}:{id:null,type,category:type==='income'?'salary':(last&&data.categories.some(c=>c.id===last.category&&c.type==='expense')?last.category:'food'),amount:'',note:'',date:preferredDay&&F.isDate(preferredDay)?preferredDay:dateLocal(),time:timeLocal()};renderTxModal();openModal()}
 function collectDraft(){if(!draft)return;const amount=document.getElementById('txAmount'),note=document.getElementById('txNote'),date=document.getElementById('txDate'),time=document.getElementById('txTime');if(amount)draft.amount=amount.value;if(note)draft.note=note.value;if(date)draft.date=date.value;if(time)draft.time=time.value}
