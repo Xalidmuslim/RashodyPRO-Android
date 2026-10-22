@@ -2084,10 +2084,14 @@ html.rashody-native-android body.matte-editorial .overlay:not([hidden])>.sheet {
 }
 html.rashody-native-android body.matte-editorial .overlay:not([hidden]) .tx-amount-block,
 html.rashody-native-android body.matte-editorial #page {overflow-anchor:none;}
-/* Maintain background scroll position as IME opens, without moving the page. */
-html.rashody-native-android body.matte-editorial.r105-modal-locked {
-  position:fixed!important;left:0!important;right:0!important;width:100%!important;
-  overflow:hidden!important;overscroll-behavior:contain!important;
+/* Keep document geometry stable: block backdrop gestures, not the body. */
+html.rashody-native-android body.matte-editorial .overlay:not([hidden]){
+  touch-action:none!important;
+  overscroll-behavior:contain!important;
+}
+html.rashody-native-android body.matte-editorial .overlay:not([hidden])>.sheet{
+  touch-action:pan-y!important;
+  overscroll-behavior:contain!important;
 }
 html.rashody-native-android body.matte-editorial .overlay:not([hidden]) .sheet {
   overscroll-behavior:contain!important;touch-action:pan-y!important;
@@ -2521,37 +2525,36 @@ function analytics(){
 }
 function settings(){const c=data.settings;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Добавить категорию</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><button class="mini-action" data-action="load-demo">${svg('spark',16)} Загрузить пример данных</button><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 4.9 · Matte Stable · Локальные данные</p>`}
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
-let r105PageY=0;
 function openModal(){
  lastFocus=document.activeElement;
  if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
- r105PageY=window.scrollY;
- // Save the exact scroll offset. When Android opens the IME, the WebView viewport
- // changes height; fixed body prevents the screen behind the sheet from jumping.
- if(nativeAndroid){
-   document.body.classList.add('r105-modal-locked');
-   document.body.style.top=`-${r105PageY}px`;
- }else document.body.style.overflow='hidden';
- document.getElementById('overlay').hidden=false;
+ // Keep the background document in its original scroll position.
+ // A fixed body + a forced Android keyboard used to shift the viewport on tap.
+ const overlay=document.getElementById('overlay');
+ if(!nativeAndroid)document.body.style.overflow='hidden';
+ overlay.hidden=false;
  const modal=document.getElementById('modal');
- const input=modal.classList.contains('tx-sheet')?document.getElementById('txAmount'):
-   modal.classList.contains('cat-sheet')?document.getElementById('catName'):
-   modal.querySelector('input:not([type=hidden]),button');
- // Focus synchronously inside the original tap handler, not in requestAnimationFrame.
- // Deferred focus can be ignored by Android WebView's user-gesture/IME policy.
- input?.focus({preventScroll:true});
- if(nativeAndroid&&input?.id==='txAmount'){
-   const plugin=financeNative();
-   plugin?.showAmountKeyboard?.().catch(e=>console.warn('Android IME:',e));
+ if(nativeAndroid){
+   // Focus the dialog for accessibility, without triggering the IME.
+   // The amount input receives focus naturally when the user taps it.
+   modal.setAttribute('tabindex','-1');
+   modal.focus({preventScroll:true});
+ }else{
+   const input=modal.classList.contains('tx-sheet')?document.getElementById('txAmount'):
+     modal.classList.contains('cat-sheet')?document.getElementById('catName'):
+     modal.querySelector('input:not([type=hidden]),button');
+   input?.focus({preventScroll:true});
  }
 }
 function hideModal(){
- document.getElementById('overlay').hidden=true;
- if(document.body.classList.contains('r105-modal-locked')){
-   document.body.classList.remove('r105-modal-locked');document.body.style.top='';
-   window.scrollTo({top:r105PageY,behavior:'instant'});
- }else document.body.style.overflow='';
- draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet');
+ const overlay=document.getElementById('overlay');
+ const modal=document.getElementById('modal');
+ if(nativeAndroid&&modal.contains(document.activeElement)&&document.activeElement!==modal)
+   document.activeElement.blur();
+ overlay.hidden=true;
+ if(!nativeAndroid)document.body.style.overflow='';
+ // Do not reset window.scrollY on close. The background never moved.
+ draft=null;catDraft=null;modal.classList.remove('tx-sheet','cat-sheet');
  modalHistoryOpen=false;if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
 }
 function closeModal(){
