@@ -25,6 +25,13 @@ if(fs.existsSync(manifest)){
  let xml=fs.readFileSync(manifest,'utf8');
  if(/android:allowBackup="[^"]*"/.test(xml))xml=xml.replace(/android:allowBackup="[^"]*"/,'android:allowBackup="false"');
  else xml=xml.replace(/<application\b/,'<application android:allowBackup="false"');
+ // No Activity resize/pan when the Android IME opens: expense modal stays steady.
+ // Keyboard overlays the lower part of the sheet, while amount input remains visible.
+ xml=xml.replace(/<activity\\b[^>]*>/s,tag=>{
+   if(/android:windowSoftInputMode="[^"]*"/.test(tag))return tag.replace(/android:windowSoftInputMode="[^"]*"/,'android:windowSoftInputMode="adjustNothing"');
+   return tag.replace('<activity','<activity android:windowSoftInputMode="adjustNothing"');
+ });
+ if(!xml.includes('android:windowSoftInputMode="adjustNothing"'))throw Error('Could not set Android soft input mode');
  fs.writeFileSync(manifest,xml,'utf8');
  console.log('Android automatic data backup disabled (manual JSON backup enabled).');
 }
