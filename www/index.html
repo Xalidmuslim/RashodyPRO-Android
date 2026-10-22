@@ -1936,22 +1936,22 @@ body.matte-editorial .storage-banner[role=alert]{line-height:1.4}
 @media(max-width:370px){body.matte-editorial #page .r49-history-toolbar>.search{flex-basis:100%}body.matte-editorial #page .r49-history-toolbar>.r49-filter-btn{margin-left:auto}}
 
 
-/* Android 15/16 edge-to-edge: honor the system status bar inset.
-   Capacitor 8 SystemBars injects --safe-area-inset-top on affected WebViews.
-   The floor also covers older WebViews returning a zero safe-area inset. */
+/* Android 15/16 edge-to-edge: keep the dashboard below the real status bar.
+   Capacitor 8 SystemBars injects --safe-area-inset-top for older WebViews.
+   The 26px floor covers WebViews incorrectly reporting a zero inset. */
 html.rashody-native-android body.matte-editorial .shell {
   padding-top: calc(max(var(--safe-area-inset-top, 0px), env(safe-area-inset-top, 0px), 26px) + 10px) !important;
 }
 
-/* 1.0.3 — Stable chart layout, readable text and non-bouncing navigation. */
-html{scroll-behavior:auto!important}
-body.matte-editorial #page .analytics-trend-panel{min-width:0!important;overflow:hidden!important}
-body.matte-editorial #page .r103-plot{
+/* v1.0.3 · Functional chart geometry and stable touch motion (no redesign). */
+html {scroll-behavior:auto!important;}
+body.matte-editorial #page .analytics-trend-panel {min-width:0!important;overflow:hidden!important;}
+body.matte-editorial #page .r103-plot {
  display:grid!important;grid-template-columns:46px minmax(0,1fr)!important;
- column-gap:8px!important;align-items:start!important;margin-top:12px!important;
- padding:1px 0 0!important;width:100%;overflow:hidden;
+ column-gap:8px!important;align-items:start!important;
+ margin-top:12px!important;padding:1px 0 0!important;width:100%;overflow:hidden;
 }
-body.matte-editorial #page .r103-plot .studio-bar-axis{
+body.matte-editorial #page .r103-plot .studio-bar-axis {
  position:static!important;inset:auto!important;top:auto!important;left:auto!important;
  width:46px!important;height:156px!important;min-height:156px!important;
  margin:0!important;padding:0 0 0 1px!important;
@@ -1961,92 +1961,87 @@ body.matte-editorial #page .r103-plot .studio-bar-axis{
  overflow:visible!important;pointer-events:none!important;
 }
 body.matte-editorial #page .r103-plot .studio-trend-bars,
-body.matte-editorial #page .r103-plot .studio-trend-bars.dense{
+body.matte-editorial #page .r103-plot .studio-trend-bars.dense {
  display:grid!important;margin:0!important;padding:0!important;min-height:0!important;
  height:191px!important;width:100%!important;max-width:100%!important;
  align-items:start!important;overflow:hidden!important;gap:2px!important;
  grid-template-columns:repeat(8,minmax(0,1fr))!important;
- background-size:100% 156px!important;background-position:0 0!important;
+ background-size:100% 156px!important;
+ background-position:0 0!important;
 }
-body.matte-editorial #page .r103-plot .studio-trend-bars.dense{
- grid-template-columns:repeat(31,minmax(0,1fr))!important;padding:0 7px!important;
+body.matte-editorial #page .r103-plot .studio-trend-bars.dense {
+ grid-template-columns:repeat(31,minmax(0,1fr))!important;
 }
-body.matte-editorial #page .r103-plot .studio-trend-bars .compare-col{
+body.matte-editorial #page .r103-plot .studio-trend-bars .compare-col {
  min-height:0!important;height:190px!important;padding:0!important;
  display:grid!important;grid-template-rows:156px 30px!important;
  align-content:start!important;gap:3px!important;overflow:visible!important;
  background:transparent!important;transform:none!important;
 }
-body.matte-editorial #page .r103-plot .studio-trend-bars .compare-track{
+body.matte-editorial #page .r103-plot .studio-trend-bars .compare-track {
  box-sizing:border-box!important;height:156px!important;min-height:156px!important;
  padding:0 1px!important;overflow:hidden!important;display:flex!important;
- align-items:flex-end!important;justify-content:center!important;flex-direction:row!important;
+ align-items:flex-end!important;justify-content:center!important;
+ flex-direction:row!important;
 }
-body.matte-editorial #page .r103-plot .studio-trend-bars .compare-stick{
+body.matte-editorial #page .r103-plot .studio-trend-bars .compare-stick {
  display:block!important;max-height:100%!important;min-height:0!important;
  width:min(95%,28px)!important;flex:none!important;transform:none!important;
  transition:background-color .18s ease,opacity .18s ease!important;
 }
-body.matte-editorial #page .r103-plot .studio-trend-bars .compare-label{
+body.matte-editorial #page .r103-plot .studio-trend-bars .compare-label {
  display:block!important;height:30px!important;line-height:22px!important;
  margin:0!important;padding:0!important;overflow:hidden!important;
  text-overflow:clip!important;white-space:nowrap!important;
- font-size:calc(10px * var(--font-scale,1))!important;text-align:center!important;
+ font-size:calc(10px * var(--font-scale,1))!important;
+ text-align:center!important;
 }
-body.matte-editorial #page .r103-plot .studio-trend-bars.dense .compare-label{
+body.matte-editorial #page .r103-plot .studio-trend-bars.dense {padding:0 7px!important;}
+body.matte-editorial #page .r103-plot .studio-trend-bars.dense .compare-label {
  width:max-content!important;max-width:none!important;overflow:visible!important;
  position:relative!important;left:50%!important;transform:translateX(-50%)!important;
 }
+/* Avoid selected-card zoom, translating content, and bounce when changing tabs. */
 body.matte-editorial .shell,body.matte-editorial .workspace,
 body.matte-editorial #page,body.matte-editorial #page .panel,
 body.matte-editorial #page .compare-col,body.matte-editorial #page .color-category-card,
-body.matte-editorial .mobile-nav button{scroll-behavior:auto!important}
+body.matte-editorial .mobile-nav button {scroll-behavior:auto!important;}
 body.matte-editorial #page .compare-col:active,
 body.matte-editorial #page .color-category-card:active,
 body.matte-editorial #page .week-day:active,
-body.matte-editorial .mobile-nav button:active{transform:none!important}
+body.matte-editorial .mobile-nav button:active {transform:none!important;}
 body.matte-editorial .mobile-nav button,
 body.matte-editorial #page .trend-mode-toggle button,
 body.matte-editorial #page .period-toggle button,
 body.matte-editorial #page .week-day,
-body.matte-editorial #page .r49-filter-btn{
+body.matte-editorial #page .r49-filter-btn {
  transition:background-color .18s ease,color .18s ease,opacity .18s ease!important;
 }
-body.matte-editorial #modal .r103-add-category{
- display:inline-flex!important;gap:5px!important;align-items:center!important;
- justify-content:center!important;background:#E7F0ED!important;color:#285F5D!important;
- border:0!important;border-radius:11px!important;padding:8px 10px!important;
- margin-left:auto!important;font-size:calc(11px * var(--font-scale,1))!important;
- min-height:39px!important;max-width:100%!important;white-space:nowrap!important;
+body.matte-editorial #modal .r103-add-category {
+ display:inline-flex!important;gap:5px!important;align-items:center!important;justify-content:center!important;
+ background:#E7F0ED!important;color:#285F5D!important;border:0!important;
+ border-radius:11px!important;padding:8px 10px!important;margin-left:auto!important;
+ font-size:calc(11px * var(--font-scale,1))!important;min-height:39px!important;
+ max-width:100%!important;white-space:nowrap!important;
 }
-body.matte-editorial #modal .r103-add-category svg{width:16px;height:16px;flex:none}
-body.matte-editorial #modal .tx-section-title{
- display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:wrap!important;
-}
-body.matte-editorial #modal .tx-section-title .tx-selected-category{
- margin-left:0!important;min-width:0!important;
-}
+body.matte-editorial #modal .r103-add-category svg {width:16px;height:16px;flex:none;}
+body.matte-editorial #modal .tx-section-title {display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:wrap!important;}
+body.matte-editorial #modal .tx-section-title .tx-selected-category {margin-left:0!important;min-width:0!important;}
 body.matte-editorial #page .record-meta,
 body.matte-editorial #page .section-caption,
 body.matte-editorial #page .setting-expl,
-body.matte-editorial .mobile-nav button span{
- font-size:max(11.5px,calc(10.5px * var(--font-scale,1)))!important;
-}
+body.matte-editorial .mobile-nav button span {font-size:max(11.5px,calc(10.5px * var(--font-scale,1)))!important;}
 @media(max-width:365px){
- body.matte-editorial #page .r103-plot{grid-template-columns:41px minmax(0,1fr)!important;gap:5px!important}
- body.matte-editorial #page .r103-plot .studio-bar-axis{
- width:41px!important;font-size:calc(9.5px * var(--font-scale,1))!important;
- }
- body.matte-editorial #modal .r103-add-category{
- font-size:calc(10px * var(--font-scale,1))!important;padding:7px 8px!important;
- }
+ body.matte-editorial #page .r103-plot {grid-template-columns:41px minmax(0,1fr)!important;gap:5px!important;}
+ body.matte-editorial #page .r103-plot .studio-bar-axis {width:41px!important;font-size:calc(9.5px * var(--font-scale,1))!important;}
+ body.matte-editorial #modal .r103-add-category {font-size:calc(10px * var(--font-scale,1))!important;padding:7px 8px!important;}
 }
 @media(prefers-reduced-motion:reduce){
  body.matte-editorial .mobile-nav button,body.matte-editorial #page .trend-mode-toggle button,
  body.matte-editorial #page .period-toggle button,body.matte-editorial #page .week-day,
- body.matte-editorial #page .r49-filter-btn,
- body.matte-editorial #page .r103-plot .compare-stick{transition:none!important}
+ body.matte-editorial #page .r49-filter-btn,body.matte-editorial #page .r103-plot .compare-stick {transition:none!important;}
 }
+
 
 /* r104-motion: smooth, non-displacing native transitions. */
 html.rashody-native-android body.matte-editorial :is(button, .week-day, .navitem, .trend-card, .legend-line, .color-category-card, .feature-link, .mobile-nav .fab, .icon-btn):active,
@@ -2073,49 +2068,37 @@ html.rashody-native-android .workspace>.storage-banner.r104-compact-error .stora
 html.rashody-native-android .workspace>.storage-banner.r104-compact-error #storageBannerText {font-size:12px!important;}
 @media(prefers-reduced-motion:reduce){html.rashody-native-android body.matte-editorial *{transition:none!important;animation:none!important}}
 
-/* 1.0.5 — stable Android navigation: no browser scroll anchoring or entrance translations. */
-html.rashody-native-android, html.rashody-native-android body,
-html.rashody-native-android #page {scroll-behavior:auto!important;overflow-anchor:none;}
-html.rashody-native-android #page {position:relative;min-width:0;}
-html.rashody-native-android body.matte-editorial #page > * {animation:none!important;}
-
-/* Android expense sheet: fade in without bouncing or changing its layout. */
-@keyframes rashody106Fade{from{opacity:0}to{opacity:1}}
-html.rashody-native-android .overlay:not([hidden]) .sheet {
- animation:rashody106Fade 210ms cubic-bezier(.2,0,.2,1) both!important;
- transform:none!important;
+/* r105-medicine-motion: WebView adaptation of Medicine Smooth Motion
+   (reference Compose durations: fade-in 205ms, fade-out 165ms,
+   FastOutSlowInEasing; no page displacement or spring transforms). */
+@keyframes r105-soft-enter { from {opacity:.36} to {opacity:1} }
+html.rashody-native-android body.matte-editorial .overlay:not([hidden]) {
+  animation:r105-soft-enter 205ms cubic-bezier(.4,0,.2,1) both!important;
+  backdrop-filter:none!important;
 }
-html.rashody-native-android .sheet #dialog-title:focus{outline:none}
+html.rashody-native-android body.matte-editorial .overlay:not([hidden])>.sheet {
+  animation:r105-soft-enter 205ms cubic-bezier(.4,0,.2,1) both!important;
+  transform:none!important;
+  transition-property:none!important;
+  scroll-behavior:auto!important;
+}
+html.rashody-native-android body.matte-editorial .overlay:not([hidden]) .tx-amount-block,
+html.rashody-native-android body.matte-editorial #page {overflow-anchor:none;}
+/* Maintain background scroll position as IME opens, without moving the page. */
+html.rashody-native-android body.matte-editorial.r105-modal-locked {
+  position:fixed!important;left:0!important;right:0!important;width:100%!important;
+  overflow:hidden!important;overscroll-behavior:contain!important;
+}
+html.rashody-native-android body.matte-editorial .overlay:not([hidden]) .sheet {
+  overscroll-behavior:contain!important;touch-action:pan-y!important;
+}
+html.rashody-native-android body.matte-editorial :is(.fab,.week-day,.panel,.trend-card,.day-ledger,.feature-day,.mobile-nav button,.tx-check):active {
+  transform:none!important;
+}
 @media (prefers-reduced-motion:reduce){
- html.rashody-native-android .overlay:not([hidden]) .sheet{animation:none!important}
+  html.rashody-native-android body.matte-editorial .overlay:not([hidden]),
+  html.rashody-native-android body.matte-editorial .overlay:not([hidden])>.sheet {animation:none!important;}
 }
-
-/* Native modal remains a fixed sheet. Prevent scroll chaining without
-   changing the page's overflow, height, or scroll coordinates. */
-html.rashody-native-android .overlay{overscroll-behavior:contain;touch-action:none}
-html.rashody-native-android .overlay .sheet{overscroll-behavior:contain;touch-action:pan-y}
-
-/* 1.0.7 native modal: fixed overlay, stable scroll position, opacity-only entry. */
-html.rashody-native-android .overlay:not([hidden]) {
-  position:fixed!important;inset:0!important;
-  overflow:hidden!important;
-  overscroll-behavior:contain!important;
-}
-html.rashody-native-android .overlay:not([hidden]) .sheet {
-  will-change:opacity;
-  transform:none!important;
-  transition-property:opacity,background-color!important;
-  transition-duration:220ms!important;
-  transition-timing-function:cubic-bezier(.2,0,.2,1)!important;
-}
-html.rashody-native-android .mobile-nav .fab:focus,
-html.rashody-native-android .mobile-nav .fab:active {
-  transform:none!important;
-}
-
-/* Android: remove expensive backdrop compositing and FAB focus shifts on sheet open. */
-html.rashody-native-android .overlay{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
-html.rashody-native-android .mobile-nav .fab:focus{transform:none!important;}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2291,6 +2274,7 @@ async function writeBackupDB(value){const db=await openStorageDB();try{await new
 function storageWarning(message){const el=document.getElementById('storageBanner');if(!el)return;const partial=!!message&&message.startsWith('Данные записаны только в одно хранилище');el.hidden=!message||(partial&&storagePartialDismissed);if(message)document.getElementById('storageBannerText').textContent=message;const reset=document.getElementById('storageReset');if(reset)reset.hidden=!recoveryLocked;const dismiss=document.getElementById('storageDismiss');if(dismiss)dismiss.hidden=!partial;
  if(nativeAndroid){
    el.classList.toggle('r104-compact-error',!!message);
+   // Never offer destructive reset when a native database may still contain expenses.
    if(reset)reset.hidden=true;
    const exportAction=el.querySelector('[data-action="export-json"]');
    if(exportAction)exportAction.hidden=!!message&&!!recoveryLocked&&!(data?.transactions?.length);
@@ -2398,48 +2382,29 @@ function summaryMoney(n){
 function axisMoney(n){const v=F.money(Number(n)||0);if(v<10000)return currencyFormat.format(v);const x=v>=1e12?[1e12,'трлн']:v>=1e9?[1e9,'млрд']:v>=1e6?[1e6,'м']:v>=1e3?[1e3,'к']:[1,''];return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:v/x[0]>100?0:1}).format(v/x[0])+x[1]}
 function currentSummary(){return F.summarizeMonth(data.transactions,monthKey(month))}
 function navData(){return [['dashboard','Обзор','dashboard'],['transactions','Операции','transactions'],['analytics','Аналитика','analytics'],['settings','Настройки','settings']]}
-function renderNav(){
- const sidebar=document.getElementById('sidebar');
- const mobile=document.getElementById('mobile-nav');
- if(!mobile.hasChildNodes()){
- sidebar.innerHTML=`<div class="brand"><div class="brand-mark">${svg('wallet',24)}</div><div><div class="brand-label">расходы<span >.</span></div><div class="brand-tag">ЛИЧНЫЕ ФИНАНСЫ</div></div></div><div class="navlist">${navData().map(([id,label,ico])=>`<button class="navitem ${view===id?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${svg(ico,21)}<span>${label}</span></button>`).join('')}</div><button type="button" class="sidebar-add" data-action="new-expense">${svg('plus',18)} Добавить расход</button><div class="sidebar-foot">${svg('shield',14)} Данные хранятся только<br>на вашем устройстве.</div>`;
+function renderNav(){document.getElementById('sidebar').innerHTML=`<div class="brand"><div class="brand-mark">${svg('wallet',24)}</div><div><div class="brand-label">расходы<span >.</span></div><div class="brand-tag">ЛИЧНЫЕ ФИНАНСЫ</div></div></div><div class="navlist">${navData().map(([id,label,ico])=>`<button class="navitem ${view===id?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${svg(ico,21)}<span>${label}</span></button>`).join('')}</div><button type="button" class="sidebar-add" data-action="new-expense">${svg('plus',18)} Добавить расход</button><div class="sidebar-foot">${svg('shield',14)} Данные хранятся только<br>на вашем устройстве.</div>`;
  const tabs=['dashboard','transactions','new','analytics','settings'];const labels={dashboard:'Обзор',transactions:'История',analytics:'Аналитика',settings:'Настройки'};
- mobile.innerHTML=tabs.map(id=>id==='new'?`<button class="fab" data-action="new-expense" aria-label="Добавить операцию">${svg('plus',27)}</button>`:`<button class="${view===id||(id==='analytics'&&view==='analytics')?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${svg(id==='transactions'?'transactions':id,20)}<span>${labels[id]}</span></button>`).join('');
- }
- // Keep the native navigation controls mounted, preserving focus and avoiding repaint jumps.
- for(const button of [...sidebar.querySelectorAll('[data-view]'),...mobile.querySelectorAll('[data-view]')]){
-  const active=button.dataset.view===view;
-  button.classList.toggle('active',active);
-  if(active)button.setAttribute('aria-current','page');
-  else button.removeAttribute('aria-current');
- }
+ document.getElementById('mobile-nav').innerHTML=tabs.map(id=>id==='new'?`<button class="fab" data-action="new-expense" aria-label="Добавить операцию">${svg('plus',27)}</button>`:`<button class="${view===id||(id==='analytics'&&view==='analytics')?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${svg(id==='transactions'?'transactions':id,20)}<span>${labels[id]}</span></button>`).join('');
 }
 function renderTop(){let heading=view==='dashboard'?'':view==='transactions'?'История':view==='analytics'?'Аналитика':'Настройки';document.getElementById('topbar').className=`topbar ${view==='dashboard'?'dashboard-topbar':'subpage-topbar'}`;document.getElementById('topbar').innerHTML=(view==='dashboard'||view==='analytics')?'':`<div class="topbar-heading"><button class="icon-btn screen-back" data-action="navigate-back" aria-label="Назад">${svg('chevronLeft',22)}</button><div><div class="topline">ФИНАНСОВЫЙ ДНЕВНИК</div><h1>${heading}</h1></div></div><div class="topbar-right">${view==='transactions'?`<button type="button" class="header-csv" data-action="export-csv" aria-label="Экспортировать операции в CSV">${svg('download',16)}<span>CSV</span></button>`:''}<button class="primary-btn add-desktop" data-action="new-expense">${svg('plus',17)} Добавить</button></div>`}
-function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();const originalY=window.scrollY;document.getElementById('page').innerHTML=html;
- if(originalY>0)window.scrollTo({top:originalY,behavior:'instant'});
-}
+function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;}
 function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
  const content=document.getElementById('page');
- if(content?.animate)content.animate([{opacity:.78},{opacity:1}],{duration:225,easing:'cubic-bezier(.2,0,.2,1)'});
+ if(content?.animate)content.animate([{opacity:.45},{opacity:1}],{duration:205,easing:'cubic-bezier(.4,0,.2,1)'});
 }
 function navState(v,guard=true,modal=false){return {__rashodyNavV3:true,view:v,guard,modal}}
-function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}
- try{history.replaceState(navState('dashboard',false),'');history.pushState(navState('dashboard'),'');navReady=true}catch(e){console.info('История недоступна:',e.message)}
- window.addEventListener('popstate',ev=>{const state=ev.state;if(!document.getElementById('overlay').hidden)hideModal();
-  if(state?.__rashodyNavV3&&!state.guard){try{history.pushState(navState('dashboard'),'')}catch(e){}}
-  const target=state?.__rashodyNavV3?(state.guard?state.view:'dashboard'):'dashboard';
-  if(view!==target){
-   // Reset scroll on the outgoing page, before replacing its DOM, to avoid WebView height-clamp bounce.
-   scrollTop();view=target;render();softNavEnter();
-  }
+function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}try{history.replaceState(navState('dashboard',false),'');history.pushState(navState('dashboard'),'');navReady=true}catch(e){console.info('История недоступна:',e.message)}
+ window.addEventListener('popstate',ev=>{const state=ev.state;if(!document.getElementById('overlay').hidden){hideModal()}
+  if(state?.__rashodyNavV3){if(view!==state.view){view=state.view;render();scrollTop();softNavEnter()}if(!state.guard){try{history.pushState(navState('dashboard'),'')}catch(e){}view='dashboard';render();scrollTop();softNavEnter()}}
+  else if(view!=='dashboard'){view='dashboard';render();scrollTop();softNavEnter()}
  });
  let edge=null;document.addEventListener('touchstart',e=>{if(nativeAndroid)return;if(e.touches.length!==1){edge=null;return}const t=e.touches[0];edge=t.clientX<=34?{x:t.clientX,y:t.clientY,when:Date.now()}:null},{passive:true});
  document.addEventListener('touchend',e=>{if(nativeAndroid||!edge||e.changedTouches.length!==1)return;const p=e.changedTouches[0],dx=p.clientX-edge.x,dy=Math.abs(p.clientY-edge.y);if(dx>85&&dx>dy*1.4&&Date.now()-edge.when<750)navigateBack();edge=null},{passive:true});
 }
-function go(v){if(v===view)return;if(!['dashboard','transactions','analytics','settings'].includes(v))return;scrollTop();view=v;if(navReady){try{history.pushState(navState(v),'')}catch(e){}}render();softNavEnter()}
-function navigateBack(){if(!document.getElementById('overlay').hidden){closeModal();return}if(view==='dashboard')return;if(navReady){history.back()}else{scrollTop();view='dashboard';render();softNavEnter()}}
+function go(v){if(v===view)return;if(!['dashboard','transactions','analytics','settings'].includes(v))return;view=v;if(navReady){try{history.pushState(navState(v),'')}catch(e){}}render();scrollTop();softNavEnter()}
+function navigateBack(){if(!document.getElementById('overlay').hidden){closeModal();return}if(view==='dashboard')return;if(navReady){history.back()}else{view='dashboard';render();scrollTop();softNavEnter()}}
 function compactMoney(n){const value=F.money(Number(n)||0);if(value>=1e6){const out=Math.round(value/1e5)/10;return String(out).replace(/\.0$/,'')+' млн'}if(value>=1e3){const out=Math.round(value/100)/10;return String(out).replace(/\.0$/,'')+'к'}return currencyFormat.format(value)}
 function monthExpenseMap(items){const map={};for(const t of items){if(t.type==='expense')map[t.date]=F.money((map[t.date]||0)+t.amount)}return map}
 function weekRangeFor(dateStr){const base=new Date(dateStr+'T12:00:00');const mondayOffset=(base.getDay()+6)%7;const start=new Date(base);start.setDate(base.getDate()-mondayOffset);return Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return dateLocal(d)})}
@@ -2556,62 +2521,46 @@ function analytics(){
 }
 function settings(){const c=data.settings;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Добавить категорию</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><button class="mini-action" data-action="load-demo">${svg('spark',16)} Загрузить пример данных</button><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 4.9 · Matte Stable · Локальные данные</p>`}
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
-let nativeModalBackgroundY=0;
+let r105PageY=0;
 function openModal(){
  lastFocus=document.activeElement;
- // Blur the fixed plus button before opening: Android WebView otherwise can
- // scroll the background to its focused element during the sheet appearance.
+ if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
+ r105PageY=window.scrollY;
+ // Save the exact scroll offset. When Android opens the IME, the WebView viewport
+ // changes height; fixed body prevents the screen behind the sheet from jumping.
  if(nativeAndroid){
-   nativeModalBackgroundY=window.scrollY;
-   if(lastFocus&&lastFocus!==document.body&&typeof lastFocus.blur==='function')lastFocus.blur();
- }
- // Android uses the native backButton listener: pushing a browser history entry
- // here can cause WebView to restore scroll and make the underlying screen jump.
- // Also never shift focus on opening; focus can launch the Android keyboard.
- if(!nativeAndroid && navReady){
-  try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}
- }else if(nativeAndroid){modalHistoryOpen=false}
- const overlay=document.getElementById('overlay');
- overlay.hidden=false;
+   document.body.classList.add('r105-modal-locked');
+   document.body.style.top=`-${r105PageY}px`;
+ }else document.body.style.overflow='hidden';
+ document.getElementById('overlay').hidden=false;
  const modal=document.getElementById('modal');
- modal.scrollTop=0;
- if(nativeAndroid){
-   const heldY=nativeModalBackgroundY;
-   requestAnimationFrame(()=>{
-     if(!overlay.hidden&&Math.abs(window.scrollY-heldY)>1)window.scrollTo(0,heldY);
-   });
-   return;
+ const input=modal.classList.contains('tx-sheet')?document.getElementById('txAmount'):
+   modal.classList.contains('cat-sheet')?document.getElementById('catName'):
+   modal.querySelector('input:not([type=hidden]),button');
+ // Focus synchronously inside the original tap handler, not in requestAnimationFrame.
+ // Deferred focus can be ignored by Android WebView's user-gesture/IME policy.
+ input?.focus({preventScroll:true});
+ if(nativeAndroid&&input?.id==='txAmount'){
+   const plugin=financeNative();
+   plugin?.showAmountKeyboard?.().catch(e=>console.warn('Android IME:',e));
  }
- document.body.style.overflow='hidden';
- requestAnimationFrame(()=>{
-  if(overlay.hidden)return;
-  const heading=document.getElementById('dialog-title');
-  if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
- });
 }
 function hideModal(){
- const modal=document.getElementById('modal');
- if(nativeAndroid&&modal?.contains(document.activeElement))document.activeElement.blur?.();
  document.getElementById('overlay').hidden=true;
- if(nativeAndroid){
-   const heldY=nativeModalBackgroundY;
-   requestAnimationFrame(()=>{
-     if(Math.abs(window.scrollY-heldY)>1)window.scrollTo(0,heldY);
-   });
- }
- if(!nativeAndroid)document.body.style.overflow='';
- draft=null;catDraft=null;
- modal.classList.remove('tx-sheet','cat-sheet');
- modalHistoryOpen=false;
- if(!nativeAndroid&&lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
+ if(document.body.classList.contains('r105-modal-locked')){
+   document.body.classList.remove('r105-modal-locked');document.body.style.top='';
+   window.scrollTo({top:r105PageY,behavior:'instant'});
+ }else document.body.style.overflow='';
+ draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet');
+ modalHistoryOpen=false;if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
 }
 function closeModal(){
  if(catDraft&&txDraftBeforeCategory){
   draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
-  if(!nativeAndroid)document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
+  document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
  }
- const shouldBack=!nativeAndroid&&modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
+ const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
 function startTx(type='expense',existing=null,preferredDay=null){txDraftBeforeCategory=null;if(type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён в настройках');const last=type==='expense'?sortTx(data.transactions.filter(t=>t.type==='expense'))[0]:null;draft=existing?{...existing}:{id:null,type,category:type==='income'?'salary':(last&&data.categories.some(c=>c.id===last.category&&c.type==='expense')?last.category:'food'),amount:'',note:'',date:preferredDay&&F.isDate(preferredDay)?preferredDay:dateLocal(),time:timeLocal()};renderTxModal();openModal()}
 function collectDraft(){if(!draft)return;const amount=document.getElementById('txAmount'),note=document.getElementById('txNote'),date=document.getElementById('txDate'),time=document.getElementById('txTime');if(amount)draft.amount=amount.value;if(note)draft.note=note.value;if(date)draft.date=date.value;if(time)draft.time=time.value}
