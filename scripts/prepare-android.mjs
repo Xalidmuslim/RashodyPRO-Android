@@ -27,7 +27,7 @@ if(fs.existsSync(manifest)){
  else xml=xml.replace(/<application\b/,'<application android:allowBackup="false"');
  // No Activity resize/pan when the Android IME opens: expense modal stays steady.
  // Keyboard overlays the lower part of the sheet, while amount input remains visible.
- xml=xml.replace(/<activity\\b[^>]*>/s,tag=>{
+ xml=xml.replace(/<activity\b[^>]*>/s,tag=>{
    if(/android:windowSoftInputMode="[^"]*"/.test(tag))return tag.replace(/android:windowSoftInputMode="[^"]*"/,'android:windowSoftInputMode="adjustNothing"');
    return tag.replace('<activity','<activity android:windowSoftInputMode="adjustNothing"');
  });
