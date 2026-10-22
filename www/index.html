@@ -2112,6 +2112,10 @@ html.rashody-native-android .mobile-nav .fab:focus,
 html.rashody-native-android .mobile-nav .fab:active {
   transform:none!important;
 }
+
+/* Android: remove expensive backdrop compositing and FAB focus shifts on sheet open. */
+html.rashody-native-android .overlay{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+html.rashody-native-android .mobile-nav .fab:focus{transform:none!important;}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2552,8 +2556,15 @@ function analytics(){
 }
 function settings(){const c=data.settings;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Добавить категорию</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><button class="mini-action" data-action="load-demo">${svg('spark',16)} Загрузить пример данных</button><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 4.9 · Matte Stable · Локальные данные</p>`}
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
+let nativeModalBackgroundY=0;
 function openModal(){
  lastFocus=document.activeElement;
+ // Blur the fixed plus button before opening: Android WebView otherwise can
+ // scroll the background to its focused element during the sheet appearance.
+ if(nativeAndroid){
+   nativeModalBackgroundY=window.scrollY;
+   if(lastFocus&&lastFocus!==document.body&&typeof lastFocus.blur==='function')lastFocus.blur();
+ }
  // Android uses the native backButton listener: pushing a browser history entry
  // here can cause WebView to restore scroll and make the underlying screen jump.
  // Also never shift focus on opening; focus can launch the Android keyboard.
@@ -2564,7 +2575,13 @@ function openModal(){
  overlay.hidden=false;
  const modal=document.getElementById('modal');
  modal.scrollTop=0;
- if(nativeAndroid)return;
+ if(nativeAndroid){
+   const heldY=nativeModalBackgroundY;
+   requestAnimationFrame(()=>{
+     if(!overlay.hidden&&Math.abs(window.scrollY-heldY)>1)window.scrollTo(0,heldY);
+   });
+   return;
+ }
  document.body.style.overflow='hidden';
  requestAnimationFrame(()=>{
   if(overlay.hidden)return;
@@ -2576,6 +2593,12 @@ function hideModal(){
  const modal=document.getElementById('modal');
  if(nativeAndroid&&modal?.contains(document.activeElement))document.activeElement.blur?.();
  document.getElementById('overlay').hidden=true;
+ if(nativeAndroid){
+   const heldY=nativeModalBackgroundY;
+   requestAnimationFrame(()=>{
+     if(Math.abs(window.scrollY-heldY)>1)window.scrollTo(0,heldY);
+   });
+ }
  if(!nativeAndroid)document.body.style.overflow='';
  draft=null;catDraft=null;
  modal.classList.remove('tx-sheet','cat-sheet');
