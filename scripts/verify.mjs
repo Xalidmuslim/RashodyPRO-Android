@@ -10,7 +10,7 @@ const native = fs.readFileSync('native/FinanceStoragePlugin.java', 'utf8');
 const guards = [
   ['Native keyboard method is present', native.includes('@PluginMethod public void showAmountKeyboard(')],
   ['IME uses SHOW_IMPLICIT, never SHOW_FORCED', native.includes('InputMethodManager.SHOW_IMPLICIT') && !native.includes('SHOW_FORCED')],
-  ['Browser input focus retained', html.includes('input?.focus({preventScroll:true})')],
+  ['Opening plus does not force browser input focus', !html.includes('input?.focus({preventScroll:true})')],
   ['Android plus does not force keyboard', !html.includes('plugin?.showAmountKeyboard?.()')],
   ['Android plus never fixes body', !html.includes("document.body.classList.add('r105-modal-locked')")],
   ['Modal close does not force scroll', !html.includes('window.scrollTo({top:r105PageY')],
@@ -46,18 +46,18 @@ function modalScenario(native){
     navReady:false,lastFocus:null,view:'dashboard',modalHistoryOpen:false,
     draft:{amount:1250},catDraft:null,financeNative:()=>({showAmountKeyboard:()=>{keyboardCalls++}})};
   vm.createContext(context);
-  vm.runInContext(extract('openModal','hideModal')+'\n'+extract('hideModal','closeModal')+
+  vm.runInContext('let modalMotionToken = 0; function motionAllowed(){return false;}\n'+extract('openModal','hideModal')+'\n'+extract('hideModal','closeModal')+
      '\nopenModal();',context,{timeout:2000});
   if(overlay.hidden)throw new Error('Plus button did not open dialog');
   if(native){
     if(body.classList.added.length||Object.keys(body.style).length)throw new Error('Android page geometry changed');
     if(modalFocuses!==1||inputFocuses||keyboardCalls)throw new Error('Android keyboard opened on plus');
   }else{
-    if(body.style.overflow!=='hidden'||inputFocuses!==1)throw new Error('Browser modal behavior changed');
+    if(Object.keys(body.style).length||inputFocuses!==0||modalFocuses!==1)throw new Error('Browser plus changed page geometry or opened keyboard');
   }
   vm.runInContext('hideModal()',context,{timeout:2000});
   if(!overlay.hidden||scrollCalls||window.scrollY!==629)throw new Error('Close moved the page');
-  if(!native&&body.style.overflow!=='')throw new Error('Browser overflow not restored');
+  if(Object.keys(body.style).length)throw new Error('Body overflow changed');
 }
 try{modalScenario(true);modalScenario(false);console.log('OK: Android and browser modal no-jump regression');}
 catch(error){console.error('FAILED: Modal transition regression:',error);okay=false}
