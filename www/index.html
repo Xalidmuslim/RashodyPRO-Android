@@ -2112,6 +2112,35 @@ html.rashody-native-android .mobile-nav .fab:focus,
 html.rashody-native-android .mobile-nav .fab:active {
   transform:none!important;
 }
+
+/* Medicine Smooth Motion / Capacitor adaptation — never translate the page. */
+html.rashody-native-android, html.rashody-native-android body.matte-editorial {overscroll-behavior-y:none;}
+html.rashody-native-android.medicine-entry-active,
+html.rashody-native-android.medicine-entry-active body {overflow:hidden!important;overscroll-behavior:none!important;}
+html.rashody-native-android body.matte-editorial .overlay:not([hidden]),
+html.rashody-native-android body.matte-editorial .overlay .sheet {
+ animation:none!important;transform:none!important;
+ transition:opacity 170ms cubic-bezier(.4,0,.2,1)!important;
+}
+html.rashody-native-android body.matte-editorial .overlay .sheet {overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+html.rashody-native-android body.matte-editorial .mobile-nav,
+html.rashody-native-android body.matte-editorial .mobile-nav button,
+html.rashody-native-android body.matte-editorial .mobile-nav .fab,
+html.rashody-native-android body.matte-editorial #page .panel,
+html.rashody-native-android body.matte-editorial #page .trend-card,
+html.rashody-native-android body.matte-editorial #page .day-ledger,
+html.rashody-native-android body.matte-editorial #page .feature-day {
+  transform:none!important;animation:none!important;
+  transition-property:opacity,background-color,color,border-color,box-shadow!important;
+  transition-duration:215ms!important;
+  transition-timing-function:cubic-bezier(.4,0,.2,1)!important;
+}
+html.rashody-native-android body.matte-editorial #modal .icon-picker{
+ display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:9px!important;max-height:214px;overflow-y:auto;
+}
+html.rashody-native-android body.matte-editorial #modal .icon-choice{width:100%!important;height:50px!important;min-height:50px!important;border-radius:13px!important;}
+html.rashody-native-android body.matte-editorial #modal .icon-choice svg{width:24px!important;height:24px!important;}
+@media(prefers-reduced-motion:reduce){html.rashody-native-android body.matte-editorial .overlay,html.rashody-native-android body.matte-editorial .overlay .sheet{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2131,7 +2160,7 @@ var FinCore = (function(){
  function summarizeMonth(transactions,month){let items=transactions.filter(t=>t.date?.slice(0,7)===month);let income=0,expense=0;for(let t of items){if(t.type==='income')income+=t.amount;else expense+=t.amount}income=money(income);expense=money(expense);return {income,expense,net:money(income-expense),count:items.length,items}}
  function expenseCategories(data){const m={};for(const t of data){if(t.type==='expense'){m[t.category]=money((m[t.category]||0)+t.amount)}}return m}
  const goodBudget=x=>{const n=Number(x);return Number.isFinite(n)&&n>=0&&n<=1e12?money(n):0};
- function normalizeSettings(s){s=(s&&typeof s==='object')?s:{};const b={};if(s.categoryBudgets&&typeof s.categoryBudgets==='object')for(const [k,v] of Object.entries(s.categoryBudgets).slice(0,100)){if(/^[a-zA-Z0-9_-]{1,70}$/.test(k))b[k]=goodBudget(v)}return {currency:['₽','$','€','₸','₾'].includes(s.currency??s.cur)?(s.currency??s.cur):'₽',monthlyBudget:goodBudget(s.monthlyBudget??s.budget),categoryBudgets:b,incomeEnabled:s.incomeEnabled!==false,fontScale:[0.9,1,1.15,1.3].includes(Number(s.fontScale))?Number(s.fontScale):1}}
+ function normalizeSettings(s){s=(s&&typeof s==='object')?s:{};const b={};if(s.categoryBudgets&&typeof s.categoryBudgets==='object')for(const [k,v] of Object.entries(s.categoryBudgets).slice(0,100)){if(/^[a-zA-Z0-9_-]{1,70}$/.test(k))b[k]=goodBudget(v)}return {currency:['₽','$','€','₸','₾'].includes(s.currency??s.cur)?(s.currency??s.cur):'₽',monthlyBudget:goodBudget(s.monthlyBudget??s.budget),categoryBudgets:b,incomeEnabled:s.incomeEnabled!==false,fontScale:[0.9,1,1.15,1.3].includes(Number(s.fontScale))?Number(s.fontScale):1,hiddenCategoryIds:Array.isArray(s.hiddenCategoryIds)?[...new Set(s.hiddenCategoryIds.filter(x=>typeof x==='string'&&/^[a-zA-Z0-9_-]{1,70}$/.test(x)))].filter(x=>x!=='other'&&x!=='other-income').slice(0,100):[]}}
  function normalizeCats(input){if(!Array.isArray(input))return [];const ids=new Set();return input.slice(0,100).map(c=>{if(!c||typeof c!=='object')return null;const id=String(c.id??'').slice(0,70);if(!/^[a-zA-Z0-9_-]{1,70}$/.test(id)||ids.has(id))return null;ids.add(id);return {id,name:String(c.name??c.n??'Категория').trim().slice(0,26)||'Категория',icon:String(c.icon??c.e??'box').slice(0,40),type:c.type==='income'?'income':'expense'}}).filter(Boolean)}
  function parseBackup(raw){let o;try{o=JSON.parse(raw)}catch(e){throw new Error('Файл не является корректным JSON')}if(!o||typeof o!=='object'||!Array.isArray(o.transactions)||!o.settings||typeof o.settings!=='object')throw new Error('Это не резервная копия приложения');
   if(o.transactions.length>50000)throw new Error('Резервная копия содержит более 50 000 операций. Импорт остановлен, чтобы не потерять записи.');
@@ -2236,6 +2265,29 @@ const PATHS={
  cart:'<circle cx="9" cy="20" r="1"/><circle cx="19" cy="20" r="1"/><path d="M3 3h2l3 13h11l3-9H6"/>',coffee:'<path d="M4 8h13v7a6.5 6.5 0 0 1-13 0V8ZM17 10h2a2.5 2.5 0 0 1 0 5h-2M8 3v2M12 3v2"/>',bus:'<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M7 21v-3M17 21v-3M8 14h1M15 14h1"/>',home:'<path d="m3 11 9-8 9 8M5 10v11h14V10M10 21v-7h4v7"/>',heart:'<path d="M20.8 9.1C20.8 5.9 18.5 4 16 4c-1.7 0-3.1.8-4 2.1C11.1 4.8 9.7 4 8 4c-2.5 0-4.8 1.9-4.8 5.1 0 4.5 8.8 10.8 8.8 10.8s8.8-6.3 8.8-10.8Z"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',shirt:'<path d="M8 3 3 6l2.5 4L8 9v12h8V9l2.5 1L21 6l-5-3c-1 3-7 3-8 0Z"/>',box:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v8l9 5 9-5V8M12 13v8"/>',
  salary:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 5V3M17 5V3M3 10h18M8 15h3"/>',briefcase:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3M3 12h18M10 12v2h4v-2"/>',gift:'<rect x="3" y="9" width="18" height="12" rx="2"/><path d="M12 9v12M3 13h18M12 9c-5 0-7-1-6-4s5-1 6 4ZM12 9c5 0 7-1 6-4s-5-1-6 4Z"/>',banknote:'<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="4"/><path d="M6 9h.01M18 15h.01"/>',
  car:'<path d="m5 17-1-4 2-6h12l2 6-1 4H5ZM4 13h16M7 17v3M17 17v3M7 10h.01M17 10h.01"/>',book:'<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22V4.5Z"/><path d="M4 19a3 3 0 0 1 3-2h13"/>',phone:'<rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/>',fuel:'<path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M3 21h12M6 8h6M14 9h2a2 2 0 0 1 2 2v5a1.5 1.5 0 0 0 3 0V8l-3-3"/>',plane:'<path d="m21 3-8 9M10 14 3 12l-1 2 6 4 4 6 2-1-2-7M12 12 5 3l-2 1 3 9"/>',music:'<path d="M9 18V5l11-2v13M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM17 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>',tool:'<path d="M14 6a5 5 0 0 0-6 6l-5 5a2.4 2.4 0 0 0 3 3l5-5a5 5 0 0 0 6-6l-3 3-3-3 3-3Z"/>',drop:'<path d="M12 2s7 7 7 12a7 7 0 0 1-14 0c0-5 7-12 7-12Z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l-1.4 1.4"/>',dollar:'<path d="M12 2v20M17 6H9a4 4 0 0 0 0 8h6a4 4 0 0 1 0 8H7"/>',receipt:'<path d="M5 3h14v18l-3-2-4 2-4-2-3 2V3ZM9 8h6M9 12h6"/>',shield:'<path d="M12 22s9-4.5 9-11V5l-9-3-9 3v6c0 6.5 9 11 9 11Z"/><path d="m9 12 2 2 4-4"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/>',download:'<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',upload:'<path d="M12 16V4m-5 5 5-5 5 5M4 16v5h16v-5"/>',trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/>',edit:'<path d="M12 20h9M4 16l-1 5 5-1L20 8a2.8 2.8 0 0 0-4-4L4 16Z"/>',repeat:'<path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/>',check:'<path d="m4 12 5 5L20 6"/>',alert:'<path d="m12 3 10 18H2L12 3ZM12 9v5M12 17h.01"/>',spark:'<path d="m12 2 2.3 7.7L22 12l-7.7 2.3L12 22l-2.3-7.7L2 12l7.7-2.3L12 2Z"/>'};
+
+/* Extended icon library, drawn with the existing 24x24 matte stroke style. */
+Object.assign(PATHS,{
+ paw:'<circle cx="7" cy="6" r="1.3"/><circle cx="12" cy="4" r="1.3"/><circle cx="17" cy="6" r="1.3"/><path d="M12 11c-2.5 0-3.5 4-6 5.5C4 18 6 21 8 21c1.5 0 2.6-1 4-1s2.5 1 4 1c2 0 4-3 2-4.5-2.5-1.5-3.5-5.5-6-5.5Z"/>',
+ baby:'<circle cx="12" cy="12" r="9"/><path d="M10 3c0-2 4-2 4 1M9 12h.01M15 12h.01M9 16q3 3 6 0"/>',
+ bike:'<circle cx="5" cy="17" r="4"/><circle cx="19" cy="17" r="4"/><path d="m5 17 5-9 4 9H5m9 0 5-9h-4M9 6h3"/>',
+ train:'<rect x="5" y="2" width="14" height="17" rx="4"/><path d="M5 10h14M8 15h1M15 15h1M8 22l3-3m5 3-3-3"/>',
+ laptop:'<rect x="5" y="4" width="14" height="13" rx="2"/><path d="M2 20h20l-3-3H5l-3 3Z"/>',
+ gamepad:'<path d="M7 7h10c3 0 5 3 5 9 0 3-3 4-5 2l-2-2H9l-2 2c-2 2-5 1-5-2 0-6 2-9 5-9Z"/><path d="M7 12h5m-2.5-2.5v5M17 11h.01M19 14h.01"/>',
+ camera:'<rect x="3" y="6" width="18" height="15" rx="3"/><circle cx="12" cy="13" r="4"/><path d="m7 6 2-3h6l2 3"/>',
+ graduation:'<path d="m2 9 10-5 10 5-10 5-10-5Zm4 3v5c4 3 8 3 12 0v-5M22 9v7"/>',
+ dumbbell:'<path d="M6 8v8M3 9v6M18 8v8M21 9v6M6 12h12"/>',
+ scissors:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 8.5 20 20M8.5 15.5 20 4"/>',
+ leaf:'<path d="M20 4C12 4 4 8 4 16a4 4 0 0 0 4 4C16 20 20 12 20 4ZM4 20l10-10"/>',
+ utensils:'<path d="M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 21V3c-5 2-6 9 0 11"/>',
+ pill:'<rect x="4" y="8" width="16" height="8" rx="4" transform="rotate(-45 12 12)"/><path d="m9 15 6-6"/>',
+ bag:'<rect x="4" y="8" width="16" height="13" rx="2"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/>',
+ key:'<circle cx="8" cy="12" r="5"/><path d="M13 12h9v4h-4v3h-3v-7"/>',
+ wifi:'<path d="M2 9q10-10 20 0M5 13q7-7 14 0M9 17q3-3 6 0M12 21h.01"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 3"/>',
+ paintbrush:'<path d="m14 6 4-4 4 4-4 4-8-8ZM3 21c6 0 8-4 8-8l3-3"/>',
+ bookOpen:'<path d="M12 6c-3-2-7-2-10-1v15c4-1 8-1 10 1 2-2 6-2 10-1V5c-3-1-7-1-10 1Zm0 0v15"/>'
+});
 const oldIcons={'🛒':'cart','☕':'coffee','🚌':'bus','🏠':'home','💊':'heart','🎬':'film','👕':'shirt','📦':'box','🍔':'cart','🧴':'drop','🎁':'gift','✈️':'plane','⛽':'fuel','🐶':'box','📚':'book','💻':'briefcase','🎮':'film','💇':'tool','🏋️':'heart','📱':'phone','💡':'sun','🎓':'book','🎧':'music','💰':'wallet','👶':'heart','🔧':'tool','🚕':'car','🍷':'coffee','🌴':'sun'};
 const svg=(name,size=19)=>`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PATHS[name]||PATHS.box}</svg>`;
 const esc=v=>String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
@@ -2262,17 +2314,18 @@ let data,view='dashboard',month=new Date(new Date().getFullYear(),new Date().get
 let historyFiltersOpen=false;let historyPeriod='month',historyAnchor=dateLocal(),analyticsPeriod='month',analyticsAnchor=dateLocal(),chartSelection=null,navReady=false,modalHistoryOpen=false,dashboardFocusDay=null,dashboardWeekAnchor=null;
 function initData(){
  let current=null;try{current=JSON.parse(localStorage.getItem(STORAGE)||'null')}catch(e){}
- if(current&&Array.isArray(current.transactions))return {transactions:F.normalizeTransactions(current.transactions),settings:F.normalizeSettings(current.settings),categories:mergeCategories(F.normalizeCats(current.categories))};
+ if(current&&Array.isArray(current.transactions))return {transactions:F.normalizeTransactions(current.transactions),settings:F.normalizeSettings(current.settings),categories:mergeCategories(F.normalizeCats(current.categories),current.settings?.hiddenCategoryIds)};
  let legacyTx=null,legacyCats=null,legacyS=null;
  try{legacyTx=JSON.parse(localStorage.getItem('rashody.v1')||'null')}catch(e){}
  try{legacyCats=JSON.parse(localStorage.getItem('rashody.cats')||'null')}catch(e){}
  try{legacyS=JSON.parse(localStorage.getItem('rashody.set')||'null')}catch(e){}
  const allCats=F.normalizeCats(legacyCats||[]).map(c=>({...c,icon:oldIcons[c.icon]||c.icon,name:c.name}));
- return {transactions:F.normalizeTransactions(legacyTx),settings:F.normalizeSettings(legacyS),categories:mergeCategories(allCats)};
+ return {transactions:F.normalizeTransactions(legacyTx),settings:F.normalizeSettings(legacyS),categories:mergeCategories(allCats,legacyS?.hiddenCategoryIds)};
 }
-function mergeCategories(raw){
- const arr=[...expenseDefaults,...incomeDefaults];
- for(const c of raw||[]){if(!c||!c.id)continue;
+function mergeCategories(raw,hidden=[]){
+ const excluded=new Set(Array.isArray(hidden)?hidden:[]);excluded.delete('other');excluded.delete('other-income');
+ const arr=[...expenseDefaults,...incomeDefaults].filter(c=>!excluded.has(c.id));
+ for(const c of raw||[]){if(!c||!c.id||excluded.has(c.id))continue;
    const o={id:c.id,name:c.name,icon:oldIcons[c.icon]||c.icon,type:c.type==='income'?'income':'expense'};
    const i=arr.findIndex(a=>a.id===o.id);
    if(i>=0){arr[i]={...o,type:arr[i].type}}else arr.push(o);
@@ -2299,7 +2352,7 @@ function readSnapshot(raw){
    if(clean.length!==source.transactions.length||new Set(clean.map(t=>t.id)).size!==clean.length)return null; // no silent truncation or duplicate IDs
    return {revision:Number.isSafeInteger(source.revision)&&source.revision>=0?source.revision:0,
      savedAt:Number.isFinite(source.savedAt)?source.savedAt:0,
-     state:{transactions:clean,settings:F.normalizeSettings(source.settings),categories:mergeCategories(F.normalizeCats(source.categories))}};
+     state:{transactions:clean,settings:F.normalizeSettings(source.settings),categories:mergeCategories(F.normalizeCats(source.categories),source.settings.hiddenCategoryIds)}};
  }catch(e){return null}
 }
 function snapshotChoice(local,backup){if(!local)return backup;if(!backup)return local;
@@ -2418,7 +2471,9 @@ function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
  const content=document.getElementById('page');
- if(content?.animate)content.animate([{opacity:.78},{opacity:1}],{duration:225,easing:'cubic-bezier(.2,0,.2,1)'});
+ if(!content?.animate)return;
+ content.getAnimations?.().forEach(animation=>animation.cancel());
+ content.animate([{opacity:.84},{opacity:1}],{duration:215,easing:'cubic-bezier(.4,0,.2,1)'});
 }
 function navState(v,guard=true,modal=false){return {__rashodyNavV3:true,view:v,guard,modal}}
 function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}
@@ -2564,8 +2619,13 @@ function openModal(){
  overlay.hidden=false;
  const modal=document.getElementById('modal');
  modal.scrollTop=0;
- if(nativeAndroid)return;
  document.body.style.overflow='hidden';
+ if(nativeAndroid){
+   // Focus during the user's original + tap to open the numeric keyboard promptly.
+   document.documentElement.classList.add('medicine-entry-active');
+   if(modal.classList.contains('tx-sheet'))document.getElementById('txAmount')?.focus({preventScroll:true});
+   return;
+ }
  requestAnimationFrame(()=>{
   if(overlay.hidden)return;
   const heading=document.getElementById('dialog-title');
@@ -2576,7 +2636,8 @@ function hideModal(){
  const modal=document.getElementById('modal');
  if(nativeAndroid&&modal?.contains(document.activeElement))document.activeElement.blur?.();
  document.getElementById('overlay').hidden=true;
- if(!nativeAndroid)document.body.style.overflow='';
+ document.body.style.overflow='';
+ document.documentElement.classList.remove('medicine-entry-active');
  draft=null;catDraft=null;
  modal.classList.remove('tx-sheet','cat-sheet');
  modalHistoryOpen=false;
@@ -2586,7 +2647,7 @@ function closeModal(){
  if(catDraft&&txDraftBeforeCategory){
   draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
-  if(!nativeAndroid)document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
+  if(nativeAndroid)document.getElementById('txAmount')?.focus({preventScroll:true});else document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
  }
  const shouldBack=!nativeAndroid&&modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
@@ -2619,7 +2680,7 @@ function quickRepeatLast(){
 }
 function repeatTx(){collectDraft();draft.id=null;draft.date=dateLocal();draft.time=timeLocal();renderTxModal();toast('Копия готова. Нажмите «Сохранить операцию»')}
 async function deleteTx(){if(!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
-const ICON_OPTIONS=['cart','coffee','car','home','heart','film','shirt','box','banknote','gift','briefcase','book','phone','fuel','plane','music','tool','drop','sun','wallet','salary'];
+const ICON_OPTIONS=['cart','coffee','car','home','heart','film','shirt','box','banknote','gift','briefcase','book','phone','fuel','plane','music','tool','drop','sun','wallet','salary','paw','baby','bike','train','laptop','gamepad','camera','graduation','dumbbell','scissors','leaf','utensils','pill','bag','key','wifi','clock','paintbrush','bookOpen'];
 let txDraftBeforeCategory=null;
 function startCatFromTx(){
  if(!draft)return;collectDraft();txDraftBeforeCategory={...draft};draft=null;
@@ -2629,7 +2690,7 @@ function startCatFromTx(){
 }
 function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',type:'expense'};renderCatModal();openModal()}
 function collectCat(){const n=document.getElementById('catName');if(n)catDraft.name=n.value}
-function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
+function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" title="${i}" aria-label="Значок ${i}">${svg(i,24)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!['other','other-income'].includes(catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
 async function saveCat(){
  collectCat();const name=catDraft.name.trim();if(!name)return toast('Укажите название категории');
  let savedId=catDraft.id;
@@ -2642,7 +2703,18 @@ async function saveCat(){
  }
  closeModal();render();await saveFeedback('Категория сохранена');
 }
-async function deleteCat(){if(!catDraft.id||expenseDefaults.some(c=>c.id===catDraft.id))return;if(!confirm('Удалить категорию? Все её расходы перейдут в «Прочее».'))return;data.transactions.forEach(t=>{if(t.category===catDraft.id)t.category='other'});delete data.settings.categoryBudgets[catDraft.id];data.categories=data.categories.filter(c=>c.id!==catDraft.id);closeModal();render();await saveFeedback('Категория удалена')}
+async function deleteCat(){
+ if(!catDraft?.id||['other','other-income'].includes(catDraft.id))return;
+ const id=catDraft.id,cat=data.categories.find(c=>c.id===id);if(!cat)return;
+ const replacement=cat.type==='income'?'other-income':'other',count=data.transactions.filter(t=>t.category===id).length;
+ if(!confirm('Удалить «'+cat.name+'»? '+(count?count+' операций перейдут в «'+(cat.type==='income'?'Другой доход':'Прочее')+'».':'Операций нет.')+' Суммы не удаляются.'))return;
+ data.transactions.forEach(t=>{if(t.category===id)t.category=replacement});
+ if(data.settings.categoryBudgets)delete data.settings.categoryBudgets[id];
+ if(!Array.isArray(data.settings.hiddenCategoryIds))data.settings.hiddenCategoryIds=[];
+ if([...expenseDefaults,...incomeDefaults].some(c=>c.id===id)&&!data.settings.hiddenCategoryIds.includes(id))data.settings.hiddenCategoryIds.push(id);
+ data.categories=data.categories.filter(c=>c.id!==id);
+ closeModal();render();await saveFeedback('Категория удалена, операции сохранены');
+}
 function openLegacyCSV(){document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">Перенос старых расходов</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><p class="sub" style="line-height:1.8;margin-bottom:16px">Откройте старую версию, в настройках нажмите «Скопировать расходы (CSV)». Вставьте скопированный текст сюда. Данные будут добавлены к текущей истории.</p><div class="field"><label for="oldCsvText">Скопированный текст CSV</label><textarea id="oldCsvText" placeholder="Дата;Время;Категория;Сумма;Заметка…" rows="7"></textarea></div><div class="modal-actions"><button class="primary-btn" data-action="confirm-old-csv">${svg('upload',17)} Перенести операции</button></div>`;openModal()}
 async function importLegacyCSV(){try{const rows=F.parseLegacyCSV(document.getElementById('oldCsvText').value);if(!confirm(`Добавить ${rows.length} расходов? Существующие записи останутся без изменений. Повторный импорт создаст дубликаты.`))return;rows.forEach(x=>x.id=newId());data.transactions.push(...rows);closeModal();render();await saveFeedback(`Перенесено расходов: ${rows.length}`)}catch(e){toast(e.message||'Не удалось обработать CSV')}}
 function changeMonth(n){month=new Date(month.getFullYear(),month.getMonth()+n,1);dashboardFocusDay=monthKey(month)==dateLocal().slice(0,7)?dateLocal():monthKey(month)+'-01';dashboardWeekAnchor=dashboardFocusDay;render()}
@@ -2664,7 +2736,7 @@ async function exportCSV(){
  try{await exportFile(new Blob([content],{type:'text/csv;charset=utf-8'}),'Расходы_операции_'+dateLocal()+'.csv');toast('CSV сохранён')}
  catch(e){console.error(e);toast('Экспорт отменён или не удалось записать файл')}
 }
-async function importJSONFile(file){if(!file)return;if(file.size>20*1024*1024){toast('Файл слишком большой');return}try{const parsed=F.parseBackup(await file.text());if(!confirm(`Восстановить копию (${parsed.transactions.length} операций)? Текущие данные будут ЗАМЕНЕНЫ. Рекомендуется сначала сохранить свою резервную копию.`))return;data={transactions:parsed.transactions,settings:parsed.settings,categories:mergeCategories(parsed.categories)};recoveryLocked=false;initNeutralAppearance();applyFontScale();month=new Date(new Date().getFullYear(),new Date().getMonth(),1);render();await saveFeedback('Резервная копия восстановлена')}catch(e){toast(e.message||'Не удалось прочитать файл')}finally{document.getElementById('importFile').value=''}}
+async function importJSONFile(file){if(!file)return;if(file.size>20*1024*1024){toast('Файл слишком большой');return}try{const parsed=F.parseBackup(await file.text());if(!confirm(`Восстановить копию (${parsed.transactions.length} операций)? Текущие данные будут ЗАМЕНЕНЫ. Рекомендуется сначала сохранить свою резервную копию.`))return;data={transactions:parsed.transactions,settings:parsed.settings,categories:mergeCategories(parsed.categories,parsed.settings.hiddenCategoryIds)};recoveryLocked=false;initNeutralAppearance();applyFontScale();month=new Date(new Date().getFullYear(),new Date().getMonth(),1);render();await saveFeedback('Резервная копия восстановлена')}catch(e){toast(e.message||'Не удалось прочитать файл')}finally{document.getElementById('importFile').value=''}}
 async function loadDemo(){if(data.transactions.length){toast('Пример доступен только при пустой истории');return}const today=new Date();let sample=[];const add=(offset,type,category,amount,note)=>{const d=new Date(today.getFullYear(),today.getMonth(),Math.max(1,today.getDate()-offset));sample.push({id:newId(),type,category,amount,note,date:dateLocal(d),time:'12:00'})};if(data.settings.incomeEnabled)add(10,'income','salary',87500,'Зарплата');add(9,'expense','home',28000,'Аренда');add(8,'expense','food',4600,'Продукты');add(6,'expense','transport',1450,'Заправка');add(5,'expense','cafe',1200,'Обед');if(data.settings.incomeEnabled)add(3,'income','sidejob',14500,'Подработка');add(2,'expense','shop',6200,'Покупки');add(1,'expense','food',2950,'Супермаркет');data.transactions=sample;month=new Date(today.getFullYear(),today.getMonth(),1);render();await saveFeedback('Добавлены демонстрационные данные')}
 async function clearData(){if(!data.transactions.length)return toast('История уже пуста');if(!confirm(`Безвозвратно удалить ${data.transactions.length} операций? Сначала сохраните JSON-копию, если она нужна.`))return;data.transactions=[];render();await saveFeedback('История очищена')}
 function actions(a){switch(a){case 'navigate-back':return navigateBack();case 'week-prev':return changeWeek(-1);case 'week-next':return changeWeek(1);case 'week-today':return resetWeek();case 'history-prev':return historyStep(-1);case 'history-next':return historyStep(1);case 'history-today':return historyToday();case 'history-reset-filters':filters={type:'all',category:'all',search:'',allDates:false};return render();case 'toggle-history-filters':historyFiltersOpen=!historyFiltersOpen;return render();case 'view-focus-day':historyPeriod='day';historyAnchor=(dashboardFocusDay&&F.isDate(dashboardFocusDay)?dashboardFocusDay:dateLocal());filters={type:'expense',category:'all',search:'',allDates:false};return go('transactions');case 'analytics-prev':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,-1);chartSelection=null;return render();case 'analytics-next':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,1);chartSelection=null;return render();case 'analytics-today':analyticsAnchor=dateLocal();chartSelection=null;return render();case 'prev-month':return changeMonth(-1);case 'next-month':return changeMonth(1);case 'new-expense':return startTx('expense');case 'new-expense-day':return startTx('expense',null,dashboardFocusDay);case 'new-income':return startTx('income');case 'close-modal':return closeModal();case 'tx-clear-amount':{const input=document.getElementById('txAmount');if(input){input.value='';if(draft)draft.amount='';updateTxConfirm();input.focus({preventScroll:true})}return}
