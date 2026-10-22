@@ -70,6 +70,34 @@ public class FinanceStoragePlugin extends Plugin {
     } catch (Exception error) { call.reject("Ошибка записи Android SQLite", error); }
   }
 
+  // Called from the user's tap on the plus button after HTML #txAmount has focus.
+  // WebView focus() on its own is not always sufficient to open Android's IME.
+  @PluginMethod public void showAmountKeyboard(PluginCall call) {
+    Activity activity = getActivity();
+    if (activity == null || getBridge() == null || getBridge().getWebView() == null) {
+      call.reject("Android WebView недоступен"); return;
+    }
+    activity.runOnUiThread(() -> {
+      android.webkit.WebView webView = getBridge().getWebView();
+      webView.post(() -> {
+        try {
+          webView.requestFocus();
+          android.view.inputmethod.InputMethodManager imm =
+              (android.view.inputmethod.InputMethodManager) activity.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+          boolean shown = imm != null && imm.showSoftInput(webView, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+          if (!shown) {
+            // On Android 15/16 the IME can ignore the first implicit show request.
+            androidx.core.view.WindowCompat.getInsetsController(activity.getWindow(), webView)
+                .show(androidx.core.view.WindowInsetsCompat.Type.ime());
+          }
+          JSObject result = new JSObject();
+          result.put("requested", true);
+          call.resolve(result);
+        } catch (Exception error) { call.reject("Не удалось открыть клавиатуру", error); }
+      });
+    });
+  }
+
   // SAF dialog stores an exported JSON/CSV where the user chooses, with no storage permission.
   @PluginMethod public void exportFile(PluginCall call) {
     String content = call.getString("content");
