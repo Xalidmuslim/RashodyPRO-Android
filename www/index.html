@@ -2103,6 +2103,24 @@ html.rashody-native-android body.matte-editorial :is(.fab,.week-day,.panel,.tren
   html.rashody-native-android body.matte-editorial .overlay:not([hidden]),
   html.rashody-native-android body.matte-editorial .overlay:not([hidden])>.sheet {animation:none!important;}
 }
+
+/* Medicine Smooth Motion · WebView. No layout/size translation or spring effects. */
+html.rashody-native-android {scroll-behavior:auto!important;overscroll-behavior-y:none}
+html.rashody-native-android body {scroll-behavior:auto!important}
+html.rashody-native-android .overlay {overscroll-behavior:contain;touch-action:none}
+html.rashody-native-android .overlay .sheet {overscroll-behavior:contain;touch-action:pan-y}
+html.rashody-native-android :is(.overlay .sheet,.mobile-nav,.workspace,#page) {animation:none!important;transform:none!important}
+html.rashody-native-android body.matte-editorial :is(button,.week-day,.trend-card,.feature-day,.panel,.day-ledger,.mobile-nav .fab):active {transform:none!important}
+html.rashody-native-android body.matte-editorial :is(button,.mobile-nav button,.week-day,.navitem,.setting-row) {
+ transition-property:background-color,color,border-color,opacity!important;
+ transition-duration:205ms!important;
+ transition-timing-function:cubic-bezier(.4,0,.2,1)!important;
+}
+@media(prefers-reduced-motion:reduce){
+ html.rashody-native-android *,html.rashody-native-android *::before,html.rashody-native-android *::after {
+  animation:none!important;transition:none!important;scroll-behavior:auto!important;
+ }
+}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2396,7 +2414,7 @@ function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
  const content=document.getElementById('page');
- if(content?.animate)content.animate([{opacity:.45},{opacity:1}],{duration:205,easing:'cubic-bezier(.4,0,.2,1)'});
+ if(content?.animate)content.animate([{opacity:.96},{opacity:1}],{duration:205,easing:'cubic-bezier(.4,0,.2,1)'});
 }
 function navState(v,guard=true,modal=false){return {__rashodyNavV3:true,view:v,guard,modal}}
 function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}try{history.replaceState(navState('dashboard',false),'');history.pushState(navState('dashboard'),'');navReady=true}catch(e){console.info('История недоступна:',e.message)}
@@ -2525,45 +2543,54 @@ function analytics(){
 }
 function settings(){const c=data.settings;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Добавить категорию</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><button class="mini-action" data-action="load-demo">${svg('spark',16)} Загрузить пример данных</button><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 4.9 · Matte Stable · Локальные данные</p>`}
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
+// Native WebView adaptation of Medicine Smooth Motion: no scroll lock or keyboard on +.
+let modalMotionToken=0;
+function motionAllowed(){return !window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches}
 function openModal(){
+ const overlay=document.getElementById('overlay');
+ if(!overlay.hidden)return;
  lastFocus=document.activeElement;
  if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
- // Keep the background document in its original scroll position.
- // A fixed body + a forced Android keyboard used to shift the viewport on tap.
- const overlay=document.getElementById('overlay');
- if(!nativeAndroid)document.body.style.overflow='hidden';
+ // The fixed overlay captures touches. Leave document overflow unchanged so
+ // opening the sheet cannot change the page width/scroll position.
  overlay.hidden=false;
  const modal=document.getElementById('modal');
- if(nativeAndroid){
-   // Focus the dialog for accessibility, without triggering the IME.
-   // The amount input receives focus naturally when the user taps it.
-   modal.setAttribute('tabindex','-1');
-   modal.focus({preventScroll:true});
- }else{
-   const input=modal.classList.contains('tx-sheet')?document.getElementById('txAmount'):
-     modal.classList.contains('cat-sheet')?document.getElementById('catName'):
-     modal.querySelector('input:not([type=hidden]),button');
-   input?.focus({preventScroll:true});
+ modal.setAttribute('tabindex','-1');
+ modal.focus({preventScroll:true}); // Do not open the Android keyboard automatically.
+ ++modalMotionToken;
+ if(motionAllowed()&&overlay.animate){
+  overlay.animate([{opacity:0},{opacity:1}],{duration:205,easing:'cubic-bezier(.4,0,.2,1)'});
+  modal.animate([{opacity:.94},{opacity:1}],{duration:215,easing:'cubic-bezier(.4,0,.2,1)'});
  }
 }
 function hideModal(){
- const overlay=document.getElementById('overlay');
- const modal=document.getElementById('modal');
- if(nativeAndroid&&modal.contains(document.activeElement)&&document.activeElement!==modal)
-   document.activeElement.blur();
+ ++modalMotionToken;
+ const overlay=document.getElementById('overlay'),modal=document.getElementById('modal');
+ overlay.getAnimations?.().forEach(a=>a.cancel());
+ modal.getAnimations?.().forEach(a=>a.cancel());
+ if(modal.contains(document.activeElement)&&document.activeElement!==modal)document.activeElement.blur();
  overlay.hidden=true;
- if(!nativeAndroid)document.body.style.overflow='';
- // Do not reset window.scrollY on close. The background never moved.
  draft=null;catDraft=null;modal.classList.remove('tx-sheet','cat-sheet');
- modalHistoryOpen=false;if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
+ modalHistoryOpen=false;
+ if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
 }
 function closeModal(){
  if(catDraft&&txDraftBeforeCategory){
   draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
-  document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
+  document.getElementById('modal').focus({preventScroll:true});return;
  }
- const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
+ const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;
+ const overlay=document.getElementById('overlay');
+ if(motionAllowed()&&overlay?.animate&&!overlay.hidden){
+  const token=++modalMotionToken;
+  const exit=overlay.animate([{opacity:1},{opacity:0}],{duration:165,easing:'cubic-bezier(.4,0,.2,1)'});
+  exit.finished.catch(()=>{}).then(()=>{
+   if(token!==modalMotionToken)return;
+   hideModal();if(shouldBack)history.back();
+  });
+ }else{hideModal();if(shouldBack)history.back()}
+}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
 function startTx(type='expense',existing=null,preferredDay=null){txDraftBeforeCategory=null;if(type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён в настройках');const last=type==='expense'?sortTx(data.transactions.filter(t=>t.type==='expense'))[0]:null;draft=existing?{...existing}:{id:null,type,category:type==='income'?'salary':(last&&data.categories.some(c=>c.id===last.category&&c.type==='expense')?last.category:'food'),amount:'',note:'',date:preferredDay&&F.isDate(preferredDay)?preferredDay:dateLocal(),time:timeLocal()};renderTxModal();openModal()}
 function collectDraft(){if(!draft)return;const amount=document.getElementById('txAmount'),note=document.getElementById('txNote'),date=document.getElementById('txDate'),time=document.getElementById('txTime');if(amount)draft.amount=amount.value;if(note)draft.note=note.value;if(date)draft.date=date.value;if(time)draft.time=time.value}
@@ -2600,7 +2627,7 @@ function startCatFromTx(){
  if(!draft)return;collectDraft();txDraftBeforeCategory={...draft};draft=null;
  catDraft={id:null,name:'',icon:'box',type:'expense'};
  const modal=document.getElementById('modal');modal.classList.remove('tx-sheet');
- renderCatModal();document.getElementById('catName')?.focus({preventScroll:true});
+ renderCatModal();document.getElementById('modal').focus({preventScroll:true});
 }
 function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',type:'expense'};renderCatModal();openModal()}
 function collectCat(){const n=document.getElementById('catName');if(n)catDraft.name=n.value}
