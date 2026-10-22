@@ -2112,6 +2112,35 @@ html.rashody-native-android .mobile-nav .fab:focus,
 html.rashody-native-android .mobile-nav .fab:active {
   transform:none!important;
 }
+
+/* Medicine Smooth Motion / Capacitor adaptation — never translate the page. */
+html.rashody-native-android, html.rashody-native-android body.matte-editorial {overscroll-behavior-y:none;}
+html.rashody-native-android.medicine-entry-active,
+html.rashody-native-android.medicine-entry-active body {overflow:hidden!important;overscroll-behavior:none!important;}
+html.rashody-native-android body.matte-editorial .overlay:not([hidden]),
+html.rashody-native-android body.matte-editorial .overlay .sheet {
+ animation:none!important;transform:none!important;
+ transition:opacity 170ms cubic-bezier(.4,0,.2,1)!important;
+}
+html.rashody-native-android body.matte-editorial .overlay .sheet {overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+html.rashody-native-android body.matte-editorial .mobile-nav,
+html.rashody-native-android body.matte-editorial .mobile-nav button,
+html.rashody-native-android body.matte-editorial .mobile-nav .fab,
+html.rashody-native-android body.matte-editorial #page .panel,
+html.rashody-native-android body.matte-editorial #page .trend-card,
+html.rashody-native-android body.matte-editorial #page .day-ledger,
+html.rashody-native-android body.matte-editorial #page .feature-day {
+  transform:none!important;animation:none!important;
+  transition-property:opacity,background-color,color,border-color,box-shadow!important;
+  transition-duration:215ms!important;
+  transition-timing-function:cubic-bezier(.4,0,.2,1)!important;
+}
+html.rashody-native-android body.matte-editorial #modal .icon-picker{
+ display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:9px!important;max-height:214px;overflow-y:auto;
+}
+html.rashody-native-android body.matte-editorial #modal .icon-choice{width:100%!important;height:50px!important;min-height:50px!important;border-radius:13px!important;}
+html.rashody-native-android body.matte-editorial #modal .icon-choice svg{width:24px!important;height:24px!important;}
+@media(prefers-reduced-motion:reduce){html.rashody-native-android body.matte-editorial .overlay,html.rashody-native-android body.matte-editorial .overlay .sheet{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2419,7 +2448,9 @@ function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
  const content=document.getElementById('page');
- if(content?.animate)content.animate([{opacity:.78},{opacity:1}],{duration:225,easing:'cubic-bezier(.2,0,.2,1)'});
+ if(!content?.animate)return;
+ content.getAnimations?.().forEach(animation=>animation.cancel());
+ content.animate([{opacity:.84},{opacity:1}],{duration:215,easing:'cubic-bezier(.4,0,.2,1)'});
 }
 function navState(v,guard=true,modal=false){return {__rashodyNavV3:true,view:v,guard,modal}}
 function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}
@@ -2565,8 +2596,13 @@ function openModal(){
  overlay.hidden=false;
  const modal=document.getElementById('modal');
  modal.scrollTop=0;
- if(nativeAndroid)return;
  document.body.style.overflow='hidden';
+ if(nativeAndroid){
+   // Focus during the user's original + tap to open the numeric keyboard promptly.
+   document.documentElement.classList.add('medicine-entry-active');
+   if(modal.classList.contains('tx-sheet'))document.getElementById('txAmount')?.focus({preventScroll:true});
+   return;
+ }
  requestAnimationFrame(()=>{
   if(overlay.hidden)return;
   const heading=document.getElementById('dialog-title');
@@ -2577,7 +2613,8 @@ function hideModal(){
  const modal=document.getElementById('modal');
  if(nativeAndroid&&modal?.contains(document.activeElement))document.activeElement.blur?.();
  document.getElementById('overlay').hidden=true;
- if(!nativeAndroid)document.body.style.overflow='';
+ document.body.style.overflow='';
+ document.documentElement.classList.remove('medicine-entry-active');
  draft=null;catDraft=null;
  modal.classList.remove('tx-sheet','cat-sheet');
  modalHistoryOpen=false;
@@ -2587,7 +2624,7 @@ function closeModal(){
  if(catDraft&&txDraftBeforeCategory){
   draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
-  if(!nativeAndroid)document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
+  if(nativeAndroid)document.getElementById('txAmount')?.focus({preventScroll:true});else document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
  }
  const shouldBack=!nativeAndroid&&modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
