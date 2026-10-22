@@ -43,3 +43,8 @@ test('category editor preserves expense draft without keyboard-opening focus',()
  assert.match(nested,/txDraftBeforeCategory=\{\.\.\.draft\}/);
  assert.doesNotMatch(nested,/getElementById\('catName'\).*focus/);
 });
+
+test('Android sheet keeps vertical touch scrolling, including inside long forms',()=>{
+ assert.match(html,/\.overlay \.sheet \{overscroll-behavior:contain;touch-action:pan-y\}/);
+ assert.doesNotMatch(html,/\.overlay \{[^}]*touch-action:none/);
+});
