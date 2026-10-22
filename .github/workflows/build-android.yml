@@ -2,7 +2,7 @@ name: Android Debug APK
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, 'codex/medicine-smooth-motion-2026-10-23']
 
 jobs:
   build:
@@ -29,6 +29,7 @@ jobs:
         run: |
           npm install
           npm run verify
+          node --test scripts/test-motion.mjs
           npx cap add android
           node scripts/prepare-android.mjs
           npx cap sync android
