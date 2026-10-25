@@ -8,7 +8,7 @@
     "android:sync": "npx cap sync android",
     "android:open": "npx cap open android",
     "android:build": "cd android && ./gradlew assembleDebug",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs && node scripts/verify-icons.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^8.0.0",

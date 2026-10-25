@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 const project=path.resolve('android');
 if(!fs.existsSync(project)){
@@ -28,3 +29,7 @@ if(fs.existsSync(manifest)){
  fs.writeFileSync(manifest,xml,'utf8');
  console.log('Android automatic data backup disabled (manual JSON backup enabled).');
 }
+
+// Install the approved matte 3D app launcher before Capacitor sync/Gradle.
+// Assets are bundled in Git; this step never changes local expense records.
+execFileSync('python3',[path.resolve('scripts/install_android_icons.py')],{stdio:'inherit'});
