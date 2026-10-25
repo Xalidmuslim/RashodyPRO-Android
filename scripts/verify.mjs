@@ -10,7 +10,7 @@ const native = fs.readFileSync('native/FinanceStoragePlugin.java', 'utf8');
 const guards = [
   ['Native keyboard method is present', native.includes('@PluginMethod public void showAmountKeyboard(')],
   ['IME uses SHOW_IMPLICIT, never SHOW_FORCED', native.includes('InputMethodManager.SHOW_IMPLICIT') && !native.includes('SHOW_FORCED')],
-  ['Browser input focus retained', html.includes('input?.focus({preventScroll:true})')],
+  ['Custom numeric keypad replaces Android IME', html.includes('data-numpad=') && html.includes('inputmode="none" readonly')],
   ['Android plus does not force keyboard', !html.includes('plugin?.showAmountKeyboard?.()')],
   ['Android plus never fixes body', !html.includes("document.body.classList.add('r105-modal-locked')")],
   ['Modal close does not force scroll', !html.includes('window.scrollTo({top:r105PageY')],
@@ -55,7 +55,7 @@ function modalScenario(native){
     if(modalFocuses||inputFocuses||keyboardCalls)throw new Error('Android dialog grabbed focus or opened the keyboard');
     if(historyPushes!==0)throw new Error('Native + pushed a browser history entry and can jump the viewport');
   }else{
-    if(body.style.overflow!=='hidden'||inputFocuses!==1||historyPushes!==1)throw new Error('Browser modal behavior changed');
+    if(body.style.overflow!=='hidden'||inputFocuses!==0||historyPushes!==1)throw new Error('Browser modal behavior changed');
   }
   vm.runInContext('hideModal()',context,{timeout:2000});
   if(!overlay.hidden||scrollCalls||window.scrollY!==629)throw new Error('Close moved the page');
