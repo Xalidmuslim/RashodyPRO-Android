@@ -2103,6 +2103,49 @@ html.rashody-native-android body.matte-editorial :is(.fab,.week-day,.panel,.tren
   html.rashody-native-android body.matte-editorial .overlay:not([hidden]),
   html.rashody-native-android body.matte-editorial .overlay:not([hidden])>.sheet {animation:none!important;}
 }
+/* v1.0.5: calendar per-day expenses and proportional scale, zero-cost days remain visible. */
+body.matte-editorial #page .week-strip .week-day{
+ min-width:0!important;overflow:hidden!important;display:grid!important;
+ grid-template-rows:13px 25px 5px 16px!important;align-content:center!important;
+ justify-items:center!important;gap:3px!important;
+ padding:7px 2px!important;min-height:80px!important;max-height:none!important;
+}
+body.matte-editorial #page .week-day-name{margin:0!important;line-height:13px!important;white-space:nowrap!important}
+body.matte-editorial #page .week-day-date{margin:0!important;line-height:25px!important}
+body.matte-editorial #page .week-day-meter{display:block!important;position:relative!important;width:84%!important;height:5px!important;
+ border-radius:12px!important;overflow:hidden!important;background:rgba(67,98,102,.14)!important;}
+body.matte-editorial #page .week-day-meter-fill{display:block!important;height:100%!important;border-radius:inherit!important;
+ background:#5B958D!important;transition:width 200ms ease-out!important;}
+body.matte-editorial #page .week-day.focus-day .week-day-meter-fill{background:#C87361!important}
+body.matte-editorial #page .week-day-total{display:block!important;width:100%!important;min-width:0!important;
+ font-size:calc(9px * var(--font-scale,1))!important;font-weight:750!important;line-height:16px!important;
+ letter-spacing:-.035em!important;text-align:center!important;white-space:nowrap!important;
+ overflow:hidden!important;text-overflow:clip!important;color:#60727A!important;}
+body.matte-editorial #page .week-day.focus-day .week-day-total{color:#FFFCF6!important}
+body.matte-editorial #page .week-day.focus-day .week-day-meter{background:rgba(255,255,255,.27)!important}
+@media(max-width:365px){body.matte-editorial #page .week-strip .week-day{padding-left:1px!important;padding-right:1px!important;gap:2px!important}
+ body.matte-editorial #page .week-day-total{font-size:calc(8px * var(--font-scale,1))!important}}
+/* v1.0.5: fixed-size touch keypad; unlike Android IME it does not resize the visual viewport. */
+body.matte-editorial #modal.tx-sheet .r105-keypad{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:5px!important;margin:8px 0 0!important;user-select:none;-webkit-user-select:none;}
+body.matte-editorial #modal.tx-sheet .r105-key{
+ display:grid!important;place-items:center!important;border:0!important;
+ height:43px!important;min-height:43px!important;border-radius:11px!important;
+ background:#FFFCF8!important;color:#23444C!important;
+ box-shadow:none!important;font-size:21px!important;line-height:1!important;font-weight:650!important;
+ padding:0!important;touch-action:manipulation!important;
+ transition:background-color 190ms ease-out,color 190ms ease-out!important;
+ transform:none!important;animation:none!important;}
+body.matte-editorial #modal.tx-sheet .r105-key:active{background:#DCEBE6!important;transform:none!important}
+body.matte-editorial #modal.tx-sheet .r105-key-back{background:#E4EBE8!important}
+body.matte-editorial #modal.tx-sheet #txAmount[readonly]{caret-color:transparent!important;user-select:none!important;-webkit-user-select:none!important;}
+/* Modal is a stationary bottom sheet: no scaling or translating of its layout when appearing. */
+body.matte-editorial #overlay .sheet{animation:none!important;transform:none!important;
+ transition:opacity 205ms ease-out!important;overscroll-behavior:contain!important;}
+body.matte-editorial #overlay:not([hidden]) .sheet{opacity:1!important}
+body.matte-editorial #overlay .sheet *:active{translate:none!important;scale:1!important}
+@media(prefers-reduced-motion:reduce){body.matte-editorial #modal.tx-sheet .r105-key{transition:none!important}}
+
 </style>
 </head>
 <body class="matte-editorial">
@@ -2222,6 +2265,7 @@ const PATHS={
  analytics:'<path d="M3 3v18h18M7 16l4-4 3 3 6-8"/>',
  budget:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
  settings:'<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3"/><circle cx="12" cy="4" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="14" cy="20" r="2"/>',
+ backspace:'<path d="M9 4H20a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H9L2 12l7-8Z"/><path d="m12 9 5 6m0-6-5 6"/>',
  plus:'<path d="M12 5v14M5 12h14"/>',chevronLeft:'<path d="m14 18-6-6 6-6"/>',chevronRight:'<path d="m10 18 6-6-6-6"/>',chevronDown:'<path d="m6 9 6 6 6-6"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
  arrowUp:'<path d="m5 14 7-7 7 7M12 7v12"/>',arrowDown:'<path d="m5 10 7 7 7-7M12 17V5"/>',trend:'<path d="M4 17 10 11l4 4 6-8M14 7h6v6"/>',chart:'<rect x="4" y="13" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="16" y="3" width="4" height="18" rx="1"/>',
  cart:'<circle cx="9" cy="20" r="1"/><circle cx="19" cy="20" r="1"/><path d="M3 3h2l3 13h11l3-9H6"/>',coffee:'<path d="M4 8h13v7a6.5 6.5 0 0 1-13 0V8ZM17 10h2a2.5 2.5 0 0 1 0 5h-2M8 3v2M12 3v2"/>',bus:'<rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M7 21v-3M17 21v-3M8 14h1M15 14h1"/>',home:'<path d="m3 11 9-8 9 8M5 10v11h14V10M10 21v-7h4v7"/>',heart:'<path d="M20.8 9.1C20.8 5.9 18.5 4 16 4c-1.7 0-3.1.8-4 2.1C11.1 4.8 9.7 4 8 4c-2.5 0-4.8 1.9-4.8 5.1 0 4.5 8.8 10.8 8.8 10.8s8.8-6.3 8.8-10.8Z"/>',film:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/>',shirt:'<path d="M8 3 3 6l2.5 4L8 9v12h8V9l2.5 1L21 6l-5-3c-1 3-7 3-8 0Z"/>',box:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 8v8l9 5 9-5V8M12 13v8"/>',
@@ -2249,6 +2293,7 @@ function registerAndroidBack(){
  if(nativeApp?.addListener)nativeApp.addListener('backButton',()=>navigateBack()).catch(e=>console.warn('Android back handler:',e));
 }
 const STORAGE='rashody.pro.v2';
+let modalScrollTop=0;
 let data,view='dashboard',month=new Date(new Date().getFullYear(),new Date().getMonth(),1),filters={type:'all',category:'all',search:'',allDates:false},draft=null,catDraft=null,toastTimer=0,lastFocus=null;
 let historyFiltersOpen=false;let historyPeriod='month',historyAnchor=dateLocal(),analyticsPeriod='month',analyticsAnchor=dateLocal(),chartSelection=null,navReady=false,modalHistoryOpen=false,dashboardFocusDay=null,dashboardWeekAnchor=null;
 function initData(){
@@ -2419,7 +2464,8 @@ function expensesOfDay(day){return sortTx(data.transactions.filter(t=>t.type==='
 function matteDateLabel(iso){return new Intl.DateTimeFormat('ru-RU',{weekday:'short',day:'numeric',month:'long'}).format(new Date(iso+'T12:00:00'))}
 function compactWeekWidget(selectedDay){
  const base=dashboardWeekAnchor||selectedDay,week=weekRangeFor(base),map=monthExpenseMap(data.transactions),today=dateLocal(),names=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
- return `<section class="calendar-shell" aria-label="Календарь расходов"><div class="calendar-title-row"><h1>Обзор</h1><div class="week-arrows"><button type="button" class="icon-btn" data-action="week-prev" aria-label="Предыдущая неделя">${svg('chevronLeft',20)}</button><button type="button" class="icon-btn" data-action="week-next" aria-label="Следующая неделя">${svg('chevronRight',20)}</button></div></div><div class="week-strip" id="weekStrip">${week.map((day,i)=>{const total=map[day]||0;return `<button type="button" class="week-day ${total>0?'has-expense':''} ${day===today?'is-active':''} ${day===selectedDay?'focus-day':''}" data-jump-day="${day}" aria-pressed="${day===selectedDay}" aria-label="${esc(matteDateLabel(day))}. Расходы: ${esc(money(total))}"><span class="week-day-name">${names[i]}</span><strong class="week-day-date">${Number(day.slice(-2))}</strong><i class="week-day-dot" aria-hidden="true"></i></button>`}).join('')}</div></section>`
+ const weekMax=Math.max(1,...week.map(day=>map[day]||0));
+ return `<section class="calendar-shell" aria-label="Календарь расходов"><div class="calendar-title-row"><h1>Обзор</h1><div class="week-arrows"><button type="button" class="icon-btn" data-action="week-prev" aria-label="Предыдущая неделя">${svg('chevronLeft',20)}</button><button type="button" class="icon-btn" data-action="week-next" aria-label="Следующая неделя">${svg('chevronRight',20)}</button></div></div><div class="week-strip" id="weekStrip">${week.map((day,i)=>{const total=map[day]||0;const percent=total>0?Math.max(6,Math.min(100,Math.round(total/weekMax*100))):0;const label=total>0?compactMoney(total).replace('.',',')+' ₽':'0 ₽';return `<button type="button" class="week-day ${total>0?'has-expense':''} ${day===today?'is-active':''} ${day===selectedDay?'focus-day':''}" data-jump-day="${day}" aria-pressed="${day===selectedDay}" aria-label="${esc(matteDateLabel(day))}. Расходы: ${esc(money(total))}"><span class="week-day-name">${names[i]}</span><strong class="week-day-date">${Number(day.slice(-2))}</strong><span class="week-day-meter" aria-hidden="true"><i class="week-day-meter-fill" style="width:${percent}%"></i></span><small class="week-day-total" title="${esc(money(total))}">${esc(label)}</small></button>`}).join('')}</div></section>`
 }
 function currentExpenseStreak(){const set=new Set(data.transactions.filter(t=>t.type==='expense').map(t=>t.date));const cursor=new Date(dateLocal()+'T12:00:00');let days=0;while(set.has(dateLocal(cursor)) && days<3650){days++;cursor.setDate(cursor.getDate()-1)}return days}
 function expenseCountLabel(n){const k=n%10,m=n%100;return `${n} ${m>=11&&m<=14?'операций':k===1?'операция':k>=2&&k<=4?'операции':'операций'}`}
@@ -2527,40 +2573,23 @@ function settings(){const c=data.settings;return `<div class="settings-grid"><se
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
 function openModal(){
  lastFocus=document.activeElement;
- // Native Capacitor backButton already closes the modal; pushing browser history here
- // can restore the WebView scroll offset and make the background jump.
- if(navReady&&!nativeAndroid){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
- // Keep the background document in its original scroll position.
- // A fixed body + a forced Android keyboard used to shift the viewport on tap.
+ modalScrollTop=window.scrollY;
+ if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
  const overlay=document.getElementById('overlay');
- if(!nativeAndroid)document.body.style.overflow='hidden';
  overlay.hidden=false;
- const modal=document.getElementById('modal');
- if(nativeAndroid){
-   // Do not force-focus even the dialog: some Android WebViews scroll the
-   // document/resize the visual viewport despite preventScroll:true.
-   // Touching an input focuses it normally; the native back handler closes this sheet.
-   modal.setAttribute('tabindex','-1');
- }else{
-   const input=modal.classList.contains('tx-sheet')?document.getElementById('txAmount'):
-     modal.classList.contains('cat-sheet')?document.getElementById('catName'):
-     modal.querySelector('input:not([type=hidden]),button');
-   input?.focus({preventScroll:true});
- }
+ // Lock the document without a scroll reset and without changing the viewport height.
+ document.body.style.position='fixed';document.body.style.top=`-${modalScrollTop}px`;
+ document.body.style.left='0';document.body.style.right='0';document.body.style.width='100%';
+ const modal=document.getElementById('modal');modal.scrollTop=0;
+ // No automatic focus on txAmount: Android keyboard must never open for number input.
+ if(!modal.classList.contains('tx-sheet'))requestAnimationFrame(()=>modal.querySelector('.sheet-header button')?.focus({preventScroll:true}));
 }
 function hideModal(){
- const overlay=document.getElementById('overlay');
- const modal=document.getElementById('modal');
- if(nativeAndroid&&modal.contains(document.activeElement)&&document.activeElement!==modal)
-   document.activeElement.blur();
- overlay.hidden=true;
- if(!nativeAndroid)document.body.style.overflow='';
- // Do not reset window.scrollY on close. The background never moved.
- draft=null;catDraft=null;modal.classList.remove('tx-sheet','cat-sheet');
- modalHistoryOpen=false;
- // Forcing focus back to the fixed bottom FAB also moves the visual viewport
- // on some Android keyboards. Browser users keep regular focus restoration.
- if(!nativeAndroid&&lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
+ document.getElementById('overlay').hidden=true;
+ document.body.style.position='';document.body.style.top='';document.body.style.left='';document.body.style.right='';document.body.style.width='';
+ window.scrollTo({top:modalScrollTop,behavior:'instant'});
+ draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet');modalHistoryOpen=false;
+ if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
 }
 function closeModal(){
  if(catDraft&&txDraftBeforeCategory){
@@ -2579,7 +2608,7 @@ function renderTxModal(){
  document.getElementById('modal').classList.add('tx-sheet');
  document.getElementById('modal').innerHTML=`<div class="sheet-header"><div><p class="tx-eyebrow">ФИНАНСОВЫЙ ДНЕВНИК</p><h2 id="dialog-title">${edit?'Изменить операцию':draft.type==='income'?'Новый доход':'Новый расход'}</h2></div><button type="button" class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div>
  <div class="type-switch ${data.settings.incomeEnabled?'':'expense-only'}"><button type="button" class="${draft.type==='expense'?'active':''}" data-tx-type="expense">${svg('arrowUp',16)} Расход</button>${data.settings.incomeEnabled?`<button type="button" class="${draft.type==='income'?'active':''}" data-tx-type="income">${svg('arrowDown',16)} Доход</button>`:''}</div>
- <section class="tx-amount-block"><label class="amount-label" for="txAmount">СУММА ${draft.type==='income'?'ДОХОДА':'РАСХОДА'}</label><div class="amount-entry"><input id="txAmount" type="text" inputmode="decimal" autocomplete="off" placeholder="0" value="${esc(draft.amount||'')}" maxlength="18" aria-label="Сумма ${draft.type==='income'?'дохода':'расхода'}"><span class="tx-currency">${esc(data.settings.currency)}</span><button type="button" class="tx-check" id="txSubmit" data-action="save-tx" aria-label="${edit?'Сохранить изменения':'Добавить операцию'}" title="${edit?'Сохранить изменения':'Добавить операцию'}" ${good?'':'disabled'}>${svg('check',25)}</button></div><div class="tx-quick-amount" aria-label="Быстрый ввод суммы">${[100,300,500,1000].map(v=>`<button type="button" data-quick-amount="${v}">${v.toLocaleString('ru-RU')}</button>`).join('')}<button type="button" class="tx-erase" data-action="tx-clear-amount" aria-label="Очистить сумму">${svg('x',16)}</button></div></section>
+ <section class="tx-amount-block"><label class="amount-label" for="txAmount">СУММА ${draft.type==='income'?'ДОХОДА':'РАСХОДА'}</label><div class="amount-entry"><input id="txAmount" type="text" inputmode="none" readonly autocomplete="off" placeholder="0" value="${esc(draft.amount||'')}" maxlength="18" aria-label="Сумма ${draft.type==='income'?'дохода':'расхода'}"><span class="tx-currency">${esc(data.settings.currency)}</span><button type="button" class="tx-check" id="txSubmit" data-action="save-tx" aria-label="${edit?'Сохранить изменения':'Добавить операцию'}" title="${edit?'Сохранить изменения':'Добавить операцию'}" ${good?'':'disabled'}>${svg('check',25)}</button></div><div class="tx-quick-amount" aria-label="Быстрый ввод суммы">${[100,300,500,1000].map(v=>`<button type="button" data-quick-amount="${v}">${v.toLocaleString('ru-RU')}</button>`).join('')}<button type="button" class="tx-erase" data-action="tx-clear-amount" aria-label="Очистить сумму">${svg('x',16)}</button></div><div class="r105-keypad" role="group" aria-label="Цифровая клавиатура для суммы" id="txKeypad">${['1','2','3','4','5','6','7','8','9',',','0','back'].map(k=>`<button type="button" class="r105-key ${k==='back'?'r105-key-back':''}" data-numpad="${k}" aria-label="${k==='back'?'Удалить последнюю цифру':k===','?'Десятичная запятая':k}" >${k==='back'?svg('backspace',21):k}</button>`).join('')}</div></section>
  <section class="tx-form-section"><div class="tx-section-title"><h3>Категория</h3><button type="button" class="r103-add-category" data-action="tx-add-category" aria-label="Добавить категорию">${svg('plus',16)}<span>Добавить категорию</span></button><span class="tx-selected-category" id="txSelectedCategory">${esc(getCat(draft.category).name)}</span></div><input type="search" class="tx-category-search" id="txCategorySearch" placeholder="Найти категорию" autocomplete="off" aria-label="Найти категорию"><div class="category-picker" id="txCategories">${icons.map(c=>`<button type="button" class="cat-choice ${c.id===draft.category?'active':''}" data-tx-category="${esc(c.id)}" aria-pressed="${c.id===draft.category}">${categoryIcon(c,18)}<span class="truncate">${esc(c.name)}</span></button>`).join('')}</div><button type="button" class="r49-more-categories" data-action="tx-more-categories" id="txMoreCategories" aria-expanded="false">Все категории ↓</button><p class="tx-search-empty" id="txSearchEmpty" hidden>Категория не найдена</p></section>
  <section class="tx-form-section tx-details"><div class="field"><label for="txNote">Комментарий <span class="tx-optional">необязательно</span></label><input id="txNote" type="text" maxlength="200" placeholder="Например, покупки в магазине" value="${esc(draft.note||'')}"></div><div class="two-fields"><div class="field"><label for="txDate">Дата</label><div class="tx-date-control"><input id="txDate" type="date" value="${esc(draft.date)}"><button type="button" data-action="tx-today" aria-label="Установить сегодняшнюю дату" title="Сегодня">Сегодня</button></div></div><div class="field"><label for="txTime">Время</label><input id="txTime" type="time" value="${esc(draft.time||'')}"></div></div></section>
  <p class="r49-save-hint">Для сохранения нажмите галочку справа от суммы.</p>
@@ -2587,9 +2616,23 @@ function renderTxModal(){
  const picker=document.getElementById('txCategories');
  if(icons.findIndex(c=>c.id===draft.category)>5){picker?.classList.add('expanded');document.getElementById('txMoreCategories')?.setAttribute('aria-expanded','true')}
 }
+function enterAmountDigit(key){
+ if(!draft)return;
+ const input=document.getElementById('txAmount');if(!input)return;
+ let value=String(input.value||'');
+ if(key==='back')value=value.slice(0,-1);
+ else if(key===','){
+  if(!value.includes(',')&&!value.includes('.'))value=(value||'0')+',';
+ }else if(/^[0-9]$/.test(key)){
+  const integer=value.split(/[,.]/)[0];const fraction=value.split(/[,.]/)[1];
+  if(value.length>=16 || (fraction!==undefined&&fraction.length>=3) || (fraction===undefined&&integer.length>=13))return;
+  value=value==='0'?key:value+key;
+ }
+ input.value=value;draft.amount=value;updateTxConfirm();
+}
 function updateTxConfirm(){const input=document.getElementById('txAmount');if(!input)return;const valid=!!F.parseAmount(input.value);document.querySelectorAll('#modal [data-action="save-tx"]').forEach(b=>{b.disabled=!valid;b.setAttribute('aria-disabled',String(!valid))})}
 function filterTxCategories(query){const term=String(query||'').trim().toLocaleLowerCase('ru');if(term){document.getElementById('txCategories')?.classList.add('expanded');document.getElementById('txMoreCategories')?.setAttribute('aria-expanded','true')}let visible=0;document.querySelectorAll('#txCategories [data-tx-category]').forEach(b=>{const name=getCat(b.dataset.txCategory).name.toLocaleLowerCase('ru');const show=!term||name.includes(term);b.hidden=!show;if(show)visible++});const el=document.getElementById('txSearchEmpty');if(el)el.hidden=visible!==0}
-async function saveTx(){collectDraft();if(draft.type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён');const amount=F.parseAmount(draft.amount);if(!amount){toast('Введите корректную сумму больше нуля');document.getElementById('txAmount')?.focus();return}if(!F.isDate(draft.date)){toast('Укажите корректную дату');return}const tx={id:draft.id||newId(),type:draft.type,category:draft.category,amount,note:String(draft.note||'').trim().slice(0,200),date:draft.date,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(draft.time||'')?draft.time:''};const isEdit=!!draft.id;
+async function saveTx(){collectDraft();if(draft.type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён');const amount=F.parseAmount(draft.amount);if(!amount){toast('Введите корректную сумму больше нуля');return}if(!F.isDate(draft.date)){toast('Укажите корректную дату');return}const tx={id:draft.id||newId(),type:draft.type,category:draft.category,amount,note:String(draft.note||'').trim().slice(0,200),date:draft.date,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(draft.time||'')?draft.time:''};const isEdit=!!draft.id;
  if(isEdit){const i=data.transactions.findIndex(x=>x.id===tx.id);if(i<0)return toast('Операция не найдена');data.transactions[i]=tx}else data.transactions.push(tx);
  month=dateFromMonth(tx.date);dashboardFocusDay=tx.date;dashboardWeekAnchor=tx.date;closeModal();render();await saveFeedback(isEdit?'Изменения сохранены':'Операция добавлена')}
 function quickRepeatLast(){
@@ -2647,13 +2690,14 @@ async function exportCSV(){
 async function importJSONFile(file){if(!file)return;if(file.size>20*1024*1024){toast('Файл слишком большой');return}try{const parsed=F.parseBackup(await file.text());if(!confirm(`Восстановить копию (${parsed.transactions.length} операций)? Текущие данные будут ЗАМЕНЕНЫ. Рекомендуется сначала сохранить свою резервную копию.`))return;data={transactions:parsed.transactions,settings:parsed.settings,categories:mergeCategories(parsed.categories)};recoveryLocked=false;initNeutralAppearance();applyFontScale();month=new Date(new Date().getFullYear(),new Date().getMonth(),1);render();await saveFeedback('Резервная копия восстановлена')}catch(e){toast(e.message||'Не удалось прочитать файл')}finally{document.getElementById('importFile').value=''}}
 async function loadDemo(){if(data.transactions.length){toast('Пример доступен только при пустой истории');return}const today=new Date();let sample=[];const add=(offset,type,category,amount,note)=>{const d=new Date(today.getFullYear(),today.getMonth(),Math.max(1,today.getDate()-offset));sample.push({id:newId(),type,category,amount,note,date:dateLocal(d),time:'12:00'})};if(data.settings.incomeEnabled)add(10,'income','salary',87500,'Зарплата');add(9,'expense','home',28000,'Аренда');add(8,'expense','food',4600,'Продукты');add(6,'expense','transport',1450,'Заправка');add(5,'expense','cafe',1200,'Обед');if(data.settings.incomeEnabled)add(3,'income','sidejob',14500,'Подработка');add(2,'expense','shop',6200,'Покупки');add(1,'expense','food',2950,'Супермаркет');data.transactions=sample;month=new Date(today.getFullYear(),today.getMonth(),1);render();await saveFeedback('Добавлены демонстрационные данные')}
 async function clearData(){if(!data.transactions.length)return toast('История уже пуста');if(!confirm(`Безвозвратно удалить ${data.transactions.length} операций? Сначала сохраните JSON-копию, если она нужна.`))return;data.transactions=[];render();await saveFeedback('История очищена')}
-function actions(a){switch(a){case 'navigate-back':return navigateBack();case 'week-prev':return changeWeek(-1);case 'week-next':return changeWeek(1);case 'week-today':return resetWeek();case 'history-prev':return historyStep(-1);case 'history-next':return historyStep(1);case 'history-today':return historyToday();case 'history-reset-filters':filters={type:'all',category:'all',search:'',allDates:false};return render();case 'toggle-history-filters':historyFiltersOpen=!historyFiltersOpen;return render();case 'view-focus-day':historyPeriod='day';historyAnchor=(dashboardFocusDay&&F.isDate(dashboardFocusDay)?dashboardFocusDay:dateLocal());filters={type:'expense',category:'all',search:'',allDates:false};return go('transactions');case 'analytics-prev':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,-1);chartSelection=null;return render();case 'analytics-next':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,1);chartSelection=null;return render();case 'analytics-today':analyticsAnchor=dateLocal();chartSelection=null;return render();case 'prev-month':return changeMonth(-1);case 'next-month':return changeMonth(1);case 'new-expense':return startTx('expense');case 'new-expense-day':return startTx('expense',null,dashboardFocusDay);case 'new-income':return startTx('income');case 'close-modal':return closeModal();case 'tx-clear-amount':{const input=document.getElementById('txAmount');if(input){input.value='';if(draft)draft.amount='';updateTxConfirm();input.focus({preventScroll:true})}return}
+function actions(a){switch(a){case 'navigate-back':return navigateBack();case 'week-prev':return changeWeek(-1);case 'week-next':return changeWeek(1);case 'week-today':return resetWeek();case 'history-prev':return historyStep(-1);case 'history-next':return historyStep(1);case 'history-today':return historyToday();case 'history-reset-filters':filters={type:'all',category:'all',search:'',allDates:false};return render();case 'toggle-history-filters':historyFiltersOpen=!historyFiltersOpen;return render();case 'view-focus-day':historyPeriod='day';historyAnchor=(dashboardFocusDay&&F.isDate(dashboardFocusDay)?dashboardFocusDay:dateLocal());filters={type:'expense',category:'all',search:'',allDates:false};return go('transactions');case 'analytics-prev':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,-1);chartSelection=null;return render();case 'analytics-next':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,1);chartSelection=null;return render();case 'analytics-today':analyticsAnchor=dateLocal();chartSelection=null;return render();case 'prev-month':return changeMonth(-1);case 'next-month':return changeMonth(1);case 'new-expense':return startTx('expense');case 'new-expense-day':return startTx('expense',null,dashboardFocusDay);case 'new-income':return startTx('income');case 'close-modal':return closeModal();case 'tx-clear-amount':{const input=document.getElementById('txAmount');if(input){input.value='';if(draft)draft.amount='';updateTxConfirm()}return}
 case 'tx-more-categories':{const picker=document.getElementById('txCategories');if(!picker)return;const on=picker.classList.toggle('expanded');const b=document.getElementById('txMoreCategories');if(b){b.setAttribute('aria-expanded',String(on));b.textContent=on?'Свернуть ↑':'Все категории ↓'}return}case 'tx-today':{const el=document.getElementById('txDate');if(el){el.value=dateLocal();if(draft)draft.date=el.value}return}
 case 'save-tx':return saveTx();case 'delete-tx':return deleteTx();case 'repeat-tx':return repeatTx();case 'quick-repeat':return quickRepeatLast();case 'reset-corrupt':return resetCorruptStorage();case 'storage-dismiss':storagePartialDismissed=true;storageWarning(null);return;case 'new-category':return startCat();case 'tx-add-category':return startCatFromTx();case 'save-category':return saveCat();case 'delete-category':return deleteCat();case 'export-json':return exportJSON();case 'export-csv':return exportCSV();case 'import-json':return document.getElementById('importFile').click();case 'import-old-csv':return openLegacyCSV();case 'confirm-old-csv':return importLegacyCSV();case 'load-demo':return loadDemo();case 'clear-data':return clearData()}}
 document.addEventListener('click',e=>{const dayPiece=e.target.closest('[data-day-chart-category]');if(dayPiece){updateDayChartSelection(dayPiece.dataset.dayChartCategory);return}if(e.target.closest('[data-day-chart-reset]')){dayChartSelection=null;render();return}const slice=e.target.closest('.ring-slice');if(slice){updateChartSelection(slice.dataset.chartCategory);slice.blur?.();return}const btn=e.target.closest('button');if(!btn)return;
+ if(btn.hasAttribute('data-numpad')&&draft){enterAmountDigit(btn.dataset.numpad);return}
  if(btn.dataset.jumpDay){dayChartSelection=null;dashboardFocusDay=btn.dataset.jumpDay;dashboardWeekAnchor=btn.dataset.jumpDay;return view==='dashboard'?render():undefined}
  if(btn.hasAttribute('data-chart-open')){const id=btn.dataset.category;filters={type:'expense',category:id,search:'',allDates:false};historyPeriod=view==='analytics'?analyticsPeriod:'month';historyAnchor=view==='analytics'?analyticsAnchor:dateLocal(month);go('transactions');return render()}
- if(btn.dataset.quickAmount&&draft){const amount=document.getElementById('txAmount');amount.value=btn.dataset.quickAmount;draft.amount=amount.value;updateTxConfirm();amount.focus({preventScroll:true});return}
+ if(btn.dataset.quickAmount&&draft){const amount=document.getElementById('txAmount');amount.value=btn.dataset.quickAmount;draft.amount=amount.value;updateTxConfirm();return}
  if(btn.dataset.action)return actions(btn.dataset.action);
  if(btn.dataset.view)return go(btn.dataset.view);
  if(btn.dataset.tx){const t=data.transactions.find(x=>x.id===btn.dataset.tx);if(t)startTx(t.type,t);return}
