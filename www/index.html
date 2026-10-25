@@ -2293,7 +2293,7 @@ function registerAndroidBack(){
  if(nativeApp?.addListener)nativeApp.addListener('backButton',()=>navigateBack()).catch(e=>console.warn('Android back handler:',e));
 }
 const STORAGE='rashody.pro.v2';
-let modalScrollTop=0;
+
 let data,view='dashboard',month=new Date(new Date().getFullYear(),new Date().getMonth(),1),filters={type:'all',category:'all',search:'',allDates:false},draft=null,catDraft=null,toastTimer=0,lastFocus=null;
 let historyFiltersOpen=false;let historyPeriod='month',historyAnchor=dateLocal(),analyticsPeriod='month',analyticsAnchor=dateLocal(),chartSelection=null,navReady=false,modalHistoryOpen=false,dashboardFocusDay=null,dashboardWeekAnchor=null;
 function initData(){
@@ -2573,21 +2573,16 @@ function settings(){const c=data.settings;return `<div class="settings-grid"><se
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
 function openModal(){
  lastFocus=document.activeElement;
- modalScrollTop=window.scrollY;
- if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
- const overlay=document.getElementById('overlay');
- overlay.hidden=false;
- // Lock the document without a scroll reset and without changing the viewport height.
- document.body.style.position='fixed';document.body.style.top=`-${modalScrollTop}px`;
- document.body.style.left='0';document.body.style.right='0';document.body.style.width='100%';
- const modal=document.getElementById('modal');modal.scrollTop=0;
- // No automatic focus on txAmount: Android keyboard must never open for number input.
- if(!modal.classList.contains('tx-sheet'))requestAnimationFrame(()=>modal.querySelector('.sheet-header button')?.focus({preventScroll:true}));
+ // Do not change Android body geometry: fixed positioning caused jumps when opening +.
+ if(navReady&&!nativeAndroid){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
+ document.getElementById('overlay').hidden=false;
+ if(!nativeAndroid)document.body.style.overflow='hidden';
+ document.getElementById('modal').scrollTop=0;
+ // On-screen numpad is displayed immediately; no focus or system keyboard here.
 }
 function hideModal(){
  document.getElementById('overlay').hidden=true;
- document.body.style.position='';document.body.style.top='';document.body.style.left='';document.body.style.right='';document.body.style.width='';
- window.scrollTo({top:modalScrollTop,behavior:'instant'});
+ if(!nativeAndroid)document.body.style.overflow='';
  draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet');modalHistoryOpen=false;
  if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
 }
@@ -2722,6 +2717,7 @@ document.addEventListener('input',e=>{if(e.target.id==='searchTx'){filters.searc
 document.addEventListener('change',e=>{if(e.target.id==='historyJump'&&F.isDate(e.target.value)){historyAnchor=e.target.value;filters.allDates=false;render()}if(e.target.id==='incomeEnabled'){data.settings.incomeEnabled=e.target.checked;render();void saveFeedback(e.target.checked?'Учёт доходов включён':'Показаны только расходы')}if(e.target.id==='filterCategory'){filters.category=e.target.value;updateTxBody()}if(e.target.id==='allDates'){filters.allDates=e.target.checked;updateTxBody()}if(e.target.id==='currency'){data.settings.currency=e.target.value;render();void saveFeedback('Сменено обозначение валюты; суммы не конвертируются')}if(e.target.dataset.categoryBudget){const raw=e.target.value.trim(),v=raw===''?0:Number(raw);if(!Number.isFinite(v)||v<0||v>1e12){toast('Неверный лимит');render();return}data.settings.categoryBudgets[e.target.dataset.categoryBudget]=F.money(v);persist();render();toast('Лимит категории сохранён')}});
 document.getElementById('importFile').addEventListener('change',e=>importJSONFile(e.target.files?.[0]));
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal()});
+document.getElementById('overlay').addEventListener('touchmove',e=>{if(e.target.id==='overlay')e.preventDefault()},{passive:false});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.day-donut-sector')){e.preventDefault();updateDayChartSelection(e.target.dataset.dayChartCategory);return}if((e.key==='Enter'||e.key===' ')&&e.target.matches('.ring-slice')){e.preventDefault();updateChartSelection(e.target.dataset.chartCategory);return}if(e.key==='Enter'&&e.target.id==='txAmount'){e.preventDefault();if(F.parseAmount(e.target.value))void saveTx();return}const ov=document.getElementById('overlay');if(e.key==='Escape'){if(!ov.hidden){e.preventDefault();closeModal()}else if(view!=='dashboard'){e.preventDefault();navigateBack()}}if(e.key==='Tab'&&!ov.hidden){const els=Array.from(document.getElementById('modal').querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled)')).filter(x=>x.getClientRects().length);if(!els.length)return;const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 function applyFontScale(){document.documentElement.style.setProperty('--font-scale',String(Math.round(data.settings.fontScale*1.12*1000)/1000))}
 // A blocked IndexedDB request must never prevent the dashboard from opening.
