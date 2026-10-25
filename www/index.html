@@ -2158,6 +2158,18 @@ body.matte-editorial #modal.tx-sheet .category-picker{grid-template-columns:repe
 body.matte-editorial #modal.tx-sheet .cat-choice{min-height:62px!important;padding:6px 2px!important;gap:2px!important;line-height:1.15!important}
 body.matte-editorial #modal.tx-sheet .cat-choice .category-icon{width:23px!important;min-width:23px!important;height:23px!important}
 body.matte-editorial #modal.tx-sheet .cat-choice .truncate{-webkit-line-clamp:3;overflow-wrap:anywhere;font-size:calc(9.5px * var(--font-scale,1))!important}
+
+/* v1.0.7: Relative weekly spend levels and legible selected day chart category. */
+body.matte-editorial #page .week-day .week-day-meter{background:#D6D8D3!important}
+body.matte-editorial #page .week-day.focus-day .week-day-meter{background:rgba(255,255,255,.28)!important}
+body.matte-editorial #page .week-day.spend-zero .week-day-meter{background:#CFCFC8!important}
+body.matte-editorial #page .week-day.spend-low .week-day-meter-fill{background:#6FAF7A!important}
+body.matte-editorial #page .week-day.spend-medium .week-day-meter-fill{background:#D8B24C!important}
+body.matte-editorial #page .week-day.spend-high .week-day-meter-fill{background:#D06A5C!important}
+body.matte-editorial #page .day-donut-center{inset:24.5%;gap:2px!important;padding:3px 2px!important}
+body.matte-editorial #page .day-donut-category{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;max-width:100%;overflow:hidden;overflow-wrap:anywhere;word-break:normal;text-align:center;font-size:clamp(8px,2.15vw,10px);font-weight:750;line-height:1.07;color:#345B60}
+body.matte-editorial #page .day-donut-center .day-donut-total{font-size:clamp(10px,2.8vw,17px)!important}
+body.matte-editorial #page .day-donut-center .day-donut-caption{font-size:clamp(8px,2vw,10px)!important}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2474,10 +2486,11 @@ function changeWeek(step){dayChartSelection=null;const base=dashboardWeekAnchor|
 function resetWeek(){dayChartSelection=null;dashboardWeekAnchor=dateLocal();dashboardFocusDay=dateLocal();month=dateFromMonth(dashboardWeekAnchor);render()}
 function expensesOfDay(day){return sortTx(data.transactions.filter(t=>t.type==='expense'&&t.date===day))}
 function matteDateLabel(iso){return new Intl.DateTimeFormat('ru-RU',{weekday:'short',day:'numeric',month:'long'}).format(new Date(iso+'T12:00:00'))}
+function weekSpendLevel(amount,weekMax){if(amount<=0)return 'zero';const ratio=amount/weekMax;return ratio<=1/3?'low':ratio<=2/3?'medium':'high'}
 function compactWeekWidget(selectedDay){
  const base=dashboardWeekAnchor||selectedDay,week=weekRangeFor(base),map=monthExpenseMap(data.transactions),today=dateLocal(),names=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
  const weekMax=Math.max(1,...week.map(day=>map[day]||0));
- return `<section class="calendar-shell" aria-label="Календарь расходов"><div class="calendar-title-row"><h1>Обзор</h1><div class="week-arrows"><button type="button" class="icon-btn" data-action="week-prev" aria-label="Предыдущая неделя">${svg('chevronLeft',20)}</button><button type="button" class="icon-btn" data-action="week-next" aria-label="Следующая неделя">${svg('chevronRight',20)}</button></div></div><div class="week-strip" id="weekStrip">${week.map((day,i)=>{const total=map[day]||0;const percent=total>0?Math.max(6,Math.min(100,Math.round(total/weekMax*100))):0;const label=total>0?compactMoney(total).replace('.',',')+' ₽':'0 ₽';return `<button type="button" class="week-day ${total>0?'has-expense':''} ${day===today?'is-active':''} ${day===selectedDay?'focus-day':''}" data-jump-day="${day}" aria-pressed="${day===selectedDay}" aria-label="${esc(matteDateLabel(day))}. Расходы: ${esc(money(total))}"><span class="week-day-name">${names[i]}</span><strong class="week-day-date">${Number(day.slice(-2))}</strong><span class="week-day-meter" aria-hidden="true"><i class="week-day-meter-fill" style="width:${percent}%"></i></span><small class="week-day-total" title="${esc(money(total))}">${esc(label)}</small></button>`}).join('')}</div></section>`
+ return `<section class="calendar-shell" aria-label="Календарь расходов"><div class="calendar-title-row"><h1>Обзор</h1><div class="week-arrows"><button type="button" class="icon-btn" data-action="week-prev" aria-label="Предыдущая неделя">${svg('chevronLeft',20)}</button><button type="button" class="icon-btn" data-action="week-next" aria-label="Следующая неделя">${svg('chevronRight',20)}</button></div></div><div class="week-strip" id="weekStrip">${week.map((day,i)=>{const total=map[day]||0;const percent=total>0?Math.max(6,Math.min(100,Math.round(total/weekMax*100))):0;const label=total>0?compactMoney(total).replace('.',',')+' ₽':'0 ₽';const level=weekSpendLevel(total,weekMax);return `<button type="button" class="week-day spend-${level} ${total>0?'has-expense':''} ${day===today?'is-active':''} ${day===selectedDay?'focus-day':''}" data-jump-day="${day}" aria-pressed="${day===selectedDay}" aria-label="${esc(matteDateLabel(day))}. Расходы: ${esc(money(total))}"><span class="week-day-name">${names[i]}</span><strong class="week-day-date">${Number(day.slice(-2))}</strong><span class="week-day-meter" aria-hidden="true"><i class="week-day-meter-fill" style="width:${percent}%"></i></span><small class="week-day-total" title="${esc(money(total))}">${esc(label)}</small></button>`}).join('')}</div></section>`
 }
 function currentExpenseStreak(){const set=new Set(data.transactions.filter(t=>t.type==='expense').map(t=>t.date));const cursor=new Date(dateLocal()+'T12:00:00');let days=0;while(set.has(dateLocal(cursor)) && days<3650){days++;cursor.setDate(cursor.getDate()-1)}return days}
 function expenseCountLabel(n){const k=n%10,m=n%100;return `${n} ${m>=11&&m<=14?'операций':k===1?'операция':k>=2&&k<=4?'операции':'операций'}`}
@@ -2502,6 +2515,7 @@ function daySummaryRing(items){
  const selected=entries.some(([id])=>id===dayChartSelection)?dayChartSelection:null;
  const shown=selected?entries.find(([id])=>id===selected)[1]:all;
  const caption=selected?`${dayChartPercent(shown,all)}% расходов`:'за день';
+ const categoryTitle=selected?dayChartName(selected):'Все расходы';
  const circumference=2*Math.PI*65;
  let offset=0;
  const arcs=entries.map(([id,amount],i)=>{
@@ -2517,7 +2531,7 @@ function daySummaryRing(items){
  }).join('');
  return `<div class="day-donut" aria-label="Круговая диаграмма расходов за выбранный день">
  <svg class="day-donut-svg" viewBox="0 0 200 200" aria-label="${all?'Категории расходов':'Расходов нет'}"><circle class="day-donut-base" cx="100" cy="100" r="65"/>${arcs}</svg>
- <button type="button" class="day-donut-center" data-day-chart-reset aria-label="Показать все расходы дня: ${esc(money(shown))}"><span class="day-donut-total num" title="${esc(money(shown))}">${esc(dayDonutAmount(shown))}</span><span class="day-donut-caption">${caption}</span></button>
+ <button type="button" class="day-donut-center" data-day-chart-reset aria-label="Показать все расходы дня: ${esc(money(all))}"><span class="day-donut-category" title="${esc(categoryTitle)}">${esc(categoryTitle)}</span><span class="day-donut-total num" title="${esc(money(shown))}">${esc(dayDonutAmount(shown))}</span><span class="day-donut-caption">${caption}</span></button>
  </div><div class="day-donut-legend">${all?legend:'<div class="day-donut-empty-legend">За выбранный день расходов нет</div>'}</div>`;
 }
 function updateDayChartSelection(id){

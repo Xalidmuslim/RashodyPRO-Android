@@ -77,5 +77,50 @@ const compactGuards=[
 ];
 for(const [name,pass] of compactGuards){console.log((pass?'OK':'FAILED')+': '+name);if(!pass)okay=false;}
 
+
+/* Dashboard visual regression: exercise production calculations and donut templates. */
+try{
+ const section=(first,last)=>{
+  const start=html.indexOf('function '+first+'('),end=html.indexOf('\nfunction '+last+'(',start);
+  if(start<0||end<start)throw new Error('Function missing: '+first);
+  return html.slice(start,end);
+ };
+ const days=Array.from({length:7},(_,i)=>'2026-10-'+(19+i)), amounts=[0,30,100,101,200,201,300];
+ const weekContext={weekRangeFor:()=>days,monthExpenseMap:()=>Object.fromEntries(days.map((d,i)=>[d,amounts[i]])),
+  dateLocal:()=>days[0],dashboardWeekAnchor:null,data:{transactions:[],settings:{currency:'₽'}},F:{money:n=>n},
+  compactMoney:n=>String(n),money:n=>String(n)+' ₽',matteDateLabel:n=>n,svg:()=>'',esc:n=>String(n)};
+ vm.createContext(weekContext);
+ vm.runInContext(section('weekSpendLevel','currentExpenseStreak'),weekContext,{timeout:2000});
+ const calendar=vm.runInContext("compactWeekWidget('2026-10-21')",weekContext,{timeout:2000});
+ const levels=[...calendar.matchAll(/class="week-day ([^"]+)" data-jump-day="[^"]+"/g)]
+  .map(m=>m[1].match(/spend-(zero|low|medium|high)/)?.[1]);
+ if(levels.join(',')!=='zero,low,low,medium,medium,high,high')
+  throw new Error('Wrong color levels for visible week');
+ for(const rule of ['spend-zero .week-day-meter{background:#CFCFC8!important}',
+   'spend-low .week-day-meter-fill{background:#6FAF7A!important}',
+   'spend-medium .week-day-meter-fill{background:#D8B24C!important}',
+   'spend-high .week-day-meter-fill{background:#D06A5C!important}']){
+   if(!html.includes(rule))throw new Error('Missing color rule '+rule);
+ }
+ const items=[{type:'expense',category:'fun',amount:9000},{type:'expense',category:'food',amount:1200},
+  {type:'expense',category:'cafe',amount:200}];
+ const donut={items,dashboardFocusDay:'2026-10-25',dateLocal:()=> '2026-10-25',expensesOfDay:()=>items,
+  data:{settings:{currency:'₽'}},F:{expenseCategories:rows=>rows.reduce((m,t)=>{
+   if(t.type==='expense')m[t.category]=(m[t.category]||0)+t.amount;return m;},{})},
+  getCat:id=>({name:({fun:'Развлечения',food:'Продукты',cafe:'Кафе и рестораны'})[id]||id}),
+  categoryColor:()=> '#A7C8B6',money:n=>String(n)+' ₽',esc:n=>String(n),render:()=>{}};
+ vm.createContext(donut);
+ vm.runInContext('let dayChartSelection=null;\n'+section('dayChartBreakdown','dashboard'),donut,{timeout:2000});
+ const selected=vm.runInContext("dayChartSelection='fun';daySummaryRing(items)",donut,{timeout:2000});
+ if(!selected.includes('day-donut-category')||!selected.includes('>Развлечения</span>')
+  ||!selected.includes('>86,5% расходов</span>')||!selected.includes('day-donut-legend-item is-selected'))
+  throw new Error('Selected donut category name/amount/share not rendered');
+ vm.runInContext("updateDayChartSelection('fun')",donut,{timeout:2000});
+ const cleared=vm.runInContext('daySummaryRing(items)',donut,{timeout:2000});
+ if(!cleared.includes('>Все расходы</span>')||!cleared.includes('>за день</span>'))
+  throw new Error('Repeating selection did not restore total');
+ console.log('OK: seven-day color levels and selected category labeling');
+}catch(error){console.error('FAILED: Dashboard visual regression:',error);okay=false}
+
 if(!okay)process.exit(1);
 
