@@ -122,5 +122,6 @@ try{
  console.log('OK: seven-day color levels and selected category labeling');
 }catch(error){console.error('FAILED: Dashboard visual regression:',error);okay=false}
 
+if(html.includes('data-action="load-demo"')||html.includes('Загрузить пример данных')||html.includes("case 'load-demo':return loadDemo();")){console.error('FAILED: Demo data control still reachable from settings');okay=false}else console.log('OK: demo-data control removed from settings');
 if(!okay)process.exit(1);
 

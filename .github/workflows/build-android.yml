@@ -27,6 +27,7 @@ jobs:
           "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
       - name: Install and generate Android project
         run: |
+          python3 -m pip install --break-system-packages Pillow
           npm install
           npm run verify
           npx cap add android

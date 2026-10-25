@@ -33,3 +33,39 @@ with zipfile.ZipFile(BUNDLE) as archive:
         with archive.open(name) as src, target.open('wb') as out:
             shutil.copyfileobj(src, out)
     print(f'Installed approved Rashody PRO launcher icons: {len(REQUIRED)} resources')
+
+# Android adaptive masks often crop the edges of the original foreground.
+# Use a reduced artwork layer, while making legacy icons truly rounded/transparent.
+def refine_launcher_icons():
+    from PIL import Image, ImageDraw
+    from io import BytesIO
+    for density in DENSITIES:
+        folder = DEST / f'mipmap-{density}'
+        foreground = folder / 'ic_launcher_foreground.png'
+        legacy = folder / 'ic_launcher.png'
+        round_icon = folder / 'ic_launcher_round.png'
+        raw = Image.open(foreground).convert('RGB')
+        # Existing foreground is a complete icon image, not an isolated logo.
+        # Keep its design and set a 17% safe margin against launcher crops.
+        edge = raw.size[0]
+        composite = Image.new('RGB', (edge, edge), '#315D54')
+        scaled_edge = round(edge * 0.78)
+        artwork = raw.resize((scaled_edge, scaled_edge), Image.Resampling.LANCZOS)
+        offset = (edge - scaled_edge) // 2
+        composite.paste(artwork, (offset, offset))
+        composite.save(foreground, 'PNG', optimize=True)
+        side = Image.open(legacy).size[0]
+        icon = composite.resize((side,side), Image.Resampling.LANCZOS).convert('RGBA')
+        # Remove opaque rectangles beyond the actual rounded launcher silhouette.
+        mask=Image.new('L',(side*4,side*4),0)
+        draw=ImageDraw.Draw(mask)
+        draw.rounded_rectangle((0,0,side*4-1,side*4-1),radius=side*4*0.22,fill=255)
+        icon.putalpha(mask.resize((side,side),Image.Resampling.LANCZOS))
+        icon.save(legacy,'PNG',optimize=True)
+        mask=Image.new('L',(side*4,side*4),0)
+        ImageDraw.Draw(mask).ellipse((0,0,side*4-1,side*4-1),fill=255)
+        circular=composite.resize((side,side),Image.Resampling.LANCZOS).convert('RGBA')
+        circular.putalpha(mask.resize((side,side),Image.Resampling.LANCZOS))
+        circular.save(round_icon,'PNG',optimize=True)
+
+refine_launcher_icons()

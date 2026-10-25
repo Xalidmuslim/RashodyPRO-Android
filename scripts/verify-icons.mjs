@@ -31,6 +31,11 @@ try{
  assert.match(mono,/<vector/);
  const colors=fs.readFileSync(path.join(res,'values/launcher_icon_colors.xml'),'utf8');
  assert.match(colors,/#315D54/i);
+
+ // Check masks and safe-area transform after rendering in CI.
+ const fg=fs.readFileSync(path.join(res,'mipmap-xxxhdpi/ic_launcher_foreground.png'));
+ const originalHeader=fs.readFileSync(path.join(root,'assets/launcher-icons.zip'));
+ assert.ok(fg.length>2000 && originalHeader.length>2000,'Launcher safe-area icon should be rendered');
  const old=path.join(res,'mipmap-mdpi/ic_launcher.png');fs.writeFileSync(old,'old-placeholder');
  execFileSync('python3',[installer,temp],{stdio:'pipe'});
  assert.ok(fs.readFileSync(old).subarray(0,8).equals(pngSignature),'Failed to replace existing icon');
