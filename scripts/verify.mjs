@@ -123,5 +123,34 @@ try{
 }catch(error){console.error('FAILED: Dashboard visual regression:',error);okay=false}
 
 if(html.includes('data-action="load-demo"')||html.includes('Загрузить пример данных')||html.includes("case 'load-demo':return loadDemo();")){console.error('FAILED: Demo data control still reachable from settings');okay=false}else console.log('OK: demo-data control removed from settings');
+
+/* Month-long opt-in sample data, without destructive writes to real transactions. */
+try{
+ const first=html.indexOf('function buildMonthlySample(');
+ const last=html.indexOf('\nfunction monthlyDemoEntries()',first);
+ if(first<0||last<first)throw Error('Monthly sample generator is missing');
+ const generator=html.slice(first,last);
+ const context={dateLocal:d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
+ vm.createContext(context);
+ vm.runInContext('const DEMO_MONTH_ID_PREFIX="rashody-month-demo-v1-";\n'+generator,context);
+ for(const [y,m,days] of [[2024,1,29],[2025,1,28],[2026,3,30],[2026,9,31]]){
+  const sample=vm.runInContext('buildMonthlySample(new Date('+y+','+m+',1),true)',context);
+  const monthName=y+'-'+String(m+1).padStart(2,'0');
+  const expenses=sample.filter(t=>t.type==='expense'),incomes=sample.filter(t=>t.type==='income');
+  if(new Set(expenses.map(t=>t.date)).size!==days)throw Error('Not all days filled '+monthName);
+  if(incomes.length!==2)throw Error('Income sample count incorrect '+monthName);
+  if(new Set(sample.map(t=>t.id)).size!==sample.length)throw Error('Duplicate sample ID');
+  if(sample.some(t=>!t.date.startsWith(monthName)||!t.id.startsWith('rashody-month-demo-v1-')||!t.note.startsWith('Образец · ')||t.amount<=0))throw Error('Invalid monthly sample '+monthName);
+  const noIncome=vm.runInContext('buildMonthlySample(new Date('+y+','+m+',1),false)',context);
+  if(noIncome.length!==expenses.length || noIncome.some(t=>t.type!=='expense'))throw Error('Income toggle ignored');
+ }
+ const ui=['data-action="load-month-demo"','data-action="remove-month-demo"', "case 'load-month-demo':return loadMonthlyDemo()","case 'remove-month-demo':return removeMonthlyDemo()"];
+ if(ui.some(x=>!html.includes(x)))throw Error('Missing monthly sample settings/UI wiring');
+ if(!html.includes('if(recoveryLocked)return toast(') || !html.includes("if(!confirm('Добавить '+rows.length+' ТЕСТОВЫХ"))throw Error('Missing safeguards for sample generation');
+ if(!html.includes('data.transactions=data.transactions.filter(t=>!ids.has(t.id))'))throw Error('Demo removal may delete real entries');
+ if(!html.includes('await saveFeedback('))throw Error('Expected existing storage mechanism missing');
+ console.log('OK: 28/29/30/31-day month demo, unique tagged IDs, preservation, settings actions');
+}catch(e){console.error('FAILED: month demo regression:',e);okay=false}
+
 if(!okay)process.exit(1);
 
