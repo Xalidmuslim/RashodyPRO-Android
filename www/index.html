@@ -2527,7 +2527,9 @@ function settings(){const c=data.settings;return `<div class="settings-grid"><se
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
 function openModal(){
  lastFocus=document.activeElement;
- if(navReady){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
+ // Native Capacitor backButton already closes the modal; pushing browser history here
+ // can restore the WebView scroll offset and make the background jump.
+ if(navReady&&!nativeAndroid){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
  // Keep the background document in its original scroll position.
  // A fixed body + a forced Android keyboard used to shift the viewport on tap.
  const overlay=document.getElementById('overlay');
@@ -2535,10 +2537,10 @@ function openModal(){
  overlay.hidden=false;
  const modal=document.getElementById('modal');
  if(nativeAndroid){
-   // Focus the dialog for accessibility, without triggering the IME.
-   // The amount input receives focus naturally when the user taps it.
+   // Do not force-focus even the dialog: some Android WebViews scroll the
+   // document/resize the visual viewport despite preventScroll:true.
+   // Touching an input focuses it normally; the native back handler closes this sheet.
    modal.setAttribute('tabindex','-1');
-   modal.focus({preventScroll:true});
  }else{
    const input=modal.classList.contains('tx-sheet')?document.getElementById('txAmount'):
      modal.classList.contains('cat-sheet')?document.getElementById('catName'):
@@ -2555,7 +2557,10 @@ function hideModal(){
  if(!nativeAndroid)document.body.style.overflow='';
  // Do not reset window.scrollY on close. The background never moved.
  draft=null;catDraft=null;modal.classList.remove('tx-sheet','cat-sheet');
- modalHistoryOpen=false;if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
+ modalHistoryOpen=false;
+ // Forcing focus back to the fixed bottom FAB also moves the visual viewport
+ // on some Android keyboards. Browser users keep regular focus restoration.
+ if(!nativeAndroid&&lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
 }
 function closeModal(){
  if(catDraft&&txDraftBeforeCategory){
