@@ -63,5 +63,19 @@ function modalScenario(native){
 }
 try{modalScenario(true);modalScenario(false);console.log('OK: Android and browser modal no-jump regression');}
 catch(error){console.error('FAILED: Modal transition regression:',error);okay=false}
+
+/* Expense sheet regression: first eight categories stay visible on a 4-column
+   mobile grid; selecting a later custom category still expands the picker. */
+const compactCss=html.slice(html.indexOf('/* v1.0.6 — compact expense entry;'));
+const compactGuards=[
+  ['Collapsed category picker shows eight (not six)', html.includes('.category-picker:not(.expanded)>.cat-choice:nth-child(n+9){display:none!important}') && !html.includes('.category-picker:not(.expanded)>.cat-choice:nth-child(n+7)')],
+  ['Eighth selected category stays in the compact grid',html.includes('if(icons.findIndex(c=>c.id===draft.category)>7)')],
+  ['Mobile category grid has four columns',/\.category-picker\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)!important/.test(compactCss)],
+  ['Keypad is a smaller fixed-height on-screen grid', /\.r105-key\{height:40px!important;min-height:40px!important/.test(compactCss)],
+  ['Category tile remains a readable touch target',/\.cat-choice\{min-height:62px!important/.test(compactCss)],
+  ['Existing amount entry and data persistence unchanged',html.includes('function enterAmountDigit(')&&html.includes('function persist(){')]
+];
+for(const [name,pass] of compactGuards){console.log((pass?'OK':'FAILED')+': '+name);if(!pass)okay=false;}
+
 if(!okay)process.exit(1);
 

@@ -1923,7 +1923,7 @@ body.matte-editorial #page .r49-empty-trend{padding:32px 14px;background:#F3F0EA
 body.matte-editorial #modal.tx-sheet .tx-quick-amount>button{min-height:44px!important;min-width:42px!important;font-size:13px!important}
 body.matte-editorial #modal.tx-sheet .tx-check{min-width:52px!important;min-height:52px!important}
 body.matte-editorial #modal.tx-sheet .cat-choice{min-height:55px!important;max-width:100%}
-body.matte-editorial #modal.tx-sheet .category-picker:not(.expanded)>.cat-choice:nth-child(n+7){display:none!important}
+body.matte-editorial #modal.tx-sheet .category-picker:not(.expanded)>.cat-choice:nth-child(n+9){display:none!important}
 body.matte-editorial #modal.tx-sheet .category-picker:not(.expanded){max-height:none!important;overflow:visible!important}
 body.matte-editorial #modal.tx-sheet .category-picker.expanded{max-height:min(32dvh,245px)!important;overflow:auto!important}
 body.matte-editorial #modal.tx-sheet .r49-more-categories{width:100%;display:block;margin:3px 0 7px;border:0;border-radius:11px;padding:10px;min-height:42px;background:#E4EFEA;color:#26545A;font-size:13px;font-weight:700;cursor:pointer}
@@ -2146,6 +2146,18 @@ body.matte-editorial #overlay:not([hidden]) .sheet{opacity:1!important}
 body.matte-editorial #overlay .sheet *:active{translate:none!important;scale:1!important}
 @media(prefers-reduced-motion:reduce){body.matte-editorial #modal.tx-sheet .r105-key{transition:none!important}}
 
+
+/* v1.0.6 — compact expense entry; keep eight existing categories in a 4×2 grid. */
+body.matte-editorial #modal.tx-sheet .tx-amount-block{padding:11px 11px 10px!important;margin-bottom:10px!important}
+body.matte-editorial #modal.tx-sheet .amount-entry{min-height:53px!important}
+body.matte-editorial #modal.tx-sheet .tx-quick-amount{padding-top:6px!important}
+body.matte-editorial #modal.tx-sheet .tx-quick-amount>button{min-height:40px!important}
+body.matte-editorial #modal.tx-sheet .r105-keypad{gap:4px!important;margin-top:6px!important}
+body.matte-editorial #modal.tx-sheet .r105-key{height:40px!important;min-height:40px!important}
+body.matte-editorial #modal.tx-sheet .category-picker{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
+body.matte-editorial #modal.tx-sheet .cat-choice{min-height:62px!important;padding:6px 2px!important;gap:2px!important;line-height:1.15!important}
+body.matte-editorial #modal.tx-sheet .cat-choice .category-icon{width:23px!important;min-width:23px!important;height:23px!important}
+body.matte-editorial #modal.tx-sheet .cat-choice .truncate{-webkit-line-clamp:3;overflow-wrap:anywhere;font-size:calc(9.5px * var(--font-scale,1))!important}
 </style>
 </head>
 <body class="matte-editorial">
@@ -2609,7 +2621,7 @@ function renderTxModal(){
  <p class="r49-save-hint">Для сохранения нажмите галочку справа от суммы.</p>
   ${edit?`<div class="tx-edit-actions"><button type="button" class="mini-action" data-action="repeat-tx">${svg('repeat',16)} Повторить</button><button type="button" class="mini-action danger-btn" data-action="delete-tx">${svg('trash',16)} Удалить</button></div>`:''}`;
  const picker=document.getElementById('txCategories');
- if(icons.findIndex(c=>c.id===draft.category)>5){picker?.classList.add('expanded');document.getElementById('txMoreCategories')?.setAttribute('aria-expanded','true')}
+ if(icons.findIndex(c=>c.id===draft.category)>7){picker?.classList.add('expanded');document.getElementById('txMoreCategories')?.setAttribute('aria-expanded','true')}
 }
 function enterAmountDigit(key){
  if(!draft)return;
