@@ -14,7 +14,7 @@ const guards = [
   ['Android plus does not force keyboard', !html.includes('plugin?.showAmountKeyboard?.()')],
   ['Android plus never fixes body', !html.includes("document.body.classList.add('r105-modal-locked')")],
   ['Modal close does not force scroll', !html.includes('window.scrollTo({top:r105PageY')],
-  ['Android dialog gets focus instead of amount input', html.includes("modal.focus({preventScroll:true})")],
+  ['Android dialog does not force focus or keyboard', !html.includes("modal.focus({preventScroll:true})")],
   ['Medicine motion profile set', html.includes('r105-medicine-motion')],
   ['No deferred input focus', !html.includes('requestAnimationFrame(()=>{const modal=')]
 ];
@@ -31,7 +31,7 @@ const extract=(name,next)=> {
   return html.slice(start,end);
 };
 function modalScenario(native){
-  let modalFocuses=0,inputFocuses=0,scrollCalls=0,keyboardCalls=0;
+  let modalFocuses=0,inputFocuses=0,scrollCalls=0,keyboardCalls=0,historyPushes=0;
   const overlay={hidden:true};
   const modal={classList:{contains:(cls)=>cls==='tx-sheet',remove:()=>{}},
      setAttribute:()=>{},focus:()=>{modalFocuses++},contains:()=>false,
@@ -42,8 +42,9 @@ function modalScenario(native){
   const document={activeElement:last,body,
      getElementById:id=>({overlay,modal,txAmount:input})[id]};
   const window={scrollY:629,scrollTo:()=>{scrollCalls++}};
-  const context={document,window,console,nativeAndroid:native,
-    navReady:false,lastFocus:null,view:'dashboard',modalHistoryOpen:false,
+  const history={pushState:()=>{historyPushes++}};
+  const context={document,window,console,history,navState:()=>({}),nativeAndroid:native,
+    navReady:true,lastFocus:null,view:'dashboard',modalHistoryOpen:false,
     draft:{amount:1250},catDraft:null,financeNative:()=>({showAmountKeyboard:()=>{keyboardCalls++}})};
   vm.createContext(context);
   vm.runInContext(extract('openModal','hideModal')+'\n'+extract('hideModal','closeModal')+
@@ -51,9 +52,10 @@ function modalScenario(native){
   if(overlay.hidden)throw new Error('Plus button did not open dialog');
   if(native){
     if(body.classList.added.length||Object.keys(body.style).length)throw new Error('Android page geometry changed');
-    if(modalFocuses!==1||inputFocuses||keyboardCalls)throw new Error('Android keyboard opened on plus');
+    if(modalFocuses||inputFocuses||keyboardCalls)throw new Error('Android dialog grabbed focus or opened the keyboard');
+    if(historyPushes!==0)throw new Error('Native + pushed a browser history entry and can jump the viewport');
   }else{
-    if(body.style.overflow!=='hidden'||inputFocuses!==1)throw new Error('Browser modal behavior changed');
+    if(body.style.overflow!=='hidden'||inputFocuses!==1||historyPushes!==1)throw new Error('Browser modal behavior changed');
   }
   vm.runInContext('hideModal()',context,{timeout:2000});
   if(!overlay.hidden||scrollCalls||window.scrollY!==629)throw new Error('Close moved the page');
