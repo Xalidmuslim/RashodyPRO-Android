@@ -11,11 +11,11 @@ for (const selector of [
   '#page .trend-card.amber',
   '#page .studio-stats .compare-metric',
   '#page .color-category-card',
-  '#page .feature-day',
-  '#page .day-ledger',
-  '#page .record-list',
+  '.feature-day',
+  '.day-ledger',
+  '.record-list',
   '#page .day-donut-svg',
-  '#page .analytics-ring-panel .ring-svg',
+  '.analytics-ring-panel .ring svg.ring-svg',
   '#page .studio-trend-bars .compare-stick',
   '#page .day-donut-center'
 ]) {
