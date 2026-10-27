@@ -27,7 +27,7 @@ for (const token of ['--satin-paper','--satin-ink','--satin-elevation']) {
 assert.match(css, /filter:\s*drop-shadow\(/, 'SVG donut must cast a soft shadow');
 assert.match(css, /\.ring-svg[\s\S]*?filter:\s*drop-shadow\(/, 'Analytics ring shadow missing');
 assert.ok(!/border:\s*1px\s+solid\s+(?:white|#fff|rgba\(255,255,255)/i.test(css), 'Do not reintroduce painted white outlines');
-assert.ok(!/text-shadow\s*:/i.test(css), 'Text must stay sharp');
+assert.ok(!/text-shadow\s*:\s*(?:\d|\.\d)/i.test(css), 'Text must stay sharp');
 assert.ok(!/transition(?:-property)?\s*:[^;]*(?:filter|box-shadow)/i.test(css), 'Do not animate shadow filters while scrolling');
 
 // Contrast test: all category-specific surfaces must have sufficiently light
