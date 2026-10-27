@@ -38,3 +38,34 @@ for(const forbidden of [/\bposition\s*:/i,/\boverflow\s*:/i,/\bfilter\s*:/i,/\bb
 assert.ok(!/transition-(?:property|duration):[^;]*box-shadow/i.test(clean), 'Do not animate blurred box shadows');
 assert.match(css, /prefers-reduced-motion:reduce/, 'Respect Android reduce motion');
 console.log('OK: premium sculpted depth, anchored selectors, safe visual-only CSS');
+
+
+/* Unified 3D pass regression: screen inventory supplied by Android screenshots. */
+for(const selector of [
+  'body.matte-editorial #page .studio-stats .compare-metric.main',
+  'body.matte-editorial #page .color-category-card',
+  'body.matte-editorial #page .studio-stats .soft-stat-symbol',
+  'body.matte-editorial #page .period-controls:not(.analytics-controls) .period-toggle button.active',
+  'body.matte-editorial #page .analytics-controls .period-toggle button.active',
+  'body.matte-editorial #page .r49-filter-btn',
+  'body.matte-editorial #page .history-tally.spent',
+  'body.matte-editorial #page .history-tally.earned',
+  'body.matte-editorial #page .category-manage .category-manage-row',
+  'body.matte-editorial #page .studio-settings-icon',
+  'body.matte-editorial #modal.tx-sheet .r105-key',
+  'body.matte-editorial #modal.tx-sheet .tx-amount-block',
+  'body.matte-editorial #modal.tx-sheet .tx-category-search',
+  'body.matte-editorial #modal.tx-sheet .cat-choice.active',
+  'body.matte-editorial #modal.tx-sheet .tx-check:disabled',
+  'body.matte-editorial #modal.tx-sheet .r49-more-categories'
+]) {
+  assert.ok(css.includes(selector), 'Premium depth missing from screen component: '+selector);
+}
+for(const token of ['--p3-satin','--p3-push','--p3-field','--p3-pastel','--p3-dark']) {
+  assert.ok(css.includes(token+':'), 'Missing consistent secondary material token: '+token);
+}
+assert.ok(css.includes('outline: none !important; /* remove drawn thick outline'), 'Selected category still has hard wire outline');
+assert.ok(css.includes('body.matte-editorial #modal.tx-sheet .cat-choice:focus-visible'), 'Keyboard focus lost');
+assert.ok(css.includes('color: #fffefa !important;'), 'Dark selected state needs legible light text');
+assert.ok(css.includes('body.matte-editorial #page .color-category-card::after'), 'Remove decorative ring');
+console.log('OK: full-surface sculpted-depth coverage for modal/history/analytics/settings');
