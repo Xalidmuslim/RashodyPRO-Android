@@ -2600,6 +2600,24 @@ function analytics(){
 }
 function settings(){const c=data.settings;const demoCount=data.transactions.filter(t=>typeof t.id==='string'&&t.id.startsWith('rashody-month-demo-v1-')).length;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Добавить категорию</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><div class="setting-expl" style="margin:10px 0 8px">Образец расходов за полный календарный месяц. Реальные операции не заменяются. Пример можно удалить отдельно.</div><div class="settings-actions"><button class="secondary-btn" type="button" data-action="load-month-demo">${svg('calendar',18)} Заполнить данные за месяц</button>${demoCount?`<button class="secondary-btn" type="button" data-action="remove-month-demo">${svg('trash',17)} Удалить образец (${demoCount})</button>`:''} </div><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 4.9 · Matte Stable · Локальные данные</p>`}
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
+// Swap only the sheet content, keeping the expense draft, keyboard focus and scroll.
+let categorySheetBusy=false;
+let modalScrollBeforeCategory=0;
+async function switchCategorySheet(renderNext,focusId,scrollY=0){
+ if(categorySheetBusy)return;
+ categorySheetBusy=true;
+ const modal=document.getElementById('modal');
+ const reduced=typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const motion=!reduced&&typeof modal?.animate==='function';
+ modal?.setAttribute('aria-busy','true');
+ try{
+  if(motion)await modal.animate([{opacity:1,transform:'translate3d(0,0,0)'},{opacity:.45,transform:'translate3d(-9px,0,0)'}],{duration:105,easing:'cubic-bezier(.4,0,1,1)'}).finished.catch(()=>{});
+  renderNext();
+  if(modal)modal.scrollTop=scrollY;
+  if(motion)await modal.animate([{opacity:.45,transform:'translate3d(10px,0,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{duration:185,easing:'cubic-bezier(.16,1,.3,1)'}).finished.catch(()=>{});
+  if(focusId)document.getElementById(focusId)?.focus({preventScroll:true});
+ }finally{modal?.removeAttribute('aria-busy');categorySheetBusy=false;}
+}
 function openModal(){
  lastFocus=document.activeElement;
  // Do not change Android body geometry: fixed positioning caused jumps when opening +.
@@ -2616,10 +2634,13 @@ function hideModal(){
  if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
 }
 function closeModal(){
+ if(categorySheetBusy)return;
  if(catDraft&&txDraftBeforeCategory){
-  draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
-  document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
-  document.getElementById('txCategorySearch')?.focus({preventScroll:true});return;
+  void switchCategorySheet(()=>{
+   draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
+   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
+  },'txCategorySearch',modalScrollBeforeCategory);
+  return;
  }
  const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
@@ -2668,23 +2689,31 @@ function repeatTx(){collectDraft();draft.id=null;draft.date=dateLocal();draft.ti
 async function deleteTx(){if(!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
 const ICON_OPTIONS=['cart','coffee','car','home','heart','film','shirt','box','banknote','gift','briefcase','book','phone','fuel','plane','music','tool','drop','sun','wallet','salary'];
 let txDraftBeforeCategory=null;
-function startCatFromTx(){
- if(!draft)return;collectDraft();txDraftBeforeCategory={...draft};draft=null;
- catDraft={id:null,name:'',icon:'box',type:'expense'};
- const modal=document.getElementById('modal');modal.classList.remove('tx-sheet');
- renderCatModal();document.getElementById('catName')?.focus({preventScroll:true});
+async function startCatFromTx(){
+ if(!draft||categorySheetBusy)return;
+ collectDraft();
+ const savedExpenseDraft={...draft},modal=document.getElementById('modal');
+ modalScrollBeforeCategory=modal.scrollTop;
+ await switchCategorySheet(()=>{
+  txDraftBeforeCategory=savedExpenseDraft;draft=null;
+  catDraft={id:null,name:'',icon:'box',type:'expense'};
+  modal.classList.remove('tx-sheet');renderCatModal();
+ },'catName',0);
 }
 function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',type:'expense'};renderCatModal();openModal()}
 function collectCat(){const n=document.getElementById('catName');if(n)catDraft.name=n.value}
-function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
+function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" aria-pressed="${catDraft.icon===i}" type="button" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
 async function saveCat(){
+ if(categorySheetBusy)return;
  collectCat();const name=catDraft.name.trim();if(!name)return toast('Укажите название категории');
  let savedId=catDraft.id;
  if(savedId){const c=data.categories.find(x=>x.id===savedId);if(c)Object.assign(c,{name,icon:catDraft.icon})}
  else{savedId='cat-'+newId().replace(/[^a-zA-Z0-9_-]/g,'');data.categories.push({id:savedId,type:'expense',name,icon:catDraft.icon})}
  if(txDraftBeforeCategory){
-  draft={...txDraftBeforeCategory,category:savedId};txDraftBeforeCategory=null;catDraft=null;
-  document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();render();
+  await switchCategorySheet(()=>{
+   draft={...txDraftBeforeCategory,category:savedId};txDraftBeforeCategory=null;catDraft=null;
+   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();render();
+  },'txCategorySearch',modalScrollBeforeCategory);
   await saveFeedback('Категория добавлена');return;
  }
  closeModal();render();await saveFeedback('Категория сохранена');
@@ -2804,7 +2833,15 @@ document.addEventListener('click',e=>{const dayPiece=e.target.closest('[data-day
  if(btn.dataset.editCategory)return startCat(btn.dataset.editCategory);
  if(btn.dataset.txType&&draft){collectDraft();draft.type=btn.dataset.txType;draft.category=draft.type==='income'?'salary':'food';renderTxModal();return}
  if(btn.dataset.txCategory&&draft){draft.category=btn.dataset.txCategory;document.querySelectorAll('#txCategories [data-tx-category]').forEach(b=>{const active=b.dataset.txCategory===draft.category;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});const chosen=document.getElementById('txSelectedCategory');if(chosen)chosen.textContent=getCat(draft.category).name;return}
- if(btn.dataset.catIcon&&catDraft){collectCat();catDraft.icon=btn.dataset.catIcon;renderCatModal();return}
+ if(btn.dataset.catIcon&&catDraft){
+  collectCat();catDraft.icon=btn.dataset.catIcon;
+  document.querySelectorAll('#modal [data-cat-icon]').forEach(icon=>{
+   const selected=icon.dataset.catIcon===catDraft.icon;
+   icon.classList.toggle('active',selected);
+   icon.setAttribute('aria-pressed',String(selected));
+  });
+  return;
+ }
 });
 document.addEventListener('contextmenu',e=>{const row=e.target.closest('.record-row[data-tx]');if(!row)return;const previous=data.transactions.find(t=>t.id===row.dataset.tx);if(!previous)return;e.preventDefault();startTx(previous.type,{...previous,id:null,date:dateLocal(),time:timeLocal(),amount:String(previous.amount)});toast('Копия операции готова — подтвердите сумму галочкой')});
 let weekTouch=null;document.addEventListener('touchstart',e=>{const strip=e.target.closest('#weekStrip');if(!strip||e.touches.length!==1)return;const t=e.touches[0];weekTouch={x:t.clientX,y:t.clientY}}, {passive:true});document.addEventListener('touchend',e=>{if(!weekTouch||e.changedTouches.length!==1)return;const t=e.changedTouches[0],dx=t.clientX-weekTouch.x,dy=t.clientY-weekTouch.y;weekTouch=null;if(Math.abs(dx)>75&&Math.abs(dx)>Math.abs(dy)*1.4)changeWeek(dx<0?1:-1)}, {passive:true});
