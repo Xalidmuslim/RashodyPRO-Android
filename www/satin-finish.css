@@ -4,12 +4,12 @@
  * Rims stay transparent. Deep ink on cards; chart depth is static, no animations.
  */
 body.matte-editorial {
-  --satin-paper:#ece7df;
+  --satin-paper:#ebe7e0;
   --satin-ink:#192e35;
   --satin-elevation:
-    0 21px 33px -17px rgba(29,40,42,.26),
-    0 9px 14px -8px rgba(29,40,42,.17),
-    0 2px 4px -2px rgba(29,40,42,.08);
+    0 30px 44px -19px rgba(27,38,41,.34),
+    0 14px 23px -11px rgba(27,38,41,.23),
+    0 4px 7px -3px rgba(27,38,41,.13);
 }
 html, body.matte-editorial {background-color:#efede8 !important;}
 
@@ -22,7 +22,7 @@ body.matte-editorial #page :is(
   .period-controls, .toolbar, .settings-grid .panel
 ) {
   background-color:var(--satin-paper) !important;
-  background-image:linear-gradient(150deg,#f5f1eb 0%,#eeebe4 48%,#e7e2da 100%) !important;
+  background-image:none !important;
   box-shadow:var(--satin-elevation) !important;
   border-color:transparent !important;
 }
@@ -31,12 +31,12 @@ body.matte-editorial #page .week-arrows .icon-btn,
 body.matte-editorial .topbar.subpage-topbar .screen-back,
 body.matte-editorial #page .period-navigation .icon-btn {
   background-color:#eae5dd !important;
-  background-image:linear-gradient(154deg,#f2eee8,#e6e1d9) !important;
+  background-image:none !important;
   border-color:transparent !important;
 }
 body.matte-editorial .mobile-nav {
   background-color:#eae6e0 !important;
-  background-image:linear-gradient(154deg,#f4f0ea 0%,#ebe6e0 62%,#e3ded7 100%) !important;
+  background-image:none !important;
   box-shadow:0 21px 32px -13px rgba(28,41,44,.27),
              0 9px 16px -9px rgba(28,41,44,.17),
              0 2px 3px -2px rgba(28,41,44,.09) !important;
@@ -44,12 +44,12 @@ body.matte-editorial .mobile-nav {
 }
 body.matte-editorial #modal.tx-sheet {
   background-color:#eae5dd !important;
-  background-image:linear-gradient(149deg,#f5f0e9,#e6e0d9) !important;
+  background-image:none !important;
   border-color:transparent !important;
 }
 body.matte-editorial #modal.tx-sheet .tx-amount-block {
   background-color:#e3ded6 !important;
-  background-image:linear-gradient(147deg,#e4ded6,#eee9e2) !important;
+  background-image:none !important;
   border-color:transparent !important;
 }
 
@@ -65,7 +65,7 @@ body.matte-editorial #page :is(
 body.matte-editorial #modal.tx-sheet :is(
   .cat-choice, .r105-key, .tx-category-search, .tx-details input
 ) {
-  background-image:linear-gradient(148deg,rgba(31,50,51,.045),rgba(31,50,51,.105)) !important;
+  background-image:none !important;
   border-color:transparent !important;
 }
 body.matte-editorial #page .history-tally.spent {
@@ -84,33 +84,33 @@ body.matte-editorial #page .category-row {
    type. Deliberately no painted outline, no inner white bevel, no text shadow. */
 body.matte-editorial #page .trend-card.coral {
   background-color:#d99a88 !important;
-  background-image:linear-gradient(151deg,#e4ad9a 0%,#d89a87 61%,#c98776 100%) !important;
+  background-image:none !important;
 }
 body.matte-editorial #page .trend-card.teal {
   background-color:#85b7ae !important;
-  background-image:linear-gradient(151deg,#9ac8be 0%,#83b6ac 61%,#72a9a0 100%) !important;
+  background-image:none !important;
 }
 body.matte-editorial #page .trend-card.amber {
   background-color:#ddb16d !important;
-  background-image:linear-gradient(151deg,#e9c18b 0%,#dbaf69 61%,#cda059 100%) !important;
+  background-image:none !important;
 }
 body.matte-editorial #page .studio-stats .compare-metric.main {
   background-color:#daa08b !important;
-  background-image:linear-gradient(153deg,#e6b09b 0%,#dba08c 59%,#cc8d79 100%) !important;
+  background-image:none !important;
 }
 body.matte-editorial #page .studio-stats .compare-metric:nth-child(2) {
   background-color:#84b8ad !important;
-  background-image:linear-gradient(153deg,#9dc9bd 0%,#85b8ae 59%,#6fa69e 100%) !important;
+  background-image:none !important;
 }
 body.matte-editorial #page .studio-stats .compare-metric:nth-child(3) {
   background-color:#dfb36e !important;
-  background-image:linear-gradient(153deg,#edc48a 0%,#dfb36e 59%,#d1a25c 100%) !important;
+  background-image:none !important;
 }
 
 /* Category colors are set by actual data as inline background-color; a
    translucently shaded gradient adds relief without changing the mapping. */
 body.matte-editorial #page .color-category-card {
-  background-image:linear-gradient(149deg,rgba(255,255,255,.13) 0%,rgba(26,46,49,.015) 47%,rgba(26,46,49,.095) 100%) !important;
+  background-image:none !important;
   border-color:transparent !important;
 }
 body.matte-editorial #page :is(
@@ -128,7 +128,7 @@ body.matte-editorial #page :is(
   .color-category-card .color-category-icon
 ) {
   background-color:rgba(32,57,57,.095) !important;
-  background-image:linear-gradient(151deg,rgba(255,255,255,.13),rgba(31,52,52,.14)) !important;
+  background-image:none !important;
   color:#21454c !important;
   border-color:transparent !important;
 }
@@ -154,7 +154,7 @@ body.matte-editorial #page .day-donut-base {
 body.matte-editorial #page .day-donut-center,
 body.matte-editorial #page .analytics-ring-panel .ring-inner {
   background-color:#ede8e0 !important;
-  background-image:linear-gradient(148deg,#e7e1d9 0%,#f2eee8 100%) !important;
+  background-image:none !important;
   box-shadow:inset 0 4px 9px rgba(30,46,47,.13),
              inset 0 -1px 2px rgba(30,46,47,.045) !important;
   border-color:transparent !important;
@@ -190,4 +190,280 @@ body.matte-editorial #page .premium-day-track {
   body.matte-editorial #page .analytics-ring-panel .ring svg.ring-svg {
     transition:none !important;
   }
+}
+
+
+/* Deep matte material system — v4.
+   Single flat materials, zero reflective/white gradients.
+   Elevation is entirely from diffuse ambient + tighter contact shadow.
+   The original layout, data, charts and animations remain unchanged. */
+body.matte-editorial {
+  --matte-backdrop:#e1dfdb;
+  --matte-raised:
+    0 30px 44px -19px rgba(25,38,41,.36),
+    0 14px 22px -11px rgba(25,38,41,.23),
+    0 4px 7px -3px rgba(25,38,41,.13);
+  --matte-control:
+    0 15px 21px -13px rgba(25,38,41,.31),
+    0 7px 12px -7px rgba(25,38,41,.21),
+    0 2px 4px -2px rgba(25,38,41,.11);
+  --matte-quiet:
+    0 15px 22px -13px rgba(25,38,41,.28),
+    0 6px 11px -7px rgba(25,38,41,.19),
+    0 2px 3px -2px rgba(25,38,41,.09);
+  --matte-well:
+    inset 0 4px 9px rgba(28,43,46,.16),
+    inset 0 1px 3px rgba(28,43,46,.095);
+}
+html, body.matte-editorial {
+  background-color:var(--matte-backdrop) !important;
+  background-image:none !important;
+}
+/* Main surfaces have less white and MUCH more altitude than page backdrop. */
+body.matte-editorial #page :is(
+  .feature-day,.day-ledger,.panel,.record-list,.period-controls,
+  .toolbar,.analytics-ring-panel,.analytics-trend-panel,
+  .analytics-category-grid,.history-summary-card,
+  .settings-grid .panel,.premium-day-chart
+) {
+  background-color:#eeebe5 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-raised) !important;
+  border-color:transparent !important;
+}
+/* Unselected calendar dates sit nearer to the backdrop; selected date
+   is still the dark-teal raised key (contrast preserved). */
+body.matte-editorial #page .week-day {
+  background-color:#eae6df !important;
+  background-image:none !important;
+  box-shadow:var(--matte-control) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page .week-day.focus-day,
+body.matte-editorial #page .week-day.focus-day.has-expense {
+  background-color:#28545d !important;
+  background-image:none !important;
+  box-shadow:
+    0 20px 29px -14px rgba(17,43,50,.45),
+    0 8px 13px -7px rgba(17,43,50,.29),
+    0 2px 4px -1px rgba(17,43,50,.13) !important;
+}
+body.matte-editorial #page .trend-card,
+body.matte-editorial #page .studio-stats .compare-metric,
+body.matte-editorial #page .color-category-card {
+  background-image:none !important;
+  box-shadow:
+    0 25px 35px -18px rgba(34,43,43,.34),
+    0 11px 18px -9px rgba(34,43,43,.22),
+    0 3px 6px -2px rgba(34,43,43,.12) !important;
+  border-color:transparent !important;
+}
+/* Keep previously verified pigmented solid colors and near-black type. */
+body.matte-editorial #page :is(
+  .trend-card,.studio-stats .compare-metric,.color-category-card
+),
+body.matte-editorial #page :is(
+  .trend-card,.studio-stats .compare-metric,.color-category-card
+) :is(strong,small,span,b,div,svg) {
+  color:var(--satin-ink) !important;
+}
+body.matte-editorial #page :is(
+  .trend-card .trend-icon,.studio-stats .soft-stat-symbol,
+  .color-category-card .color-category-icon,.record-row .category-icon
+) {
+  background-image:none !important;
+  box-shadow:var(--matte-control) !important;
+  border-color:transparent !important;
+}
+/* History and settings: leave category colors individual; deepen their
+   short shadows, not equal to the floating main panels. */
+body.matte-editorial #page :is(
+  .history-tally,.category-row,.category-manage .category-manage-row,
+  .insight-tile,.day-donut-legend-item,
+  .settings-actions button,.secondary-btn,.repeat-inline,
+  .feature-link,.today-btn,.r49-filter-btn,.header-csv,
+  .studio-settings-icon,.settings-grid .subtle-add
+) {
+  background-image:none !important;
+  box-shadow:var(--matte-quiet) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page .history-tally:not(.spent):not(.earned) {
+  background-color:#d8ded9 !important;
+}
+body.matte-editorial #page .history-tally.spent {
+  background-color:#e4c9c2 !important;
+}
+body.matte-editorial #page .history-tally.earned {
+  background-color:#c6ddd5 !important;
+}
+body.matte-editorial #page :is(
+  .history-tally,.category-row,.day-donut-legend-item
+) :is(strong,small,span,b) {
+  color:#243840 !important;
+}
+/* Buttons: clean matte geometry, no white bead or inner rim. */
+body.matte-editorial #page :is(
+  .week-arrows .icon-btn,.period-navigation .icon-btn,
+  .icon-btn,.trend-mode-toggle button:not(.active),
+  .period-toggle button:not(.active),.font-toggle button:not(.active)
+),
+body.matte-editorial .topbar.subpage-topbar .screen-back {
+  background-color:#e5e1da !important;
+  background-image:none !important;
+  box-shadow:var(--matte-control) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page :is(
+  .trend-mode-toggle,.period-toggle,.font-toggle
+) {
+  background-color:#d9d6d0 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page :is(
+  .trend-mode-toggle button.active,.period-toggle button.active,
+  .font-toggle button.active
+) {
+  background-color:#28505a !important;
+  background-image:none !important;
+  box-shadow:var(--matte-control) !important;
+  color:#fffaf5 !important;
+  border-color:transparent !important;
+}
+/* Recessed inputs communicate a different depth than raised actions. */
+body.matte-editorial #page :is(
+  .search,.filter-group,.filter-select,.setting-select,.font-sample
+),
+body.matte-editorial #modal.tx-sheet :is(
+  .tx-amount-block,.type-switch,.tx-category-search,.tx-details input
+) {
+  background-color:#dfdbd4 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+  border-color:transparent !important;
+}
+/* Bottom navigation is a single monolithic raised dock; the selected tab
+   is softly inset. Its add button rises higher, without a glossy hotspot. */
+body.matte-editorial .mobile-nav {
+  background-color:#eeebe5 !important;
+  background-image:none !important;
+  box-shadow:
+    0 36px 48px -20px rgba(27,39,42,.38),
+    0 16px 25px -12px rgba(27,39,42,.23),
+    0 4px 7px -2px rgba(27,39,42,.13) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial .mobile-nav button.active:not(.fab) {
+  background-color:#cbded6 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial .mobile-nav .fab {
+  background-color:#c47b68 !important;
+  background-image:none !important;
+  box-shadow:
+    0 23px 30px -14px rgba(89,48,42,.43),
+    0 9px 15px -7px rgba(89,48,42,.28),
+    0 3px 5px -2px rgba(89,48,42,.13) !important;
+  border-color:transparent !important;
+}
+/* New expense entry: isolated raised surface + tactile keypad and category
+   grid. Input recess remains visibly BELOW the surrounding card. */
+body.matte-editorial :is(.overlay .sheet,#modal.tx-sheet) {
+  background-color:#ede8e0 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-raised) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #modal.tx-sheet :is(
+  .r105-key,.tx-quick-amount>button,.cat-choice,.r49-more-categories,
+  .type-switch button:not(.active),.tx-date-control button,
+  .tx-edit-actions button
+) {
+  background-color:#e8e4dd !important;
+  background-image:none !important;
+  box-shadow:var(--matte-control) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #modal.tx-sheet .cat-choice.active {
+  background-color:#bcd5cd !important;
+  background-image:none !important;
+  box-shadow:
+    0 14px 19px -12px rgba(27,68,65,.28),
+    0 6px 10px -6px rgba(27,68,65,.18) !important;
+}
+body.matte-editorial #modal.tx-sheet :is(
+  .type-switch button.active,.tx-check:not(:disabled)
+) {
+  background-color:#28505a !important;
+  background-image:none !important;
+  box-shadow:var(--matte-control) !important;
+  color:#fffaf5 !important;
+}
+body.matte-editorial #modal.tx-sheet .tx-check:disabled {
+  background-color:#cdd1cb !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+}
+body.matte-editorial #modal.tx-sheet .r105-key:active {
+  background-color:#ccdcd5 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+}
+/* Donut/analytics rings: single static shadow on the entire SVG so stroke
+   segments still have crisp category borders. No per-sector blur passes. */
+body.matte-editorial #page .day-donut-svg {
+  filter:drop-shadow(0 13px 8px rgba(25,43,47,.34)) !important;
+}
+body.matte-editorial #page .analytics-ring-panel .ring svg.ring-svg {
+  filter:drop-shadow(0 14px 9px rgba(25,43,47,.34)) !important;
+}
+body.matte-editorial #page :is(
+  .day-donut-center,.analytics-ring-panel .ring-inner
+) {
+  background-color:#dfdad3 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+  border-color:transparent !important;
+}
+/* Graphs use modest contact shadows; 31 columns remain lightweight. */
+body.matte-editorial #page :is(
+  .studio-trend-bars .compare-stick,.premium-day-fill
+) {
+  box-shadow:3px 6px 7px -4px rgba(25,43,47,.33),
+             1px 2px 3px -1px rgba(25,43,47,.20) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page .studio-trend-bars.dense .compare-stick {
+  box-shadow:1px 3px 3px -2px rgba(25,43,47,.22) !important;
+}
+body.matte-editorial #page .premium-day-track {
+  background-color:#d4d0c9 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+}
+/* Preserve visible focus outline for keyboards; neither card nor
+   SVG shadows animate during scrolling or selection. */
+@media(prefers-reduced-motion:reduce) {
+  body.matte-editorial #page .studio-trend-bars .compare-stick {
+    transition:none !important;
+  }
+}
+
+
+/* Explicit final selectors for shared controls used by History and Settings. */
+body.matte-editorial #page .period-toggle button:not(.active) {
+  background-color:#e5e1da !important;
+  background-image:none !important;
+  box-shadow:var(--matte-control) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page .setting-select {
+  background-color:#dfdbd4 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+  border-color:transparent !important;
 }
