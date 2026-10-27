@@ -1,0 +1,193 @@
+/*
+ * Satin Finish v3 — 2026-10-27
+ * Reference: expensive matte surfaces, darker readable pigments, clean depth.
+ * Rims stay transparent. Deep ink on cards; chart depth is static, no animations.
+ */
+body.matte-editorial {
+  --satin-paper:#ece7df;
+  --satin-ink:#192e35;
+  --satin-elevation:
+    0 21px 33px -17px rgba(29,40,42,.26),
+    0 9px 14px -8px rgba(29,40,42,.17),
+    0 2px 4px -2px rgba(29,40,42,.08);
+}
+html, body.matte-editorial {background-color:#efede8 !important;}
+
+/* Existing large surfaces are almost white. More midtone gives cast shadows
+   a material to define, rather than suggesting a white outlined plastic slab. */
+body.matte-editorial #page :is(
+  .feature-day, .day-ledger, .panel, .analytics-ring-panel,
+  .analytics-trend-panel, .analytics-category-grid,
+  .record-list, .history-summary-card,
+  .period-controls, .toolbar, .settings-grid .panel
+) {
+  background-color:var(--satin-paper) !important;
+  background-image:linear-gradient(150deg,#f5f1eb 0%,#eeebe4 48%,#e7e2da 100%) !important;
+  box-shadow:var(--satin-elevation) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page .week-day,
+body.matte-editorial #page .week-arrows .icon-btn,
+body.matte-editorial .topbar.subpage-topbar .screen-back,
+body.matte-editorial #page .period-navigation .icon-btn {
+  background-color:#eae5dd !important;
+  background-image:linear-gradient(154deg,#f2eee8,#e6e1d9) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial .mobile-nav {
+  background-color:#eae6e0 !important;
+  background-image:linear-gradient(154deg,#f4f0ea 0%,#ebe6e0 62%,#e3ded7 100%) !important;
+  box-shadow:0 21px 32px -13px rgba(28,41,44,.27),
+             0 9px 16px -9px rgba(28,41,44,.17),
+             0 2px 3px -2px rgba(28,41,44,.09) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #modal.tx-sheet {
+  background-color:#eae5dd !important;
+  background-image:linear-gradient(149deg,#f5f0e9,#e6e0d9) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #modal.tx-sheet .tx-amount-block {
+  background-color:#e3ded6 !important;
+  background-image:linear-gradient(147deg,#e4ded6,#eee9e2) !important;
+  border-color:transparent !important;
+}
+
+/* Preserve category identity while darkening excessively pale pastel tiles.
+   The translucent overlay shades the EXISTING category color, rather than
+   replacing every category with one neutral gray. */
+body.matte-editorial #page :is(
+  .category-row, .category-manage .category-manage-row,
+  .history-tally, .insight-tile, .day-donut-legend-item,
+  .day-donut-legend .legend-line, .note-box, .font-sample,
+  .search, .filter-select, .setting-select, .filter-group
+),
+body.matte-editorial #modal.tx-sheet :is(
+  .cat-choice, .r105-key, .tx-category-search, .tx-details input
+) {
+  background-image:linear-gradient(148deg,rgba(31,50,51,.045),rgba(31,50,51,.105)) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page .history-tally.spent {
+  background-color:#e6d0ca !important;
+}
+body.matte-editorial #page .history-tally.earned {
+  background-color:#cbded6 !important;
+}
+/* Retain real category tints in settings, not pure white cards. */
+body.matte-editorial #page .category-row {
+  box-shadow:0 10px 16px -11px rgba(29,45,45,.21),
+             0 3px 6px -4px rgba(29,45,45,.13) !important;
+}
+
+/* Raised pigment cards, now with sufficiently bright *material* for charcoal
+   type. Deliberately no painted outline, no inner white bevel, no text shadow. */
+body.matte-editorial #page .trend-card.coral {
+  background-color:#d99a88 !important;
+  background-image:linear-gradient(151deg,#e4ad9a 0%,#d89a87 61%,#c98776 100%) !important;
+}
+body.matte-editorial #page .trend-card.teal {
+  background-color:#85b7ae !important;
+  background-image:linear-gradient(151deg,#9ac8be 0%,#83b6ac 61%,#72a9a0 100%) !important;
+}
+body.matte-editorial #page .trend-card.amber {
+  background-color:#ddb16d !important;
+  background-image:linear-gradient(151deg,#e9c18b 0%,#dbaf69 61%,#cda059 100%) !important;
+}
+body.matte-editorial #page .studio-stats .compare-metric.main {
+  background-color:#daa08b !important;
+  background-image:linear-gradient(153deg,#e6b09b 0%,#dba08c 59%,#cc8d79 100%) !important;
+}
+body.matte-editorial #page .studio-stats .compare-metric:nth-child(2) {
+  background-color:#84b8ad !important;
+  background-image:linear-gradient(153deg,#9dc9bd 0%,#85b8ae 59%,#6fa69e 100%) !important;
+}
+body.matte-editorial #page .studio-stats .compare-metric:nth-child(3) {
+  background-color:#dfb36e !important;
+  background-image:linear-gradient(153deg,#edc48a 0%,#dfb36e 59%,#d1a25c 100%) !important;
+}
+
+/* Category colors are set by actual data as inline background-color; a
+   translucently shaded gradient adds relief without changing the mapping. */
+body.matte-editorial #page .color-category-card {
+  background-image:linear-gradient(149deg,rgba(255,255,255,.13) 0%,rgba(26,46,49,.015) 47%,rgba(26,46,49,.095) 100%) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page :is(
+  .trend-card, .studio-stats .compare-metric, .color-category-card
+),
+body.matte-editorial #page :is(
+  .trend-card, .studio-stats .compare-metric, .color-category-card
+) :is(strong,span,small,b,div,svg) {
+  color:var(--satin-ink) !important;
+  text-shadow:none !important;
+}
+body.matte-editorial #page :is(
+  .trend-card .trend-icon,
+  .studio-stats .soft-stat-symbol,
+  .color-category-card .color-category-icon
+) {
+  background-color:rgba(32,57,57,.095) !important;
+  background-image:linear-gradient(151deg,rgba(255,255,255,.13),rgba(31,52,52,.14)) !important;
+  color:#21454c !important;
+  border-color:transparent !important;
+}
+/* Text in ordinary light category cards is also ink instead of washed-out gray. */
+body.matte-editorial #page :is(
+  .history-tally,.category-row,.day-donut-legend-item,
+  .color-category-card,.feature-day,.day-ledger
+) :is(.category-name,.num,strong,.setting-title,.legend-name) {
+  color:var(--satin-ink) !important;
+}
+
+/* Donut/ring: a *single* filter on the stable SVG, not on each segment.
+   No strokes or decorative rims added. Does not animate or change geometry. */
+body.matte-editorial #page .day-donut-svg {
+  filter:drop-shadow(0 9px 6px rgba(30,49,50,.25)) !important;
+}
+body.matte-editorial #page .analytics-ring-panel .ring svg.ring-svg {
+  filter:drop-shadow(0 10px 7px rgba(28,46,48,.27)) !important;
+}
+body.matte-editorial #page .day-donut-base {
+  stroke:#d9d4cb !important;
+}
+body.matte-editorial #page .day-donut-center,
+body.matte-editorial #page .analytics-ring-panel .ring-inner {
+  background-color:#ede8e0 !important;
+  background-image:linear-gradient(148deg,#e7e1d9 0%,#f2eee8 100%) !important;
+  box-shadow:inset 0 4px 9px rgba(30,46,47,.13),
+             inset 0 -1px 2px rgba(30,46,47,.045) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page :is(
+ .day-donut-total,.day-donut-category,.day-donut-caption,
+ .ring-center-amount,.ring-center-label,.ring-center-share
+) {
+  color:var(--satin-ink) !important;
+}
+
+/* Bar chart: cast contact shadow only on filled bars. Dense 31-day graphs
+   receive a smaller shadow to avoid many expensive blur layers in WebView. */
+body.matte-editorial #page .studio-trend-bars .compare-stick,
+body.matte-editorial #page .premium-day-fill {
+  box-shadow:3px 5px 6px -3px rgba(30,48,50,.24),
+             1px 2px 3px -1px rgba(30,48,50,.14) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page .studio-trend-bars.dense .compare-stick {
+  box-shadow:1px 3px 3px -2px rgba(30,48,50,.20) !important;
+}
+body.matte-editorial #page .premium-day-track {
+  background-color:#d9d4cb !important;
+  box-shadow:inset 0 3px 6px rgba(34,51,53,.12) !important;
+  border-color:transparent !important;
+}
+
+/* The explicit active controls stay deep teal with light type for readability;
+   the requested near-black type applies to financial cards and their labels. */
+@media(prefers-reduced-motion:reduce) {
+  body.matte-editorial #page .day-donut-svg,
+  body.matte-editorial #page .analytics-ring-panel .ring svg.ring-svg {
+    transition:none !important;
+  }
+}
