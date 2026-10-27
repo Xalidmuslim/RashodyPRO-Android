@@ -452,3 +452,18 @@ body.matte-editorial #page .premium-day-track {
     transition:none !important;
   }
 }
+
+
+/* Explicit final selectors for shared controls used by History and Settings. */
+body.matte-editorial #page .period-toggle button:not(.active) {
+  background-color:#e5e1da !important;
+  background-image:none !important;
+  box-shadow:var(--matte-control) !important;
+  border-color:transparent !important;
+}
+body.matte-editorial #page .setting-select {
+  background-color:#dfdbd4 !important;
+  background-image:none !important;
+  box-shadow:var(--matte-well) !important;
+  border-color:transparent !important;
+}
