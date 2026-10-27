@@ -1,0 +1,251 @@
+/*
+ * Premium Sculpted Depth · 2026-10-27
+ * Warm porcelain / machined matte metal / three physical elevation levels.
+ * Top-left diffuse key light, lower-right ambient falloff and contact shadow.
+ * Visual layer only: no layout, DOM, chart data, persistence or scrolling changes.
+ * Keep this file AFTER the original embedded style to defeat the late flat overrides.
+ */
+body.matte-editorial {
+  --p3-porcelain: #fffefa;
+  --p3-surface: #f7f3ec;
+  --p3-depth-ink: 37, 47, 49;
+  --p3-shadow-hero:
+    0 27px 36px -13px rgba(37,47,49,.25),
+    0 13px 18px -9px rgba(37,47,49,.16),
+    0 3px 4px -2px rgba(37,47,49,.14),
+    inset 0 2px 1px rgba(255,255,255,.96),
+    inset 0 -1px 1px rgba(73,66,55,.085);
+  --p3-shadow-raised:
+    0 18px 27px -12px rgba(37,47,49,.20),
+    0 8px 13px -7px rgba(37,47,49,.15),
+    0 2px 3px -1px rgba(37,47,49,.11),
+    inset 0 2px 1px rgba(255,255,255,.88),
+    inset 0 -1px 1px rgba(65,60,53,.075);
+  --p3-shadow-control:
+    0 11px 17px -8px rgba(35,44,47,.23),
+    0 4px 6px -3px rgba(35,44,47,.17),
+    0 1px 2px rgba(35,44,47,.08),
+    inset 0 2px 1px rgba(255,255,255,.96),
+    inset 0 -1px 1px rgba(73,66,55,.07);
+}
+
+/* Level 1: broad carved-porcelain islands. Strongest separation is reserved
+   for the selected-day surface and the two primary financial surfaces. */
+body.matte-editorial #page .feature-day,
+body.matte-editorial #page .day-ledger,
+body.matte-editorial #page .analytics-ring-panel {
+  background-color: #faf6f0 !important;
+  background-image:
+    radial-gradient(ellipse at 11% -12%, rgba(255,255,255,.95), transparent 68%),
+    linear-gradient(155deg, #fffefa 0%, #faf7f2 49%, #f0ece6 100%) !important;
+  background-blend-mode: normal !important;
+  background-repeat: no-repeat !important;
+  border: 1px solid rgba(255,255,255,.93) !important;
+  box-shadow: var(--p3-shadow-hero) !important;
+}
+
+/* Level 2: same light source with shallower, more restrained contact shadows. */
+body.matte-editorial #page :is(
+  .panel, .analytics-trend-panel, .analytics-category-grid,
+  .record-list, .period-controls, .history-summary-card,
+  .toolbar, .settings-grid .panel
+) {
+  background-color: #faf7f1 !important;
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(255,255,255,.84), transparent 64%),
+    linear-gradient(156deg, #fffdfa 0%, #f4efe9 100%) !important;
+  background-blend-mode: normal !important;
+  background-repeat: no-repeat !important;
+  border: 1px solid rgba(255,255,255,.82) !important;
+  box-shadow: var(--p3-shadow-raised) !important;
+}
+
+/* Calendar: each date is a small raised key, not a box with a drawn border. */
+body.matte-editorial #page .week-day {
+  background-color: #f8f6f1 !important;
+  background-image: linear-gradient(154deg, #fffefa 5%, #f3efe8 80%, #ece7df 100%) !important;
+  border: 1px solid rgba(255,255,255,.83) !important;
+  box-shadow: var(--p3-shadow-control) !important;
+}
+body.matte-editorial #page .week-day.focus-day,
+body.matte-editorial #page .week-day.focus-day.has-expense {
+  background-color: #264953 !important;
+  background-image:
+    radial-gradient(ellipse at 26% 0%, rgba(147,196,194,.26), transparent 65%),
+    linear-gradient(154deg, #3c6872 0%, #244750 55%, #122e39 100%) !important;
+  border: 1px solid rgba(91,144,151,.65) !important;
+  box-shadow:
+    0 14px 18px -9px rgba(18,47,57,.44),
+    0 5px 7px -3px rgba(18,47,57,.30),
+    inset 0 2px 1px rgba(191,227,226,.29),
+    inset 0 -2px 2px rgba(7,26,33,.21) !important;
+}
+body.matte-editorial #page .week-arrows .icon-btn,
+body.matte-editorial .topbar.subpage-topbar .screen-back,
+body.matte-editorial .icon-btn {
+  background-color: #faf7f3 !important;
+  background-image: linear-gradient(145deg, #fffefa 0%, #eee9e3 100%) !important;
+  border: 1px solid rgba(255,255,255,.96) !important;
+  box-shadow: var(--p3-shadow-control) !important;
+}
+
+/* Ceramic colored stat blocks: tonal variation, not hard edge strokes or
+   specular/glass highlights. The raised icon is a second, smaller object. */
+body.matte-editorial #page .trend-card {
+  border: 1px solid rgba(255,255,255,.24) !important;
+  box-shadow:
+    0 19px 26px -12px rgba(52,54,50,.24),
+    0 9px 12px -6px rgba(52,54,50,.16),
+    0 2px 3px -1px rgba(52,54,50,.11),
+    inset 0 2px 1px rgba(255,255,255,.31),
+    inset 0 -2px 2px rgba(37,39,36,.13) !important;
+  background-blend-mode: normal !important;
+  background-repeat: no-repeat !important;
+}
+body.matte-editorial #page .trend-card.coral {
+  background-color: #c57564 !important;
+  background-image: linear-gradient(153deg, #dd9180 0%, #cf7969 57%, #b76559 100%) !important;
+}
+body.matte-editorial #page .trend-card.teal {
+  background-color: #4d908a !important;
+  background-image: linear-gradient(153deg, #68a9a1 0%, #4c918b 56%, #37746f 100%) !important;
+}
+body.matte-editorial #page .trend-card.amber {
+  background-color: #d4a050 !important;
+  background-image: linear-gradient(153deg, #e8b76c 0%, #d5a04e 57%, #bf8739 100%) !important;
+}
+body.matte-editorial #page .trend-card .trend-icon,
+body.matte-editorial #page .color-category-card .color-category-icon {
+  background: radial-gradient(ellipse at 31% 16%,
+    rgba(255,255,255,.45) 0%,
+    rgba(255,255,255,.22) 39%,
+    rgba(30,44,45,.09) 100%) !important;
+  border: 1px solid rgba(255,255,255,.36) !important;
+  box-shadow:
+    0 7px 10px -5px rgba(28,42,43,.34),
+    0 2px 3px -1px rgba(28,42,43,.20),
+    inset 0 2px 1px rgba(255,255,255,.38),
+    inset 0 -1px 1px rgba(24,37,38,.13) !important;
+}
+
+/* Expense-category bubbles keep their current palette; a gentle light wash
+   separates them physically from the flat transaction rows. */
+body.matte-editorial #page .record-row .category-icon {
+  background-image: radial-gradient(ellipse at 33% 21%, rgba(255,255,255,.58), transparent 72%) !important;
+  border: 1px solid rgba(255,255,255,.60) !important;
+  box-shadow:
+    0 7px 11px -6px rgba(37,47,49,.24),
+    0 2px 3px -1px rgba(37,47,49,.10),
+    inset 0 1px 1px rgba(255,255,255,.79) !important;
+}
+
+/* Analytics: raised numeric summaries, while chart geometry stays untouched. */
+body.matte-editorial #page .compare-metric,
+body.matte-editorial #page .history-tally,
+body.matte-editorial #page .insight-tile {
+  border: 1px solid rgba(255,255,255,.73) !important;
+  box-shadow: var(--p3-shadow-raised) !important;
+  background-blend-mode: normal !important;
+}
+body.matte-editorial #page .compare-metric {
+  background-image: linear-gradient(152deg, rgba(255,255,255,.43), rgba(69,100,103,.09)) !important;
+}
+body.matte-editorial #page .history-tally {
+  background-image: linear-gradient(153deg, #fffefa 0%, #eee9e3 100%) !important;
+}
+body.matte-editorial #page .insight-tile {
+  background-image: linear-gradient(151deg, rgba(255,255,255,.42), rgba(54,92,96,.07)) !important;
+}
+body.matte-editorial #page .day-donut-center,
+body.matte-editorial #page .ring-inner {
+  background-color: #faf8f3 !important;
+  background-image: linear-gradient(151deg, #f2eee7, #fffefa) !important;
+  box-shadow:
+    inset 0 3px 7px rgba(32,45,44,.11),
+    inset 0 -2px 2px rgba(255,255,255,.85) !important;
+}
+
+/* Tactile controls: the small button has a real contact shadow, while
+   its top bevel is a lighting cue rather than a thick graphical outline. */
+body.matte-editorial #page .feature-link,
+body.matte-editorial #page .today-btn,
+body.matte-editorial #page .period-toggle button.active {
+  background-color: #e7efeb !important;
+  background-image: linear-gradient(148deg, #f0f7f3 0%, #d3e2db 100%) !important;
+  border: 1px solid rgba(255,255,255,.88) !important;
+  box-shadow: var(--p3-shadow-control) !important;
+}
+body.matte-editorial #page .feature-link:active,
+body.matte-editorial #page .week-arrows .icon-btn:active {
+  box-shadow:
+    inset 0 3px 6px rgba(40,59,57,.19),
+    inset 0 -1px 1px rgba(255,255,255,.9) !important;
+}
+
+/* Navigation dock: single heavy machined piece above the background. */
+body.matte-editorial .mobile-nav {
+  background-color: #f4f0eb !important;
+  background-image:
+    radial-gradient(ellipse at 16% -25%, rgba(255,255,255,.95), transparent 70%),
+    linear-gradient(155deg, #fffefa 0%, #f0ebe5 70%, #e4dfd9 100%) !important;
+  border: 1px solid rgba(255,255,255,.96) !important;
+  box-shadow:
+    0 26px 37px -10px rgba(34,43,46,.28),
+    0 12px 16px -8px rgba(34,43,46,.17),
+    0 3px 4px -2px rgba(34,43,46,.12),
+    inset 0 2px 1px rgba(255,255,255,.97),
+    inset 0 -2px 2px rgba(92,79,68,.12) !important;
+}
+body.matte-editorial .mobile-nav button.active:not(.fab) {
+  background-color: #dcebe6 !important;
+  background-image: linear-gradient(152deg, #ecf4ef 0%, #d1e1db 100%) !important;
+  border: 1px solid rgba(255,255,255,.56) !important;
+  box-shadow:
+    inset 0 2px 5px rgba(46,84,84,.105),
+    inset 0 -1px 1px rgba(255,255,255,.8) !important;
+}
+body.matte-editorial .mobile-nav .fab {
+  background-color: #cc7864 !important;
+  background-image:
+    radial-gradient(ellipse at 30% 12%, rgba(255,255,255,.31), transparent 56%),
+    linear-gradient(151deg, #e5967e 0%, #cf7864 58%, #aa5b51 100%) !important;
+  border: 1px solid rgba(255,225,206,.6) !important;
+  box-shadow:
+    0 18px 23px -10px rgba(97,50,46,.38),
+    0 8px 11px -5px rgba(97,50,46,.25),
+    0 2px 3px -1px rgba(97,50,46,.20),
+    inset 0 2px 1px rgba(255,235,223,.48),
+    inset 0 -2px 2px rgba(91,39,38,.22) !important;
+}
+
+/* Modal remains a surface, not an opaque flat overlay. No blur: Android-safe. */
+body.matte-editorial .overlay .sheet {
+  background-color: #f9f6f0 !important;
+  background-image: linear-gradient(156deg, #fffefa, #eee9e2) !important;
+  border: 1px solid rgba(255,255,255,.94) !important;
+  box-shadow:
+    0 30px 50px rgba(28,37,40,.25),
+    0 10px 16px rgba(28,37,40,.14),
+    inset 0 2px 1px rgba(255,255,255,.91) !important;
+}
+body.matte-editorial .overlay .sheet .primary-btn {
+  background-image: linear-gradient(145deg, #3b6771, #193c48) !important;
+  border: 1px solid rgba(137,190,194,.32) !important;
+  box-shadow:
+    0 11px 17px -7px rgba(19,52,60,.38),
+    0 3px 5px -2px rgba(19,52,60,.22),
+    inset 0 2px 1px rgba(187,228,225,.28) !important;
+}
+
+/* Animation of large blurred shadows is costly on Android WebView.
+   Keep palette transitions, but never animate cast shadows while scrolling. */
+html.rashody-native-android body.matte-editorial :is(
+  button, .week-day, .navitem, .trend-card, .legend-line,
+  .color-category-card, .panel, .day-ledger, .feature-day,
+  .mobile-nav, .mobile-nav button
+) {
+  transition-property: background-color, color, opacity !important;
+}
+@media (prefers-reduced-motion:reduce) {
+  body.matte-editorial * { transition: none !important; }
+}
