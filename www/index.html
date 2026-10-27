@@ -2630,7 +2630,7 @@ function openModal(){
 function hideModal(){
  document.getElementById('overlay').hidden=true;
  if(!nativeAndroid)document.body.style.overflow='';
- draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet');modalHistoryOpen=false;
+ draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet','cat-from-expense');modalHistoryOpen=false;
  if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
 }
 function closeModal(){
@@ -2638,7 +2638,7 @@ function closeModal(){
  if(catDraft&&txDraftBeforeCategory){
   void switchCategorySheet(()=>{
    draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
-   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();
+   document.getElementById('modal').classList.remove('cat-sheet','cat-from-expense');renderTxModal();
   },'txCategorySearch',modalScrollBeforeCategory);
   return;
  }
@@ -2697,10 +2697,10 @@ async function startCatFromTx(){
  await switchCategorySheet(()=>{
   txDraftBeforeCategory=savedExpenseDraft;draft=null;
   catDraft={id:null,name:'',icon:'box',type:'expense'};
-  modal.classList.remove('tx-sheet');renderCatModal();
+  modal.classList.remove('tx-sheet');renderCatModal();modal.classList.add('cat-from-expense');
  },'catName',0);
 }
-function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',type:'expense'};renderCatModal();openModal()}
+function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',type:'expense'};renderCatModal();document.getElementById('modal').classList.remove('cat-from-expense');openModal()}
 function collectCat(){const n=document.getElementById('catName');if(n)catDraft.name=n.value}
 function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" aria-pressed="${catDraft.icon===i}" type="button" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
 async function saveCat(){
@@ -2712,7 +2712,7 @@ async function saveCat(){
  if(txDraftBeforeCategory){
   await switchCategorySheet(()=>{
    draft={...txDraftBeforeCategory,category:savedId};txDraftBeforeCategory=null;catDraft=null;
-   document.getElementById('modal').classList.remove('cat-sheet');renderTxModal();render();
+   document.getElementById('modal').classList.remove('cat-sheet','cat-from-expense');renderTxModal();render();
   },'txCategorySearch',modalScrollBeforeCategory);
   await saveFeedback('Категория добавлена');return;
  }
