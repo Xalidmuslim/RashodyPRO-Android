@@ -6,6 +6,8 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,3 +44,17 @@ jobs:
         with:
           name: Rashody-PRO-debug-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publish one-time direct APK download
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-apk]') }}
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-DeepMatte-v5.1.apk
+          gh release create deep-matte-v5.1 "RashodyPRO-DeepMatte-v5.1.apk" \
+            --target "$GITHUB_SHA" \
+            --title "Расходы PRO — Deep Matte v5.1" \
+            --notes "Прямая загрузка APK без входа в GitHub. Это debug-сборка: перед установкой сохраните JSON-копию расходов. Если подпись не совпадает, не удаляйте текущую версию до резервного копирования." \
+            --latest
