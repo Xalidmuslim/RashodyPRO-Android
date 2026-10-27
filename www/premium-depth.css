@@ -10,23 +10,17 @@ body.matte-editorial {
   --p3-surface: #f7f3ec;
   --p3-depth-ink: 37, 47, 49;
   --p3-shadow-hero:
-    0 27px 36px -13px rgba(37,47,49,.25),
-    0 13px 18px -9px rgba(37,47,49,.16),
-    0 3px 4px -2px rgba(37,47,49,.14),
-    inset 0 2px 1px rgba(255,255,255,.96),
-    inset 0 -1px 1px rgba(73,66,55,.085);
+    0 22px 35px -14px rgba(30,42,44,.27),
+    0 9px 16px -9px rgba(30,42,44,.17),
+    0 2px 4px -2px rgba(30,42,44,.12);
   --p3-shadow-raised:
-    0 18px 27px -12px rgba(37,47,49,.20),
-    0 8px 13px -7px rgba(37,47,49,.15),
-    0 2px 3px -1px rgba(37,47,49,.11),
-    inset 0 2px 1px rgba(255,255,255,.88),
-    inset 0 -1px 1px rgba(65,60,53,.075);
+    0 16px 26px -15px rgba(30,42,44,.22),
+    0 7px 13px -8px rgba(30,42,44,.15),
+    0 2px 4px -2px rgba(30,42,44,.10);
   --p3-shadow-control:
-    0 11px 17px -8px rgba(35,44,47,.23),
-    0 4px 6px -3px rgba(35,44,47,.17),
-    0 1px 2px rgba(35,44,47,.08),
-    inset 0 2px 1px rgba(255,255,255,.96),
-    inset 0 -1px 1px rgba(73,66,55,.07);
+    0 11px 18px -10px rgba(30,42,44,.22),
+    0 4px 7px -4px rgba(30,42,44,.15),
+    0 1px 2px rgba(30,42,44,.06);
 }
 
 /* Level 1: broad carved-porcelain islands. Strongest separation is reserved
@@ -40,7 +34,7 @@ body.matte-editorial #page .analytics-ring-panel {
     linear-gradient(155deg, #fffefa 0%, #faf7f2 49%, #f0ece6 100%) !important;
   background-blend-mode: normal !important;
   background-repeat: no-repeat !important;
-  border: 1px solid rgba(255,255,255,.93) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-shadow-hero) !important;
 }
 
@@ -56,7 +50,7 @@ body.matte-editorial #page :is(
     linear-gradient(156deg, #fffdfa 0%, #f4efe9 100%) !important;
   background-blend-mode: normal !important;
   background-repeat: no-repeat !important;
-  border: 1px solid rgba(255,255,255,.82) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-shadow-raised) !important;
 }
 
@@ -64,7 +58,7 @@ body.matte-editorial #page :is(
 body.matte-editorial #page .week-day {
   background-color: #f8f6f1 !important;
   background-image: linear-gradient(154deg, #fffefa 5%, #f3efe8 80%, #ece7df 100%) !important;
-  border: 1px solid rgba(255,255,255,.83) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-shadow-control) !important;
 }
 body.matte-editorial #page .week-day.focus-day,
@@ -73,7 +67,7 @@ body.matte-editorial #page .week-day.focus-day.has-expense {
   background-image:
     radial-gradient(ellipse at 26% 0%, rgba(147,196,194,.26), transparent 65%),
     linear-gradient(154deg, #3c6872 0%, #244750 55%, #122e39 100%) !important;
-  border: 1px solid rgba(91,144,151,.65) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 14px 18px -9px rgba(18,47,57,.44),
     0 5px 7px -3px rgba(18,47,57,.30),
@@ -85,19 +79,18 @@ body.matte-editorial .topbar.subpage-topbar .screen-back,
 body.matte-editorial .icon-btn {
   background-color: #faf7f3 !important;
   background-image: linear-gradient(145deg, #fffefa 0%, #eee9e3 100%) !important;
-  border: 1px solid rgba(255,255,255,.96) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-shadow-control) !important;
 }
 
 /* Ceramic colored stat blocks: tonal variation, not hard edge strokes or
    specular/glass highlights. The raised icon is a second, smaller object. */
 body.matte-editorial #page .trend-card {
-  border: 1px solid rgba(255,255,255,.24) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 19px 26px -12px rgba(52,54,50,.24),
     0 9px 12px -6px rgba(52,54,50,.16),
     0 2px 3px -1px rgba(52,54,50,.11),
-    inset 0 2px 1px rgba(255,255,255,.31),
     inset 0 -2px 2px rgba(37,39,36,.13) !important;
   background-blend-mode: normal !important;
   background-repeat: no-repeat !important;
@@ -120,11 +113,10 @@ body.matte-editorial #page .color-category-card .color-category-icon {
     rgba(255,255,255,.45) 0%,
     rgba(255,255,255,.22) 39%,
     rgba(30,44,45,.09) 100%) !important;
-  border: 1px solid rgba(255,255,255,.36) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 7px 10px -5px rgba(28,42,43,.34),
     0 2px 3px -1px rgba(28,42,43,.20),
-    inset 0 2px 1px rgba(255,255,255,.38),
     inset 0 -1px 1px rgba(24,37,38,.13) !important;
 }
 
@@ -132,18 +124,17 @@ body.matte-editorial #page .color-category-card .color-category-icon {
    separates them physically from the flat transaction rows. */
 body.matte-editorial #page .record-row .category-icon {
   background-image: radial-gradient(ellipse at 33% 21%, rgba(255,255,255,.58), transparent 72%) !important;
-  border: 1px solid rgba(255,255,255,.60) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 7px 11px -6px rgba(37,47,49,.24),
-    0 2px 3px -1px rgba(37,47,49,.10),
-    inset 0 1px 1px rgba(255,255,255,.79) !important;
+    0 2px 3px -1px rgba(37,47,49,.10);
 }
 
 /* Analytics: raised numeric summaries, while chart geometry stays untouched. */
 body.matte-editorial #page .compare-metric,
 body.matte-editorial #page .history-tally,
 body.matte-editorial #page .insight-tile {
-  border: 1px solid rgba(255,255,255,.73) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-shadow-raised) !important;
   background-blend-mode: normal !important;
 }
@@ -161,8 +152,7 @@ body.matte-editorial #page .ring-inner {
   background-color: #faf8f3 !important;
   background-image: linear-gradient(151deg, #f2eee7, #fffefa) !important;
   box-shadow:
-    inset 0 3px 7px rgba(32,45,44,.11),
-    inset 0 -2px 2px rgba(255,255,255,.85) !important;
+    inset 0 3px 7px rgba(32,45,44,.11);
 }
 
 /* Tactile controls: the small button has a real contact shadow, while
@@ -172,14 +162,13 @@ body.matte-editorial #page .today-btn,
 body.matte-editorial #page .period-toggle button.active {
   background-color: #e7efeb !important;
   background-image: linear-gradient(148deg, #f0f7f3 0%, #d3e2db 100%) !important;
-  border: 1px solid rgba(255,255,255,.88) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-shadow-control) !important;
 }
 body.matte-editorial #page .feature-link:active,
 body.matte-editorial #page .week-arrows .icon-btn:active {
   box-shadow:
-    inset 0 3px 6px rgba(40,59,57,.19),
-    inset 0 -1px 1px rgba(255,255,255,.9) !important;
+    inset 0 3px 6px rgba(40,59,57,.19);
 }
 
 /* Navigation dock: single heavy machined piece above the background. */
@@ -188,33 +177,30 @@ body.matte-editorial .mobile-nav {
   background-image:
     radial-gradient(ellipse at 16% -25%, rgba(255,255,255,.95), transparent 70%),
     linear-gradient(155deg, #fffefa 0%, #f0ebe5 70%, #e4dfd9 100%) !important;
-  border: 1px solid rgba(255,255,255,.96) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 26px 37px -10px rgba(34,43,46,.28),
     0 12px 16px -8px rgba(34,43,46,.17),
     0 3px 4px -2px rgba(34,43,46,.12),
-    inset 0 2px 1px rgba(255,255,255,.97),
     inset 0 -2px 2px rgba(92,79,68,.12) !important;
 }
 body.matte-editorial .mobile-nav button.active:not(.fab) {
   background-color: #dcebe6 !important;
   background-image: linear-gradient(152deg, #ecf4ef 0%, #d1e1db 100%) !important;
-  border: 1px solid rgba(255,255,255,.56) !important;
+  border: 1px solid transparent !important;
   box-shadow:
-    inset 0 2px 5px rgba(46,84,84,.105),
-    inset 0 -1px 1px rgba(255,255,255,.8) !important;
+    inset 0 2px 5px rgba(46,84,84,.105);
 }
 body.matte-editorial .mobile-nav .fab {
   background-color: #cc7864 !important;
   background-image:
     radial-gradient(ellipse at 30% 12%, rgba(255,255,255,.31), transparent 56%),
     linear-gradient(151deg, #e5967e 0%, #cf7864 58%, #aa5b51 100%) !important;
-  border: 1px solid rgba(255,225,206,.6) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 18px 23px -10px rgba(97,50,46,.38),
     0 8px 11px -5px rgba(97,50,46,.25),
     0 2px 3px -1px rgba(97,50,46,.20),
-    inset 0 2px 1px rgba(255,235,223,.48),
     inset 0 -2px 2px rgba(91,39,38,.22) !important;
 }
 
@@ -222,15 +208,14 @@ body.matte-editorial .mobile-nav .fab {
 body.matte-editorial .overlay .sheet {
   background-color: #f9f6f0 !important;
   background-image: linear-gradient(156deg, #fffefa, #eee9e2) !important;
-  border: 1px solid rgba(255,255,255,.94) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 30px 50px rgba(28,37,40,.25),
-    0 10px 16px rgba(28,37,40,.14),
-    inset 0 2px 1px rgba(255,255,255,.91) !important;
+    0 10px 16px rgba(28,37,40,.14);
 }
 body.matte-editorial .overlay .sheet .primary-btn {
   background-image: linear-gradient(145deg, #3b6771, #193c48) !important;
-  border: 1px solid rgba(137,190,194,.32) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 11px 17px -7px rgba(19,52,60,.38),
     0 3px 5px -2px rgba(19,52,60,.22),
@@ -264,36 +249,29 @@ body.matte-editorial {
   --p3-satin:
     linear-gradient(152deg, #fffefa 0%, #fbf8f3 44%, #f0ebe4 100%);
   --p3-push:
-    0 10px 16px -9px rgba(34,47,47,.25),
-    0 3px 5px -3px rgba(34,47,47,.18),
-    inset 0 2px 1px rgba(255,255,255,.92),
-    inset 0 -1px 1px rgba(61,59,51,.09);
+    0 11px 17px -10px rgba(30,42,44,.21),
+    0 4px 8px -5px rgba(30,42,44,.13);
   --p3-field:
-    inset 0 2px 5px rgba(54,64,63,.12),
-    inset 0 -1px 1px rgba(255,255,255,.82),
-    0 1px 0 rgba(255,255,255,.8);
+    inset 0 3px 7px rgba(33,47,50,.105),
+    0 2px 4px -3px rgba(33,47,50,.075);
   --p3-pastel:
-    0 12px 18px -11px rgba(41,54,54,.21),
-    0 3px 5px -3px rgba(41,54,54,.11),
-    inset 0 2px 1px rgba(255,255,255,.70),
-    inset 0 -1px 1px rgba(37,58,57,.07);
+    0 13px 22px -14px rgba(30,42,44,.21),
+    0 5px 9px -6px rgba(30,42,44,.12);
   --p3-dark:
-    0 13px 19px -9px rgba(18,48,57,.40),
-    0 4px 7px -3px rgba(18,48,57,.29),
-    inset 0 2px 1px rgba(189,222,222,.31),
-    inset 0 -2px 2px rgba(7,29,38,.23);
+    0 15px 25px -12px rgba(17,44,52,.33),
+    0 6px 11px -6px rgba(17,44,52,.23),
+    0 2px 4px -2px rgba(17,44,52,.13);
 }
 
 /* ANALYTICS: the KPI triptych previously got flat backgrounds from
    .studio-stats overrides. Give each a finely graded solid-colored face. */
 body.matte-editorial #page .studio-stats .compare-metric,
 body.matte-editorial #page .color-category-card {
-  border: 1px solid rgba(255,255,255,.24) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 17px 25px -12px rgba(45,53,51,.27),
     0 7px 11px -6px rgba(45,53,51,.17),
     0 2px 3px -1px rgba(45,53,51,.11),
-    inset 0 2px 1px rgba(255,255,255,.33),
     inset 0 -2px 2px rgba(22,39,39,.13) !important;
   background-repeat: no-repeat !important;
   background-blend-mode: normal !important;
@@ -316,23 +294,22 @@ body.matte-editorial #page .color-category-card:nth-child(3n) {
 body.matte-editorial #page .studio-stats .soft-stat-symbol,
 body.matte-editorial #page .color-category-card .color-category-icon {
   background: radial-gradient(ellipse at 23% 14%, rgba(255,255,255,.52), rgba(255,255,255,.20) 54%, rgba(37,45,44,.09)) !important;
-  border: 1px solid rgba(255,255,255,.39) !important;
+  border: 1px solid transparent !important;
   box-shadow:
     0 6px 9px -5px rgba(29,47,48,.36),
-    0 2px 3px -1px rgba(29,47,48,.15),
-    inset 0 2px 1px rgba(255,255,255,.41) !important;
+    0 2px 3px -1px rgba(29,47,48,.15);
 }
 body.matte-editorial #page .color-category-card::after {
   display: none !important; /* no ornamental wire circles */
 }
 body.matte-editorial #page .studio-trend-bars .compare-stick {
   background-image: linear-gradient(94deg, rgba(255,255,255,.19), transparent 45%, rgba(41,49,49,.09)) !important;
-  box-shadow: 2px 3px 5px rgba(54,62,60,.18), inset 1px 0 rgba(255,255,255,.22) !important;
+  box-shadow: 2px 3px 5px rgba(54,62,60,.18);
 }
 body.matte-editorial #page .analytics-ring-panel .chart-detail,
 body.matte-editorial #page .analytics-insight {
   background-image: linear-gradient(153deg, #fbf9f3, #eeeae3) !important;
-  border: 1px solid rgba(255,255,255,.78) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-field) !important;
 }
 
@@ -343,7 +320,7 @@ body.matte-editorial #page .trend-mode-toggle,
 body.matte-editorial #page .font-toggle {
   background-color: #eae7e1 !important;
   background-image: linear-gradient(151deg, #efebe5, #e4dfd8) !important;
-  border: 1px solid rgba(255,255,255,.68) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-field) !important;
 }
 body.matte-editorial #page .period-toggle button:not(.active),
@@ -352,8 +329,8 @@ body.matte-editorial #page .font-toggle button:not(.active) {
   background-color: #faf8f4 !important;
   background-image: linear-gradient(153deg, #fffefa, #f0ece6) !important;
   color: #344a52 !important;
-  border: 1px solid rgba(255,255,255,.73) !important;
-  box-shadow: 0 3px 6px -4px rgba(39,52,51,.17), inset 0 1px rgba(255,255,255,.85) !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 3px 6px -4px rgba(39,52,51,.17);
 }
 body.matte-editorial #page .period-toggle button.active,
 body.matte-editorial #page .analytics-controls .period-toggle button.active,
@@ -363,14 +340,14 @@ body.matte-editorial #page .font-toggle button.active {
   background-color: #214650 !important;
   background-image: linear-gradient(151deg, #3c6872 0%, #254d58 57%, #183640 100%) !important;
   color: #fffefa !important;
-  border: 1px solid rgba(136,183,185,.26) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-dark) !important;
   text-shadow: none !important;
 }
 body.matte-editorial #page .analytics-controls .period-toggle button:not(.active) {
   background-color: #faf8f4 !important;
   background-image: var(--p3-satin) !important;
-  border: 1px solid rgba(255,255,255,.83) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-push) !important;
 }
 body.matte-editorial #page .period-navigation .icon-btn,
@@ -379,7 +356,7 @@ body.matte-editorial #page .r49-filter-btn,
 body.matte-editorial #page .header-csv {
   background-color: #f7f4ee !important;
   background-image: var(--p3-satin) !important;
-  border: 1px solid rgba(255,255,255,.85) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-push) !important;
 }
 body.matte-editorial #page .r49-filter-btn,
@@ -392,7 +369,7 @@ body.matte-editorial #page .today-btn {
 body.matte-editorial #page :is(.search, .filter-group, .filter-select, .setting-select) {
   background-color: #f1eee8 !important;
   background-image: linear-gradient(153deg, #f0ece6 0%, #fbf9f3 100%) !important;
-  border: 1px solid rgba(255,255,255,.67) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-field) !important;
 }
 body.matte-editorial #page .filter-group button.active {
@@ -404,7 +381,7 @@ body.matte-editorial #page .history-tally,
 body.matte-editorial #page .history-tally.spent,
 body.matte-editorial #page .history-tally.earned {
   background-image: linear-gradient(154deg, rgba(255,255,255,.60), rgba(90,103,97,.055)) !important;
-  border: 1px solid rgba(255,255,255,.85) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-pastel) !important;
 }
 body.matte-editorial #page .history-tally.spent {
@@ -425,19 +402,19 @@ body.matte-editorial #page .studio-settings-icon,
 body.matte-editorial #page .category-manage .category-manage-row,
 body.matte-editorial #page .category-row {
   background-image: linear-gradient(154deg, rgba(255,255,255,.63), rgba(47,75,74,.045)) !important;
-  border: 1px solid rgba(255,255,255,.75) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-pastel) !important;
 }
 body.matte-editorial #page :is(.secondary-btn,.repeat-inline,.settings-actions button:not(.primary-btn),.category-manage button) {
   background-image: linear-gradient(151deg, rgba(255,255,255,.63), rgba(52,102,96,.045)) !important;
-  border: 1px solid rgba(255,255,255,.80) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-push) !important;
 }
 body.matte-editorial #page .primary-btn,
 body.matte-editorial #page .subtle-add {
   background-color: #254c57 !important;
   background-image: linear-gradient(150deg, #426e78, #1b3d48) !important;
-  border: 1px solid rgba(152,193,190,.35) !important;
+  border: 1px solid transparent !important;
   color: #fffefa !important;
   box-shadow: var(--p3-dark) !important;
 }
@@ -445,7 +422,7 @@ body.matte-editorial #page .note-box,
 body.matte-editorial #page .storage-banner:not([role="alert"]) {
   background-image: linear-gradient(153deg, rgba(255,255,255,.38), rgba(38,81,76,.055)) !important;
   box-shadow: var(--p3-field) !important;
-  border: 1px solid rgba(255,255,255,.50) !important;
+  border: 1px solid transparent !important;
 }
 
 /* NEW EXPENSE: nested amount well, keys and category pads are sculpted,
@@ -453,37 +430,37 @@ body.matte-editorial #page .storage-banner:not([role="alert"]) {
 body.matte-editorial #modal.tx-sheet {
   background-color: #f8f4ee !important;
   background-image: linear-gradient(155deg, #fffefa, #f3efe8 70%, #e9e4dc) !important;
-  border: 1px solid rgba(255,255,255,.95) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-shadow-hero) !important;
 }
 body.matte-editorial #modal.tx-sheet .type-switch {
   background-image: linear-gradient(155deg, #e9e4dd, #f3efe8) !important;
-  border: 1px solid rgba(255,255,255,.67) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-field) !important;
 }
 body.matte-editorial #modal.tx-sheet .type-switch button:not(.active) {
   background-image: linear-gradient(150deg, #fffefa, #f0ece6) !important;
-  border: 1px solid rgba(255,255,255,.79) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-push) !important;
   color: #2e4851 !important;
 }
 body.matte-editorial #modal.tx-sheet .type-switch button.active {
   background-image: linear-gradient(150deg, #416f79, #214650) !important;
   color: #fff !important;
-  border: 1px solid rgba(167,209,210,.36) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-dark) !important;
 }
 body.matte-editorial #modal.tx-sheet .tx-amount-block {
   background-color: #edeae3 !important;
   background-image: linear-gradient(148deg, #edeae3, #f6f2eb) !important;
-  border: 1px solid rgba(255,255,255,.60) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-field) !important;
 }
 body.matte-editorial #modal.tx-sheet .r105-key,
 body.matte-editorial #modal.tx-sheet .tx-quick-amount>button {
   background-color: #fffefa !important;
   background-image: linear-gradient(150deg, #fffefa, #f1ede7 100%) !important;
-  border: 1px solid rgba(255,255,255,.85) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-push) !important;
   color: #2b4850 !important;
 }
@@ -501,25 +478,24 @@ body.matte-editorial #modal.tx-sheet .tx-category-search,
 body.matte-editorial #modal.tx-sheet .tx-details input {
   background-color: #f1eee8 !important;
   background-image: linear-gradient(151deg, #efebe5, #faf8f3) !important;
-  border: 1px solid rgba(255,255,255,.68) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-field) !important;
 }
 body.matte-editorial #modal.tx-sheet .cat-choice {
   background-color: #f5f1eb !important;
   background-image: linear-gradient(150deg, #fffdfa, #f0ece6 100%) !important;
-  border: 1px solid rgba(255,255,255,.76) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-push) !important;
 }
 body.matte-editorial #modal.tx-sheet .cat-choice.active {
   background-color: #d9eae5 !important;
   background-image: linear-gradient(150deg, #eef7f3, #cde3dc) !important;
-  border: 1px solid rgba(75,140,133,.57) !important;
+  border: 1px solid transparent !important;
   outline: none !important; /* remove drawn thick outline from normal selection */
   color: #234a51 !important;
   box-shadow:
     0 8px 12px -8px rgba(28,80,77,.33),
     0 2px 4px -2px rgba(28,80,77,.23),
-    inset 0 2px 1px rgba(255,255,255,.87),
     inset 0 -1px 2px rgba(60,111,104,.15) !important;
 }
 body.matte-editorial #modal.tx-sheet .cat-choice:focus-visible {
@@ -530,7 +506,7 @@ body.matte-editorial #modal.tx-sheet .r49-more-categories,
 body.matte-editorial #modal.tx-sheet .tx-date-control button {
   background-color: #dcebe5 !important;
   background-image: linear-gradient(150deg, #ebf5ef, #d4e5de) !important;
-  border: 1px solid rgba(255,255,255,.70) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-push) !important;
 }
 body.matte-editorial #modal.tx-sheet .tx-check:not(:disabled) {
@@ -542,13 +518,12 @@ body.matte-editorial #modal.tx-sheet .tx-check:disabled {
   background-color: #d8dbd5 !important;
   background-image: linear-gradient(148deg, #e8e9e3, #d2d6d0) !important;
   box-shadow:
-    inset 0 2px 4px rgba(80,95,92,.10),
-    inset 0 -1px 1px rgba(255,255,255,.75) !important;
+    inset 0 2px 4px rgba(80,95,92,.10);
   color: #9ba6a0 !important;
 }
 body.matte-editorial #modal.tx-sheet .tx-edit-actions button {
   background-image: var(--p3-satin) !important;
-  border: 1px solid rgba(255,255,255,.78) !important;
+  border: 1px solid transparent !important;
   box-shadow: var(--p3-push) !important;
 }
 
@@ -563,4 +538,74 @@ body.matte-editorial :is(button, input, select):focus-visible {
   body.matte-editorial #modal.tx-sheet .cat-choice {
     transition: none !important;
   }
+}
+
+
+/* Finish: physical cast shadows, never artificial painted border strokes.
+   This overrides legacy inline CSS rules that still draw white rims on less
+   commonly visited controls. The transparent border keeps original box geometry.
+   Keyboard focus outlines remain intentionally visible for accessibility. */
+body.matte-editorial #page :is(
+  .week-day, .icon-btn, .trend-card, .trend-icon,
+  .feature-day, .day-ledger, .feature-link, .panel,
+  .analytics-ring-panel, .analytics-trend-panel,
+  .analytics-category-grid, .compare-metric, .history-tally,
+  .record-list, .period-controls, .period-toggle,
+  .period-toggle button, .trend-mode-toggle,
+  .trend-mode-toggle button, .color-category-card,
+  .color-category-icon, .filter-group, .filter-select, .search,
+  .setting-select, .font-toggle, .font-toggle button,
+  .category-row, .category-icon, .history-summary-card,
+  .today-btn, .r49-filter-btn, .header-csv,
+  .secondary-btn, .primary-btn, .subtle-add, .note-box
+),
+body.matte-editorial :is(
+  .mobile-nav, .mobile-nav button, .mobile-nav .fab,
+  .topbar .screen-back, .topbar .icon-btn,
+  .overlay .sheet, .overlay .sheet button
+),
+body.matte-editorial #modal.tx-sheet :is(
+  .type-switch, .type-switch button, .tx-amount-block,
+  .r105-key, .cat-choice, .tx-category-search,
+  .tx-details input, .tx-check, .r49-more-categories,
+  .tx-quick-amount button, .tx-date-control button
+) {
+  border-color: transparent !important;
+}
+
+/* Zero white hairline highlights in the dock and in the main card.
+   The contact/ambient shadows, not a bright rim, establish elevation. */
+body.matte-editorial .mobile-nav {
+  box-shadow: var(--p3-shadow-hero) !important;
+}
+body.matte-editorial #page .trend-card {
+  box-shadow:
+    0 19px 27px -14px rgba(51,54,50,.26),
+    0 7px 13px -7px rgba(51,54,50,.15),
+    0 2px 4px -2px rgba(51,54,50,.11) !important;
+}
+body.matte-editorial #page .studio-stats .compare-metric,
+body.matte-editorial #page .color-category-card {
+  box-shadow:
+    0 19px 27px -14px rgba(51,54,50,.24),
+    0 8px 13px -8px rgba(51,54,50,.16),
+    0 2px 4px -2px rgba(51,54,50,.10) !important;
+}
+body.matte-editorial #page .week-day.focus-day,
+body.matte-editorial #page .week-day.focus-day.has-expense,
+body.matte-editorial #page .period-toggle button.active,
+body.matte-editorial #page .trend-mode-toggle button.active {
+  box-shadow: var(--p3-dark) !important;
+}
+body.matte-editorial .mobile-nav .fab {
+  box-shadow:
+    0 17px 24px -12px rgba(97,50,46,.40),
+    0 6px 11px -6px rgba(97,50,46,.26),
+    0 2px 4px -2px rgba(97,50,46,.15) !important;
+}
+
+/* Leave selected controls visibly selected using tone, not strokes. */
+body.matte-editorial #modal.tx-sheet .cat-choice.active {
+  box-shadow: 0 8px 15px -9px rgba(26,82,77,.29),
+              0 3px 6px -4px rgba(26,82,77,.16) !important;
 }

@@ -27,7 +27,12 @@ for (const selector of selectors) assert.ok(css.includes(selector), 'Depth not c
 for (const token of ['--p3-shadow-hero', '--p3-shadow-raised', '--p3-shadow-control']) {
   assert.ok(css.includes(token + ':'), 'Missing shared token: ' + token);
 }
-assert.ok((css.match(/inset\s+0\s+[12]px/g) || []).length >= 6, 'Missing consistent rim lighting');
+// Matte depth must be cast by the surface, never drawn as white outlines.
+const opaqueBorders=[...css.matchAll(/\bborder\s*:\s*1px\s+solid\s+(?!transparent\b)[^;]+!important\s*;/gi)];
+assert.equal(opaqueBorders.length,0,'Visible 1px rims remain: '+opaqueBorders.slice(0,3).map(m=>m[0]).join(' | '));
+const brightInset=/\binset\b[^,;]*\b(?:rgba\(\s*255\s*,\s*(?:255|235)\s*,\s*(?:255|223)|#fff(?:fff)?\b)/i;
+assert.ok(!brightInset.test(css),'Artificial white inset highlight remains');
+assert.ok((css.match(/\b0\s+\d+px\s+\d+px\s+-\d+px\s+rgba\(/g)||[]).length>=8,'Real, soft external cast shadows should remain');
 assert.ok((css.match(/linear-gradient\(/g) || []).length >= 12, 'No material lighting gradients');
 assert.ok((css.match(/box-shadow:/g) || []).length >= 12, 'No physical contact/ambient shadows');
 // Guardrail: decoration must not change page geometry, scrolling or storage behavior.
