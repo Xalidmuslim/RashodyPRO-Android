@@ -52,5 +52,26 @@ for(const color of bg) {
  assert.ok(contrast>=4.5, 'Black-on-category-card contrast too low: '+color+' / '+contrast.toFixed(2));
 }
 assert.match(css,/color:\s*var\(--satin-ink\)\s*!important/, 'Card text must be dark');
-assert.ok((css.match(/background-image:/g)||[]).length>=12,'Not enough matte material variation');
-console.log('OK: satin matte surfaces, dark legible card text and static donut shadows');
+/* Material regression: the old shiny v3 was caused by 15 pale gradients.
+   All elevations must instead be created by solid matte surfaces + cast shadows. */
+assert.ok(!/(?:linear|radial|conic)-gradient\s*\(/i.test(css),
+  'Premium material must not use any simulated white/gloss gradient');
+assert.ok(!/\binset\s+0\s+[12]px\s+(?:[01]px\s+)?rgba\(\s*255\b/i.test(css),
+  'White hairline rim has returned');
+for(const selector of [
+  '.mobile-nav', '.mobile-nav button.active', '.mobile-nav .fab',
+  '#modal.tx-sheet', '#modal.tx-sheet .cat-choice',
+  '#modal.tx-sheet .r105-key', '#page .history-tally',
+  '#page .period-toggle button', '#page .analytics-ring-panel',
+  '#page .studio-stats .compare-metric', '#page .trend-card',
+  '#page .category-row', '#page .setting-select',
+  '#page .day-donut-svg', '#page .analytics-ring-panel .ring svg.ring-svg'
+]) assert.ok(css.includes(selector), 'Missing all-screen matte treatment: '+selector);
+for (const name of ['--matte-backdrop','--matte-raised','--matte-control','--matte-well']) {
+  assert.ok(css.includes(name+':'), 'Elevation scale incomplete: '+name);
+}
+assert.ok((css.match(/background-image:\s*none\s*!important/g)||[]).length>=12,
+  'All key surfaces must explicitly neutralize earlier gradients');
+assert.ok(!/\bbackdrop-filter\s*:/i.test(css), 'Blur glass layer is prohibited');
+assert.ok(!/\banimation\s*:\s*[^;]+shadow/i.test(css), 'Animated shadows are prohibited');
+console.log('OK: shadow-only deep matte surfaces and static chart depth across screens');
