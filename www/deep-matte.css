@@ -370,3 +370,19 @@ body.matte-editorial #page button:focus-visible{
     transition:none!important;
   }
 }
+
+/* v5.1 cascade audit: last two surviving legacy gradients.
+   More specific selectors counter historical nth-child and .period-controls
+   rules without changing each category's muted solid background color. */
+body.matte-editorial #page .period-controls:not(.analytics-controls) .period-toggle,
+body.matte-editorial #page .analytics-controls .period-toggle {
+  background-image:none!important;
+  background-color:#d1ccc5!important;
+  border-color:transparent!important;
+  box-shadow:var(--d5-well-shadow)!important;
+}
+body.matte-editorial #page .settings-grid .category-manage button:nth-child(n) {
+  background-image:none!important;
+  border-color:transparent!important;
+  box-shadow:var(--d5-shadow-control)!important;
+}

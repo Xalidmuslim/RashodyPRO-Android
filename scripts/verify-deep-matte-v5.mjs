@@ -36,4 +36,10 @@ assert.ok(finish.includes("#modal.tx-sheet .cat-choice.active"),"Keep category s
 assert.ok(finish.includes(":focus-visible"),"Preserve keyboard focus cues");
 assert.ok(finish.includes("prefers-reduced-motion"),"Respect motion preferences");
 assert.match(html,/<link rel="stylesheet" href="deep-matte\.css">/,"Final material CSS must load");
+for(const selector of [
+  ".period-controls:not(.analytics-controls) .period-toggle",
+  ".settings-grid .category-manage button:nth-child(n)"
+]) {
+  assert.ok(finish.includes(selector),"Cascade specificity fix missing: "+selector);
+}
 console.log("OK: all-screen deep matte v5 visual contract");
