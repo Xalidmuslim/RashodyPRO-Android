@@ -25,4 +25,7 @@ assert.ok(!/transition(?:-property)?\s*:[^;]*(?:filter|box-shadow)/i.test(noComm
 assert.ok(!/(^|[;{}])\s*(?:width|height|overflow|position|grid-template-columns)\s*:/im.test(noComments),'A depth-only pass must not change layout geometry');
 assert.match(css,/week-day\.focus-day/,'Selected days need dark readable contrast');
 assert.match(css,/prefers-reduced-motion/,'Respect reduced motion');
+for(const selector of ['.analytics-controls .period-toggle button:not(.active)', '.period-controls:not(.analytics-controls) .period-toggle button:not(.active)']) {
+ assert.ok(css.includes(selector),'Legacy period control may still render a white gradient: '+selector);
+}
 console.log('OK: deep matte multi-level shadows, no white gradients, cards/plots/forms, layout-safe');

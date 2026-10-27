@@ -50,3 +50,11 @@ body.matte-editorial #page .premium-day-track{background:#cecbc4!important;box-s
 body.matte-editorial #page :is(.day-donut-legend-item,.analytics-ring-panel .legend-line){background:transparent!important;background-image:none!important;border-color:transparent!important;box-shadow:none!important;}
 body.matte-editorial :is(button,input,select):focus-visible{outline:2px solid #235f65!important;outline-offset:2px;}
 @media(prefers-reduced-motion:reduce){body.matte-editorial #page :is(.day-donut-svg,.ring-svg,.studio-trend-bars .compare-stick){transition:none!important;}}
+
+/* History/analytics period selectors previously overrode the default matte buttons. */
+body.matte-editorial #page .analytics-controls .period-toggle button:not(.active),
+body.matte-editorial #page .period-controls:not(.analytics-controls) .period-toggle button:not(.active){
+  background:#dedad3!important;background-image:none!important;
+  border-color:transparent!important;box-shadow:var(--d4-elev-small)!important;
+  color:var(--d4-ink)!important;
+}
