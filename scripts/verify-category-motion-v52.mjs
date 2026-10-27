@@ -33,4 +33,6 @@ assert.match(finish,/prefers-reduced-motion:reduce/,'Motion-reduction CSS missin
 assert.ok(!/(?:linear|radial)-gradient\s*\(/.test(finish),'No bright gradient is permitted');
 assert.ok(!/transition(?:-property)?\s*:[^;]*(box-shadow|filter)/i.test(finish),'Shadows must never animate on scrolling');
 assert.match(workflow,/deep-matte-v5\.2/, 'Publish new version as a separate downloadable APK');
+assert.match(html,/classList\.add\('cat-from-expense'\)/,'Mark category transitions originating inside an open expense');
+assert.match(styles,/\.sheet\.cat-sheet:not\(\.cat-from-expense\)/,'Do not replay modal entry animation after content swap');
 console.log('OK: category return preserving expense state, icon selection, coherent tactile controls and matte color polish');
