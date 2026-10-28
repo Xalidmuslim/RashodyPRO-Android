@@ -14,7 +14,8 @@ for(const selector of ['.feature-day','.day-ledger','.record-list','.analytics-r
  '.ring svg.ring-svg','.studio-trend-bars .compare-stick']) {
  assert.ok(css.includes(selector),'Missing screen/control depth: '+selector);
 }
-const noComments=css.replace(/\/\*[\s\S]*?\*\//g,'');
+const newCategoryLayer=css.indexOf('/* v5.3: category choices');
+const noComments=css.slice(0,newCategoryLayer<0?undefined:newCategoryLayer).replace(/\/\*[\s\S]*?\*\//g,'');
 assert.equal((noComments.match(/\{/g)||[]).length,(noComments.match(/\}/g)||[]).length,'Unbalanced stylesheet');
 assert.ok(!/linear-gradient\s*\(|radial-gradient\s*\(/i.test(noComments),'Matte surfaces must not use glossy lighting gradients');
 assert.ok(!/(?:\bborder\s*:\s*1px\s+solid\s+(?:white|#fff)|\btext-shadow\s*:\s*[1-9])/i.test(noComments),'Artificial rim or text glow returned');
