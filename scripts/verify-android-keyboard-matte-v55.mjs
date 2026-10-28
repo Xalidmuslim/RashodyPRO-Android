@@ -9,6 +9,8 @@ const end=html.indexOf('\nfunction openModal(){',start);
 assert.ok(start>0&&end>start,'Android IME and category-sheet implementation must exist');
 const source=html.slice(start,end);
 const final=css.slice(css.indexOf('/* matte-unified-v55'));
+assert.match(html,/async function saveTx\(\)\{if\(modalCloseBusy\)return;/,'A second Save must not duplicate a transaction during IME dismissal');
+assert.match(html,/if\(categorySheetBusy\|\|modalCloseBusy\)return;/,'Category Save must also be idempotent during IME dismissal');
 assert.ok(final.startsWith('/* matte-unified-v55'),'Final matte override must load last');
 assert.doesNotMatch(final,/(?:linear|radial|conic)-gradient\s*\(/i,'No glossy gradient in the final material layer');
 assert.match(final,/--r-modal-visible-height/,'Sheet must follow visual viewport');
