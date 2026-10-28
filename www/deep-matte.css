@@ -570,3 +570,95 @@ body.matte-editorial #modal.tx-sheet #txSelectedCategory {
     transition: none !important;
   }
 }
+
+
+/* category-modal-matte-v54 — solid, low-glare surfaces across both sheets.
+ * Midtone hierarchy: warm canvas → sunk wells → raised keys.
+ * Only opaque pigments and cast shadows, no white gradients / hairline rims. */
+body.matte-editorial #modal.tx-sheet,
+body.matte-editorial #modal.cat-sheet {
+ background-color:#e5e0d8!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:0 25px 35px -13px rgba(25,38,40,.33),
+            0 9px 16px -7px rgba(25,38,40,.19)!important;
+}
+body.matte-editorial #modal.tx-sheet .tx-amount-block,
+body.matte-editorial #modal.tx-sheet .type-switch,
+body.matte-editorial #modal.tx-sheet .tx-category-search,
+body.matte-editorial #modal.tx-sheet .tx-details input,
+body.matte-editorial #modal.cat-sheet .field input {
+ background:#d4cfc6!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:inset 0 3px 7px rgba(37,47,47,.15),inset 0 1px 2px rgba(37,47,47,.08)!important;
+ color:#213a41!important;
+}
+body.matte-editorial #modal.tx-sheet .r105-key,
+body.matte-editorial #modal.tx-sheet .tx-quick-amount>button,
+body.matte-editorial #modal.tx-sheet .r49-more-categories,
+body.matte-editorial #modal.tx-sheet .type-switch button:not(.active),
+body.matte-editorial #modal.cat-sheet .icon-choice,
+body.matte-editorial #modal.cat-sheet .icon-btn {
+ background:#d2cec6!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:0 10px 14px -8px rgba(27,39,41,.27),
+            0 3px 5px -3px rgba(27,39,41,.16)!important;
+ color:#213a41!important;
+}
+body.matte-editorial #modal.tx-sheet .r105-key:active,
+body.matte-editorial #modal.tx-sheet .tx-quick-amount>button:active{
+ background:#c6c5be!important;
+ background-image:none!important;
+}
+body.matte-editorial #modal.tx-sheet .tx-check:disabled{
+ background:#c3c5bf!important;
+ background-image:none!important;
+ box-shadow:inset 0 3px 5px rgba(35,47,48,.12)!important;
+}
+body.matte-editorial #modal.tx-sheet .tx-quick-amount .tx-erase,
+body.matte-editorial #modal.tx-sheet .r105-key-back{
+ background:#c3d5cd!important;
+ background-image:none!important;
+}
+body.matte-editorial #modal.tx-sheet .cat-choice,
+body.matte-editorial #modal.tx-sheet .cat-choice.active{
+ background-color:#d2cec6!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--d5-shadow-control)!important;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice::before{
+ background:#aec9be!important;
+}
+body.matte-editorial #modal.cat-sheet .icon-choice.active{
+ background:#aac7bc!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--d5-shadow-control)!important;
+}
+body.matte-editorial #modal.tx-sheet .tx-selected-category,
+body.matte-editorial #modal.cat-sheet .amount-label,
+body.matte-editorial #modal.tx-sheet .tx-section-title h3{
+ color:#29494b!important;
+}
+body.matte-editorial #modal.tx-sheet .r103-add-category{
+ background:#b6d0c4!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ color:#204449!important;
+ box-shadow:0 11px 16px -9px rgba(28,62,57,.29),0 3px 5px -3px rgba(28,62,57,.18)!important;
+}
+body.matte-editorial #modal.cat-sheet .primary-btn{
+ background:#2d555e!important;
+ background-image:none!important;
+ color:#f8f7f2!important;
+ border-color:transparent!important;
+ box-shadow:var(--d5-shadow-control)!important;
+}
+/* Keep sheet height animation compositable but never animate expensive shadows. */
+@media(prefers-reduced-motion:reduce){
+ body.matte-editorial #modal.tx-sheet *,
+ body.matte-editorial #modal.cat-sheet *{animation:none!important;}
+}
