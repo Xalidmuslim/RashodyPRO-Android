@@ -776,3 +776,31 @@ body.matte-editorial #page .week-day-total{
  body.matte-editorial #page .trend-card{padding-left:6px!important;padding-right:6px!important;}
  body.matte-editorial #page .trend-card>span:last-child{font-size:calc(9px * var(--font-scale,1))!important;}
 }
+
+/* Strong-specificity cleanup for historic premium CSS with !important gradients. */
+body.matte-editorial #page :is(
+ .feature-day,.day-ledger,.analytics-ring-panel,.panel,.record-list,
+ .period-controls,.toolbar,.settings-grid .panel,.week-day,
+ .trend-card,.trend-card .trend-icon,.color-category-card .color-category-icon,
+ .record-row .category-icon,.compare-metric,.history-tally,.insight-tile,
+ .day-donut-center,.ring-inner,.feature-link,.today-btn,
+ .period-toggle button.active,.analytics-controls .period-toggle button.active,
+ .period-controls:not(.analytics-controls) .period-toggle button.active,
+ .trend-mode-toggle button.active,.font-toggle button.active,
+ .mobile-nav button.active,.studio-stats .compare-metric,
+ .studio-stats .soft-stat-symbol,.studio-trend-bars .compare-stick,
+ .analytics-ring-panel .chart-detail,.analytics-insight,
+ .filter-group button.active,.search,.filter-select,.setting-select,
+ .setting-actions button,.secondary-btn,.repeat-inline,.category-manage button,
+ .category-row,.primary-btn,.subtle-add,.note-box
+){background-image:none!important;}
+body.matte-editorial :is(.mobile-nav,.mobile-nav .fab,.mobile-nav button.active:not(.fab)){
+ background-image:none!important;
+}
+body.matte-editorial #modal.tx-sheet :is(
+ .type-switch,.type-switch button.active,.type-switch button:not(.active),
+ .r105-key,.r105-key-back,.r105-key:active,.tx-quick-amount>button,
+ .tx-quick-amount .tx-erase,.tx-category-search,.tx-details input,
+ .cat-choice,.cat-choice.active,.r49-more-categories,
+ .tx-date-control button,.tx-check:not(:disabled),.tx-check:disabled
+){background-image:none!important;}
