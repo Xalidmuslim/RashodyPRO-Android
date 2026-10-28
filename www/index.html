@@ -2598,25 +2598,65 @@ function analytics(){
  <section class="panel analytics-trend-panel"><div class="section-heading studio-trend-heading"><div><h2>Динамика расходов</h2><div class="section-caption">Нажмите на столбец для просмотра периода</div></div><div class="trend-mode-toggle">${[['day','По дням'],['week','По неделям'],['month','По месяцам']].map(([id,label])=>`<button type="button" data-trend-mode="${id}" class="${analyticsTrendMode===id?'active':''}" aria-pressed="${analyticsTrendMode===id}">${label}</button>`).join('')}</div></div>${chartSeries.every(item=>item.value===0)?`<div class="r49-empty-trend" role="status">За эти периоды расходов нет. Выберите другой период или добавьте расход.</div>`:`<div class="r103-plot"><div class="studio-bar-axis"><span title="${esc(money(max))}">${axisMoney(max)}</span><span title="${esc(money(max/2))}">${axisMoney(max/2)}</span><span>0</span></div><div class="compare-bars studio-trend-bars ${analyticsTrendMode==='day'?'dense':''}">${chartSeries.map((item,i)=>{const selected=item.date===analyticsAnchor;return `<button class="compare-col ${selected?'selected':''}" type="button" data-trend-date="${item.date}" aria-pressed="${selected}" aria-label="${esc(item.label)}: ${esc(money(item.value))}"><span class="compare-track"><span class="compare-stick" style="height:${item.value?Math.max(4,item.value/max*100):0}%"></span></span><span class="compare-label">${item.marked?esc(item.label):''}</span></button>`}).join('')}</div></div>`}</section>
  ${s.expense?`<section class="panel analytics-category-grid"><div class="section-heading"><h2>Топ категорий</h2><button class="ghost-btn" data-chart-open data-category="${esc(activeCategory(cats))}">Все категории →</button></div><div class="color-category-grid">${ranked.slice(0,3).map(([id,value],i)=>{const c=getCat(id);return `<button class="color-category-card" style="background-color:${categoryCardColor(id)}!important" type="button" data-chart-category="${esc(id)}" aria-label="${esc(c.name)}, ${esc(money(value))}"><span class="color-category-icon">${svg(c.icon,23)}</span><span class="category-name">${esc(c.name)}</span><strong class="num" title="${esc(money(value))}">${summaryMoney(value)}</strong><small>${Math.round(value/s.expense*100)}% всех расходов</small></button>`}).join('')}</div></section>`:''}`;
 }
-function settings(){const c=data.settings;const demoCount=data.transactions.filter(t=>typeof t.id==='string'&&t.id.startsWith('rashody-month-demo-v1-')).length;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Добавить категорию</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><div class="setting-expl" style="margin:10px 0 8px">Образец расходов за полный календарный месяц. Реальные операции не заменяются. Пример можно удалить отдельно.</div><div class="settings-actions"><button class="secondary-btn" type="button" data-action="load-month-demo">${svg('calendar',18)} Заполнить данные за месяц</button>${demoCount?`<button class="secondary-btn" type="button" data-action="remove-month-demo">${svg('trash',17)} Удалить образец (${demoCount})</button>`:''} </div><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 5.3 · Deep Matte · Локальные данные</p>`}
+function settings(){const c=data.settings;const demoCount=data.transactions.filter(t=>typeof t.id==='string'&&t.id.startsWith('rashody-month-demo-v1-')).length;return `<div class="settings-grid"><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('settings',20)}</span> Внешний вид и учёт</h2><div class="setting-row"><div><div class="setting-title">Размер текста</div><div class="setting-expl">Увеличьте шрифт для комфортного чтения</div></div><div class="font-toggle" aria-label="Размер шрифта">${[[0.9,'А−'],[1,'А'],[1.15,'А+'],[1.3,'А++']].map(([n,label])=>`<button data-font="${n}" aria-pressed="${c.fontScale===n}" class="${c.fontScale===n?'active':''}">${label}</button>`).join('')}</div></div><div class="font-sample">Пример текста: расходы, покупки и статистика</div><div class="setting-row"><div><div class="setting-title">Учитывать доходы</div><div class="setting-expl">Если выключить, останутся только расходы. Сохранённые доходы не удаляются и появятся после включения.</div></div><label class="switch" aria-label="Учитывать доходы"><input type="checkbox" id="incomeEnabled" ${c.incomeEnabled?'checked':''}><span class="switch-track"></span></label></div><div class="setting-row"><div><div class="setting-title">Валюта</div><div class="setting-expl">Обозначение без пересчёта сумм</div></div><select id="currency" class="setting-select" aria-label="Валюта">${[['₽','Рубль ₽'],['$','Доллар $'],['€','Евро €'],['₸','Тенге ₸'],['₾','Лари ₾']].map(([id,label])=>`<option value="${id}" ${c.currency===id?'selected':''}>${label}</option>`).join('')}</select></div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon teal">${svg('box',20)}</span> Категории</h2><div class="setting-row"><div><div class="setting-title">Категории расходов</div><div class="setting-expl">Свои названия и значки категорий</div></div><button class="secondary-btn" data-action="new-category">${svg('plus',16)} Добавить категорию</button></div><div class="category-manage">${data.categories.filter(x=>x.type==='expense').map(cat=>`<button data-edit-category="${esc(cat.id)}" title="Изменить категорию">${svg(cat.icon,15)} ${esc(cat.name)}</button>`).join('')}</div></section><section class="panel"><h2 class="studio-settings-title"><span class="studio-settings-icon coral">${svg('shield',20)}</span> Мои данные</h2><div class="setting-expl" style="margin:7px 0 17px">Экспорт, импорт и резервное копирование</div><div class="settings-actions"><button class="secondary-btn" data-action="export-json">${svg('download',18)} Скачать резервную копию (.json)</button><button class="secondary-btn" data-action="import-json">${svg('upload',18)} Восстановить из копии</button><button class="secondary-btn" data-action="import-old-csv">${svg('receipt',18)} Перенести CSV старой версии</button><button class="secondary-btn" data-action="export-csv">${svg('receipt',18)} Скачать операции (.csv)</button></div><div class="note-box">${svg('shield',19)}<p style="margin:7px 0 0"><b>Без регистрации и подписки.</b> Данные хранятся локально в этом браузере. JSON-копия содержит все записи, включая скрытые доходы. Регулярно сохраняйте её.</p></div><div class="separator"></div><div class="setting-expl" style="margin:10px 0 8px">Образец расходов за полный календарный месяц. Реальные операции не заменяются. Пример можно удалить отдельно.</div><div class="settings-actions"><button class="secondary-btn" type="button" data-action="load-month-demo">${svg('calendar',18)} Заполнить данные за месяц</button>${demoCount?`<button class="secondary-btn" type="button" data-action="remove-month-demo">${svg('trash',17)} Удалить образец (${demoCount})</button>`:''} </div><button class="mini-action danger-btn" data-action="clear-data" style="color:var(--danger)">${svg('trash',16)} Удалить все операции</button></section></div><p class="sub" style="text-align:center;margin:15px 0 0">Расходы PRO 5.4 · Deep Matte · Локальные данные</p>`}
 function toast(s){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=s;el.classList.add('visible');toastTimer=setTimeout(()=>el.classList.remove('visible'),2700)}
 // Swap only the sheet content, keeping the expense draft, keyboard focus and scroll.
 let categorySheetBusy=false;
 let modalScrollBeforeCategory=0;
+let txCategorySearchBeforeCategory='';
+let txExpandedBeforeCategory=false;
+let txPickerScrollBeforeCategory=0;
+let categorySheetNeedsRefresh=false;
 async function switchCategorySheet(renderNext,focusId,scrollY=0){
  if(categorySheetBusy)return;
  categorySheetBusy=true;
  const modal=document.getElementById('modal');
  const reduced=typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  const motion=!reduced&&typeof modal?.animate==='function';
- modal?.setAttribute('aria-busy','true');
- try{
-  if(motion)await modal.animate([{opacity:1,transform:'translate3d(0,0,0)'},{opacity:.45,transform:'translate3d(-9px,0,0)'}],{duration:105,easing:'cubic-bezier(.4,0,1,1)'}).finished.catch(()=>{});
+ const previousHeight=modal.style.height;
+ const oldHeight=modal.getBoundingClientRect().height;
+ modal.setAttribute('aria-busy','true');
+ const animateContents=(frames,options)=>Promise.all([...modal.children]
+  .filter(child=>typeof child.animate==='function')
+  .map(child=>child.animate(frames,options).finished.catch(()=>{})));
+ try {
+  // Legacy Android CSS forces transform:none!important on #modal itself.
+  // Animate actual content, not the sheet's blocked transform/opacity.
+  if(motion)await animateContents([
+   {opacity:1,transform:'translate3d(0,0,0)'},
+   {opacity:0,transform:'translate3d(-8px,0,0)'}
+  ],{duration:110,easing:'cubic-bezier(.4,0,1,1)'});
+  modal.style.height=oldHeight+'px';
   renderNext();
-  if(modal)modal.scrollTop=scrollY;
-  if(motion)await modal.animate([{opacity:.45,transform:'translate3d(10px,0,0)'},{opacity:1,transform:'translate3d(0,0,0)'}],{duration:185,easing:'cubic-bezier(.16,1,.3,1)'}).finished.catch(()=>{});
+  modal.style.height='auto';
+  const newHeight=modal.getBoundingClientRect().height;
+  modal.style.height=oldHeight+'px';
+  modal.scrollTop=scrollY;
+  if(motion){
+   const heightAnimation=Math.abs(oldHeight-newHeight)>1
+    ?modal.animate([{height:oldHeight+'px'},{height:newHeight+'px'}],
+       {duration:260,easing:'cubic-bezier(.16,1,.3,1)',fill:'forwards'})
+    :null;
+   await Promise.all([
+    animateContents([
+      {opacity:0,transform:'translate3d(9px,0,0)'},
+      {opacity:1,transform:'translate3d(0,0,0)'}
+    ],{duration:210,easing:'cubic-bezier(.16,1,.3,1)'}),
+    heightAnimation?.finished.catch(()=>{})??Promise.resolve()
+   ]);
+   // Apply the natural height before canceling its animation.
+   modal.style.height=previousHeight;
+   heightAnimation?.cancel();
+  }
+  modal.style.height=previousHeight;
+  modal.scrollTop=scrollY;
+  // Heading focus does not summon the keyboard or scroll the sheet.
   if(focusId)document.getElementById(focusId)?.focus({preventScroll:true});
- }finally{modal?.removeAttribute('aria-busy');categorySheetBusy=false;}
+ } finally {
+  modal.style.height=previousHeight;
+  modal.removeAttribute('aria-busy');
+  categorySheetBusy=false;
+ }
 }
 function openModal(){
  lastFocus=document.activeElement;
@@ -2632,14 +2672,22 @@ function hideModal(){
  if(!nativeAndroid)document.body.style.overflow='';
  draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet','cat-from-expense');modalHistoryOpen=false;
  if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
+ if(categorySheetNeedsRefresh){
+  categorySheetNeedsRefresh=false;
+  const pageY=window.scrollY;
+  render();
+  window.scrollTo({top:pageY,behavior:'instant'});
+ }
 }
 function closeModal(){
  if(categorySheetBusy)return;
  if(catDraft&&txDraftBeforeCategory){
   void switchCategorySheet(()=>{
    draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
-   document.getElementById('modal').classList.remove('cat-sheet','cat-from-expense');renderTxModal();
-  },'txCategorySearch',modalScrollBeforeCategory);
+   document.getElementById('modal').classList.remove('cat-sheet','cat-from-expense');
+   renderTxModal();
+   restoreTxCategoryView();
+  },'dialog-title',modalScrollBeforeCategory);
   return;
  }
  const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
@@ -2651,7 +2699,7 @@ function renderTxModal(){
  if(!icons.some(c=>c.id===draft.category))draft.category=icons[0]?.id||'other';
  const good=!!F.parseAmount(draft.amount);
  document.getElementById('modal').classList.add('tx-sheet');
- document.getElementById('modal').innerHTML=`<div class="sheet-header"><div><p class="tx-eyebrow">ФИНАНСОВЫЙ ДНЕВНИК</p><h2 id="dialog-title">${edit?'Изменить операцию':draft.type==='income'?'Новый доход':'Новый расход'}</h2></div><button type="button" class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div>
+ document.getElementById('modal').innerHTML=`<div class="sheet-header"><div><p class="tx-eyebrow">ФИНАНСОВЫЙ ДНЕВНИК</p><h2 id="dialog-title" tabindex="-1">${edit?'Изменить операцию':draft.type==='income'?'Новый доход':'Новый расход'}</h2></div><button type="button" class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div>
  <div class="type-switch ${data.settings.incomeEnabled?'':'expense-only'}"><button type="button" class="${draft.type==='expense'?'active':''}" data-tx-type="expense">${svg('arrowUp',16)} Расход</button>${data.settings.incomeEnabled?`<button type="button" class="${draft.type==='income'?'active':''}" data-tx-type="income">${svg('arrowDown',16)} Доход</button>`:''}</div>
  <section class="tx-amount-block"><label class="amount-label" for="txAmount">СУММА ${draft.type==='income'?'ДОХОДА':'РАСХОДА'}</label><div class="amount-entry"><input id="txAmount" type="text" inputmode="none" readonly autocomplete="off" placeholder="0" value="${esc(draft.amount||'')}" maxlength="18" aria-label="Сумма ${draft.type==='income'?'дохода':'расхода'}"><span class="tx-currency">${esc(data.settings.currency)}</span><button type="button" class="tx-check" id="txSubmit" data-action="save-tx" aria-label="${edit?'Сохранить изменения':'Добавить операцию'}" title="${edit?'Сохранить изменения':'Добавить операцию'}" ${good?'':'disabled'}>${svg('check',25)}</button></div><div class="tx-quick-amount" aria-label="Быстрый ввод суммы">${[100,300,500,1000].map(v=>`<button type="button" data-quick-amount="${v}">${v.toLocaleString('ru-RU')}</button>`).join('')}<button type="button" class="tx-erase" data-action="tx-clear-amount" aria-label="Очистить сумму">${svg('x',16)}</button></div><div class="r105-keypad" role="group" aria-label="Цифровая клавиатура для суммы" id="txKeypad">${['1','2','3','4','5','6','7','8','9',',','0','back'].map(k=>`<button type="button" class="r105-key ${k==='back'?'r105-key-back':''}" data-numpad="${k}" aria-label="${k==='back'?'Удалить последнюю цифру':k===','?'Десятичная запятая':k}" >${k==='back'?svg('backspace',21):k}</button>`).join('')}</div></section>
  <section class="tx-form-section"><div class="tx-section-title"><h3>Категория</h3><button type="button" class="r103-add-category" data-action="tx-add-category" aria-label="Добавить категорию">${svg('plus',16)}<span>Добавить категорию</span></button><span class="tx-selected-category" id="txSelectedCategory">${esc(getCat(draft.category).name)}</span></div><input type="search" class="tx-category-search" id="txCategorySearch" placeholder="Найти категорию" autocomplete="off" aria-label="Найти категорию"><div class="category-picker" id="txCategories">${icons.map(c=>`<button type="button" class="cat-choice ${c.id===draft.category?'active':''}" data-tx-category="${esc(c.id)}" aria-pressed="${c.id===draft.category}">${categoryIcon(c,18)}<span class="truncate">${esc(c.name)}</span></button>`).join('')}</div><button type="button" class="r49-more-categories" data-action="tx-more-categories" id="txMoreCategories" aria-expanded="false">Все категории ↓</button><p class="tx-search-empty" id="txSearchEmpty" hidden>Категория не найдена</p></section>
@@ -2694,15 +2742,31 @@ async function startCatFromTx(){
  collectDraft();
  const savedExpenseDraft={...draft},modal=document.getElementById('modal');
  modalScrollBeforeCategory=modal.scrollTop;
+ txCategorySearchBeforeCategory=document.getElementById('txCategorySearch')?.value||'';
+ txExpandedBeforeCategory=document.getElementById('txCategories')?.classList.contains('expanded')||false;
+ txPickerScrollBeforeCategory=document.getElementById('txCategories')?.scrollTop||0;
  await switchCategorySheet(()=>{
   txDraftBeforeCategory=savedExpenseDraft;draft=null;
   catDraft={id:null,name:'',icon:'box',type:'expense'};
   modal.classList.remove('tx-sheet');renderCatModal();modal.classList.add('cat-from-expense');
- },'catName',0);
+ },'dialog-title',0);
+}
+function restoreTxCategoryView(){
+ const search=document.getElementById('txCategorySearch');
+ if(search&&txCategorySearchBeforeCategory){
+  search.value=txCategorySearchBeforeCategory;
+  filterTxCategories(search.value);
+ }
+ const picker=document.getElementById('txCategories');
+ if(picker&&txExpandedBeforeCategory){
+  picker.classList.add('expanded');
+  document.getElementById('txMoreCategories')?.setAttribute('aria-expanded','true');
+ }
+ if(picker)picker.scrollTop=txPickerScrollBeforeCategory;
 }
 function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',type:'expense'};renderCatModal();document.getElementById('modal').classList.remove('cat-from-expense');openModal()}
 function collectCat(){const n=document.getElementById('catName');if(n)catDraft.name=n.value}
-function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" aria-pressed="${catDraft.icon===i}" type="button" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
+function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title" tabindex="-1">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" aria-pressed="${catDraft.icon===i}" type="button" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
 async function saveCat(){
  if(categorySheetBusy)return;
  collectCat();const name=catDraft.name.trim();if(!name)return toast('Укажите название категории');
@@ -2710,10 +2774,15 @@ async function saveCat(){
  if(savedId){const c=data.categories.find(x=>x.id===savedId);if(c)Object.assign(c,{name,icon:catDraft.icon})}
  else{savedId='cat-'+newId().replace(/[^a-zA-Z0-9_-]/g,'');data.categories.push({id:savedId,type:'expense',name,icon:catDraft.icon})}
  if(txDraftBeforeCategory){
+  categorySheetNeedsRefresh=true;
+  txCategorySearchBeforeCategory=''; // Newly added category must be visible
+  txPickerScrollBeforeCategory=0;
   await switchCategorySheet(()=>{
    draft={...txDraftBeforeCategory,category:savedId};txDraftBeforeCategory=null;catDraft=null;
-   document.getElementById('modal').classList.remove('cat-sheet','cat-from-expense');renderTxModal();render();
-  },'txCategorySearch',modalScrollBeforeCategory);
+   document.getElementById('modal').classList.remove('cat-sheet','cat-from-expense');
+   renderTxModal();
+   restoreTxCategoryView();
+  },'dialog-title',modalScrollBeforeCategory);
   await saveFeedback('Категория добавлена');return;
  }
  closeModal();render();await saveFeedback('Категория сохранена');
