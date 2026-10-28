@@ -2800,7 +2800,7 @@ function enterAmountDigit(key){
 }
 function updateTxConfirm(){const input=document.getElementById('txAmount');if(!input)return;const valid=!!F.parseAmount(input.value);document.querySelectorAll('#modal [data-action="save-tx"]').forEach(b=>{b.disabled=!valid;b.setAttribute('aria-disabled',String(!valid))})}
 function filterTxCategories(query){const term=String(query||'').trim().toLocaleLowerCase('ru');if(term){document.getElementById('txCategories')?.classList.add('expanded');document.getElementById('txMoreCategories')?.setAttribute('aria-expanded','true')}let visible=0;document.querySelectorAll('#txCategories [data-tx-category]').forEach(b=>{const name=getCat(b.dataset.txCategory).name.toLocaleLowerCase('ru');const show=!term||name.includes(term);b.hidden=!show;if(show)visible++});const el=document.getElementById('txSearchEmpty');if(el)el.hidden=visible!==0}
-async function saveTx(){collectDraft();if(draft.type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён');const amount=F.parseAmount(draft.amount);if(!amount){toast('Введите корректную сумму больше нуля');return}if(!F.isDate(draft.date)){toast('Укажите корректную дату');return}const tx={id:draft.id||newId(),type:draft.type,category:draft.category,amount,note:String(draft.note||'').trim().slice(0,200),date:draft.date,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(draft.time||'')?draft.time:''};const isEdit=!!draft.id;
+async function saveTx(){if(modalCloseBusy)return;collectDraft();if(draft.type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён');const amount=F.parseAmount(draft.amount);if(!amount){toast('Введите корректную сумму больше нуля');return}if(!F.isDate(draft.date)){toast('Укажите корректную дату');return}const tx={id:draft.id||newId(),type:draft.type,category:draft.category,amount,note:String(draft.note||'').trim().slice(0,200),date:draft.date,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(draft.time||'')?draft.time:''};const isEdit=!!draft.id;
  if(isEdit){const i=data.transactions.findIndex(x=>x.id===tx.id);if(i<0)return toast('Операция не найдена');data.transactions[i]=tx}else data.transactions.push(tx);
  month=dateFromMonth(tx.date);dashboardFocusDay=tx.date;dashboardWeekAnchor=tx.date;closeModal();render();await saveFeedback(isEdit?'Изменения сохранены':'Операция добавлена')}
 function quickRepeatLast(){
@@ -2809,7 +2809,7 @@ function quickRepeatLast(){
  startTx('expense',{...previous,id:null,date:dateLocal(),time:timeLocal(),amount:String(previous.amount)});
 }
 function repeatTx(){collectDraft();draft.id=null;draft.date=dateLocal();draft.time=timeLocal();renderTxModal();toast('Копия готова. Нажмите «Сохранить операцию»')}
-async function deleteTx(){if(!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
+async function deleteTx(){if(modalCloseBusy||!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
 const ICON_OPTIONS=['cart','coffee','car','home','heart','film','shirt','box','banknote','gift','briefcase','book','phone','fuel','plane','music','tool','drop','sun','wallet','salary'];
 let txDraftBeforeCategory=null;
 async function startCatFromTx(){
@@ -2843,7 +2843,7 @@ function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',ty
 function collectCat(){const n=document.getElementById('catName');if(n)catDraft.name=n.value}
 function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title" tabindex="-1">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" aria-pressed="${catDraft.icon===i}" type="button" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
 async function saveCat(){
- if(categorySheetBusy)return;
+ if(categorySheetBusy||modalCloseBusy)return;
  collectCat();const name=catDraft.name.trim();if(!name)return toast('Укажите название категории');
  let savedId=catDraft.id;
  if(savedId){const c=data.categories.find(x=>x.id===savedId);if(c)Object.assign(c,{name,icon:catDraft.icon})}
