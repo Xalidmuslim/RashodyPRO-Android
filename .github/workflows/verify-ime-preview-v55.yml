@@ -2,6 +2,8 @@ name: Android IME v5.5 Preview QA
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [fix/keyboard-sheet-matte-v55]
   workflow_dispatch:
 
 jobs:
