@@ -44,7 +44,7 @@ function modalScenario(native){
   const window={scrollY:629,scrollTo:()=>{scrollCalls++}};
   const history={pushState:()=>{historyPushes++}};
   const context={document,window,console,history,navState:()=>({}),nativeAndroid:native,
-    navReady:true,lastFocus:null,view:'dashboard',modalHistoryOpen:false,
+    navReady:true,lastFocus:null,view:'dashboard',modalHistoryOpen:false,categorySheetNeedsRefresh:false,
     draft:{amount:1250},catDraft:null,financeNative:()=>({showAmountKeyboard:()=>{keyboardCalls++}})};
   vm.createContext(context);
   vm.runInContext(extract('openModal','hideModal')+'\n'+extract('hideModal','closeModal')+
