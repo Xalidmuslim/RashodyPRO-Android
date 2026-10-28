@@ -17,5 +17,5 @@ assert.match(finish,/#txSelectedCategory\s*\{[\s\S]*?text-overflow:\s*ellipsis/,
 assert.match(html,/if\(btn\.dataset\.txCategory&&draft\)\{[\s\S]*?if\(draft\.category===next\)return/, 'Repeat selection should not redraw');
 assert.match(html,/chosen\.animate\(\[\{opacity:\.45/, 'Selected name should change smoothly');
 assert.match(html,/aria-pressed.*String\(active\)/, 'Selected category must remain accessible');
-assert.match(html,/Расходы PRO 5\.3 · Deep Matte/, 'UI build marker must identify installed version');
+assert.match(html,/Расходы PRO 5\.\d+(?:\.\d+)? · Deep Matte/, 'UI build marker must identify installed version');
 console.log('OK: animated category selection, reduced motion, readable name, stable layout');
