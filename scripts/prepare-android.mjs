@@ -5,6 +5,14 @@ const project=path.resolve('android');
 if(!fs.existsSync(project)){
  console.error('Android ещё не добавлен. Выполните: npm install && npx cap add android');process.exit(1);
 }
+// Make the installed Android version identifiable; the signed package identity
+// remains unchanged. This does not solve a certificate mismatch on existing installs.
+const androidGradle=path.join(project,'app/build.gradle');
+let gradle=fs.readFileSync(androidGradle,'utf8');
+if(!/\bversionCode\s+\d+/.test(gradle)||!/\bversionName\s+["'][^"']+["']/.test(gradle))throw Error('Could not set Android version; Gradle template changed');
+gradle=gradle.replace(/\bversionCode\s+\d+/,'versionCode 53')
+             .replace(/\bversionName\s+["'][^"']+["']/,'versionName "5.3"');
+fs.writeFileSync(androidGradle,gradle,'utf8');
 const packageId='ru.rashody.pro';
 const pkgDir=path.join(project,'app/src/main/java',...packageId.split('.'));
 fs.mkdirSync(pkgDir,{recursive:true});
