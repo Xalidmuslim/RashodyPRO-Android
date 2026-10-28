@@ -662,3 +662,115 @@ body.matte-editorial #modal.cat-sheet .primary-btn{
  body.matte-editorial #modal.tx-sheet *,
  body.matte-editorial #modal.cat-sheet *{animation:none!important;}
 }
+
+
+/* matte-unified-v55: last in cascade, solid midtone materials on every screen.
+   No reflective gradients or white plastic keys. Keep accessibility contrast. */
+body.matte-editorial{
+  --d5-canvas:#ccc9c3;
+  --d5-surface-hero:#e0dcd5;
+  --d5-surface-panel:#dbd7d0;
+  --d5-surface-recessed:#cbc7bf;
+  --d5-surface-control:#d0ccc4;
+}
+html,body.matte-editorial{background-color:var(--d5-canvas)!important;background-image:none!important;}
+body.matte-editorial #page :is(
+ .feature-day,.day-ledger,.panel,.analytics-ring-panel,.analytics-trend-panel,
+ .analytics-category-grid,.record-list,.history-summary-card,.period-controls,
+ .toolbar,.settings-grid .panel
+){background-color:var(--d5-surface-panel)!important;background-image:none!important;}
+body.matte-editorial #page :is(
+ .week-day:not(.focus-day),.history-tally,.insight-tile,.record-row .category-icon,
+ .trend-icon,.color-category-icon,.compare-metric,.font-sample,.note-box,
+ .analytics-ring-panel .ring-inner,.day-donut-center
+){background-image:none!important;}
+body.matte-editorial #page :is(
+ .week-day:not(.focus-day),.period-navigation .icon-btn,.week-arrows .icon-btn,
+ .header-csv,.setting-select,.r49-filter-btn,.history-tally
+){background-color:var(--d5-surface-control)!important;background-image:none!important;}
+body.matte-editorial :is(.icon-btn,.primary-btn,.secondary-btn,.ghost-btn),
+body.matte-editorial .topbar.subpage-topbar .screen-back,
+body.matte-editorial .mobile-nav :is(button,.fab),
+body.matte-editorial #modal :is(button,input,textarea,select),
+body.matte-editorial #page :is(button,input,select) {
+ background-image:none!important;
+}
+body.matte-editorial #modal.tx-sheet,
+body.matte-editorial #modal.cat-sheet,
+body.matte-editorial .overlay .sheet{
+ background-color:var(--d5-surface-hero)!important;
+ background-image:none!important;
+}
+body.matte-editorial #modal.tx-sheet :is(
+ .tx-amount-block,.type-switch,.tx-category-search,.tx-details input
+),
+body.matte-editorial #modal.cat-sheet .field input{
+ background:#c8c4bc!important;background-image:none!important;color:#1b353b!important;
+}
+body.matte-editorial #modal.tx-sheet :is(
+ .r105-key,.tx-quick-amount>button,.r49-more-categories,.type-switch button:not(.active)
+),
+body.matte-editorial #modal.cat-sheet :is(.icon-choice,.icon-btn){
+ background:#cfcbc3!important;background-image:none!important;color:#1b353b!important;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice{
+ background:#cdc9c1!important;background-image:none!important;
+}
+body.matte-editorial #modal.tx-sheet .r103-add-category{
+ background:#abc3ba!important;background-image:none!important;color:#1a3b40!important;
+}
+body.matte-editorial #modal.cat-sheet .primary-btn,
+body.matte-editorial #modal.tx-sheet .tx-check:not(:disabled){
+ background:#315961!important;background-image:none!important;color:#fffdfa!important;
+}
+/* Keep the backdrop in the visible viewport during Android IME resize.
+   Height follows visualViewport with a short interpolation; the document remains in place. */
+html.rashody-native-android body.matte-editorial #overlay:not([hidden]){
+ inset:auto 0 auto 0!important;
+ top:var(--r-modal-visible-top,0px)!important;
+ height:var(--r-modal-visible-height,100dvh)!important;
+ overflow:hidden!important;
+ transition:height 160ms cubic-bezier(.4,0,.2,1),top 160ms cubic-bezier(.4,0,.2,1)!important;
+}
+html.rashody-native-android body.matte-editorial #modal.tx-sheet,
+html.rashody-native-android body.matte-editorial #modal.cat-sheet{
+ max-height:calc(var(--r-modal-visible-height,100dvh) - 8px)!important;
+ transition:max-height 160ms cubic-bezier(.4,0,.2,1)!important;
+}
+@media(prefers-reduced-motion:reduce){
+ html.rashody-native-android body.matte-editorial #overlay:not([hidden]),
+ html.rashody-native-android body.matte-editorial #modal.tx-sheet,
+ html.rashody-native-android body.matte-editorial #modal.cat-sheet{transition:none!important;}
+}
+
+/* dashboard-label-fit-v55: do not bleed text past cards at 320px / large text. */
+body.matte-editorial #page .trend-cards,
+body.matte-editorial #page .trend-card,
+body.matte-editorial #page .feature-copy,
+body.matte-editorial #page .day-donut-description,
+body.matte-editorial #page .ledger-heading{min-width:0;}
+body.matte-editorial #page .trend-card{overflow:hidden;}
+body.matte-editorial #page .trend-card strong{
+ display:block;max-width:100%;min-width:0;
+ font-size:clamp(12px,3.4vw,calc(20px * var(--font-scale,1)))!important;
+ line-height:1.18!important;overflow-wrap:anywhere!important;
+}
+body.matte-editorial #page .trend-card>span:last-child{
+ white-space:normal!important;overflow-wrap:anywhere!important;
+ line-height:1.25!important;max-width:100%;
+}
+body.matte-editorial #page .feature-copy :is(h2,p,.feature-amount){
+ max-width:100%;min-width:0;overflow-wrap:anywhere!important;word-break:normal;
+}
+body.matte-editorial #page .day-donut-legend :is(.day-donut-name,.day-donut-data){
+ min-width:0;max-width:100%;overflow-wrap:anywhere;white-space:normal;
+}
+body.matte-editorial #page .ledger-heading{flex-wrap:wrap;gap:6px 9px;}
+body.matte-editorial #page .week-day-total{
+ min-width:0;max-width:100%;text-overflow:ellipsis!important;
+ font-size:clamp(8px,2.1vw,10px)!important;letter-spacing:-.04em!important;
+}
+@media(max-width:360px){
+ body.matte-editorial #page .trend-card{padding-left:6px!important;padding-right:6px!important;}
+ body.matte-editorial #page .trend-card>span:last-child{font-size:calc(9px * var(--font-scale,1))!important;}
+}
