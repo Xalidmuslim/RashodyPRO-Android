@@ -2607,6 +2607,55 @@ let txCategorySearchBeforeCategory='';
 let txExpandedBeforeCategory=false;
 let txPickerScrollBeforeCategory=0;
 let categorySheetNeedsRefresh=false;
+// v5.5 Android IME: track the visible WebView without moving the page.
+const modalViewportState={fullHeight:0,backgroundY:0};
+function syncModalViewport(){
+ if(!nativeAndroid)return;
+ const overlay=document.getElementById('overlay'),viewport=window.visualViewport;
+ if(!viewport||!overlay||overlay.hidden)return;
+ overlay.style.setProperty('--r-modal-visible-height',Math.round(viewport.height)+'px');
+ overlay.style.setProperty('--r-modal-visible-top',Math.round(viewport.offsetTop||0)+'px');
+}
+function keepModalBackgroundStationary(){
+ if(!nativeAndroid||document.getElementById('overlay').hidden)return;
+ if(Math.abs(window.scrollY-modalViewportState.backgroundY)>1)
+  window.scrollTo({top:modalViewportState.backgroundY,behavior:'instant'});
+}
+function isModalEditableFocused(){
+ const active=document.activeElement;
+ return !!(active?.closest?.('#modal')&&
+  (active.tagName==='INPUT'||active.tagName==='TEXTAREA')&&!active.readOnly&&!active.disabled);
+}
+async function settleModalKeyboard(){
+ if(!isModalEditableFocused())return;
+ document.activeElement.blur();
+ const viewport=window.visualViewport;
+ if(!nativeAndroid||!viewport||modalViewportState.fullHeight-viewport.height<96)return;
+ await new Promise(resolve=>{
+  let completed=false,settleTimer;
+  const finish=()=>{
+   if(completed)return;completed=true;
+   clearTimeout(deadline);clearTimeout(settleTimer);
+   viewport.removeEventListener('resize',onResize);resolve();
+  };
+  const onResize=()=>{
+   clearTimeout(settleTimer);
+   if(viewport.height>=modalViewportState.fullHeight-55)
+    settleTimer=setTimeout(finish,80);
+  };
+  const deadline=setTimeout(finish,480);
+  viewport.addEventListener('resize',onResize);
+  onResize();
+ });
+ syncModalViewport();keepModalBackgroundStationary();
+}
+if(nativeAndroid&&window.visualViewport){
+ const onViewportChange=()=>requestAnimationFrame(()=>{
+  syncModalViewport();keepModalBackgroundStationary();
+ });
+ window.visualViewport.addEventListener('resize',onViewportChange,{passive:true});
+ window.visualViewport.addEventListener('scroll',onViewportChange,{passive:true});
+}
 async function switchCategorySheet(renderNext,focusId,scrollY=0){
  if(categorySheetBusy)return;
  categorySheetBusy=true;
@@ -2614,12 +2663,14 @@ async function switchCategorySheet(renderNext,focusId,scrollY=0){
  const reduced=typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  const motion=!reduced&&typeof modal?.animate==='function';
  const previousHeight=modal.style.height;
- const oldHeight=modal.getBoundingClientRect().height;
+ let oldHeight;
  modal.setAttribute('aria-busy','true');
  const animateContents=(frames,options)=>Promise.all([...modal.children]
   .filter(child=>typeof child.animate==='function')
   .map(child=>child.animate(frames,options).finished.catch(()=>{})));
  try {
+  await settleModalKeyboard();
+  oldHeight=modal.getBoundingClientRect().height;
   // Legacy Android CSS forces transform:none!important on #modal itself.
   // Animate actual content, not the sheet's blocked transform/opacity.
   if(motion)await animateContents([
@@ -2663,13 +2714,23 @@ function openModal(){
  // Do not change Android body geometry: fixed positioning caused jumps when opening +.
  if(navReady&&!nativeAndroid){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
  document.getElementById('overlay').hidden=false;
- if(!nativeAndroid)document.body.style.overflow='hidden';
+ if(nativeAndroid){
+  modalViewportState.backgroundY=window.scrollY;
+  modalViewportState.fullHeight=window.visualViewport?.height||window.innerHeight;
+  syncModalViewport();
+ }else document.body.style.overflow='hidden';
  document.getElementById('modal').scrollTop=0;
  // On-screen numpad is displayed immediately; no focus or system keyboard here.
 }
 function hideModal(){
  document.getElementById('overlay').hidden=true;
- if(!nativeAndroid)document.body.style.overflow='';
+ if(nativeAndroid){
+  const overlay=document.getElementById('overlay');
+  overlay.style.removeProperty('--r-modal-visible-height');
+  overlay.style.removeProperty('--r-modal-visible-top');
+  const y=modalViewportState.backgroundY;
+  requestAnimationFrame(()=>window.scrollTo({top:y,behavior:'instant'}));
+ }else document.body.style.overflow='';
  draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet','cat-from-expense');modalHistoryOpen=false;
  if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
  if(categorySheetNeedsRefresh){
