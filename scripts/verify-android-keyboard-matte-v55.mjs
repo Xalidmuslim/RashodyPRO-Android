@@ -4,6 +4,10 @@ import vm from 'node:vm';
 
 const html=fs.readFileSync('www/index.html','utf8');
 const css=fs.readFileSync('www/deep-matte.css','utf8');
+const androidPrep=fs.readFileSync('scripts/prepare-android.mjs','utf8');
+assert.match(androidPrep,/windowSoftInputMode="adjustResize"/,
+ 'Generated Android activity must resize, not pan, with the IME');
+
 const start=html.indexOf('const modalViewportState={');
 const end=html.indexOf('\nfunction openModal(){',start);
 assert.ok(start>0&&end>start,'Android IME and category-sheet implementation must exist');
