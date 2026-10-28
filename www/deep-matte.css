@@ -682,6 +682,8 @@ body.matte-editorial #page :is(
 body.matte-editorial #page :is(
  .week-day:not(.focus-day),.history-tally,.insight-tile,.record-row .category-icon,
  .trend-icon,.color-category-icon,.compare-metric,.font-sample,.note-box,
+ .analytics-insight,.studio-settings-icon,.repeat-inline,.color-category-card,
+ .day-donut-legend-item,.category-row,.feature-link,.today-btn,.settings-actions button,
  .analytics-ring-panel .ring-inner,.day-donut-center
 ){background-image:none!important;}
 body.matte-editorial #page :is(
