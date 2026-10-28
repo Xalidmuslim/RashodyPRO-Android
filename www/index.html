@@ -2751,7 +2751,21 @@ function closeModal(){
   },'dialog-title',modalScrollBeforeCategory);
   return;
  }
- const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
+ if(isModalEditableFocused()){
+  if(modalCloseBusy)return;
+  modalCloseBusy=true;
+  void settleModalKeyboard().then(()=>{
+   if(!document.getElementById('overlay').hidden)finishCloseModal();
+  }).finally(()=>{modalCloseBusy=false});
+  return;
+ }
+ finishCloseModal();
+}
+let modalCloseBusy=false;
+function finishCloseModal(){
+ const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;
+ hideModal();if(shouldBack)history.back();
+}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
 function startTx(type='expense',existing=null,preferredDay=null){txDraftBeforeCategory=null;if(type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён в настройках');const last=type==='expense'?sortTx(data.transactions.filter(t=>t.type==='expense'))[0]:null;draft=existing?{...existing}:{id:null,type,category:type==='income'?'salary':(last&&data.categories.some(c=>c.id===last.category&&c.type==='expense')?last.category:'food'),amount:'',note:'',date:preferredDay&&F.isDate(preferredDay)?preferredDay:dateLocal(),time:timeLocal()};renderTxModal();openModal()}
 function collectDraft(){if(!draft)return;const amount=document.getElementById('txAmount'),note=document.getElementById('txNote'),date=document.getElementById('txDate'),time=document.getElementById('txTime');if(amount)draft.amount=amount.value;if(note)draft.note=note.value;if(date)draft.date=date.value;if(time)draft.time=time.value}
