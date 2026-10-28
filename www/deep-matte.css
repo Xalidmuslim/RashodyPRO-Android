@@ -511,3 +511,62 @@ body.matte-editorial #modal button:focus-visible{
  body.matte-editorial .mobile-nav button{transition:none!important;translate:none!important;}
  body.matte-editorial .overlay:not([hidden]) .sheet.cat-sheet{animation:none!important;}
 }
+
+
+/* v5.3: category choices are selection surfaces, not instant-color tiles.
+   Only the overlay's opacity and icon scale animate: no box-shadow repaint
+   or layout shift, no glossy border or highlight. */
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice,
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice.active {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #dcd7cf !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: var(--d5-shadow-control) !important;
+  color: #203940 !important;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: #b5cfc4;
+  opacity: 0;
+  transition: opacity .24s cubic-bezier(.4, 0, .2, 1);
+  z-index: 0;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice.active::before {
+  opacity: 1;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice > * {
+  position: relative;
+  z-index: 1;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice .category-icon {
+  transition: scale .22s cubic-bezier(.16, 1, .3, 1) !important;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice.active .category-icon {
+  scale: 1.09;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice:focus-visible {
+  outline: 2px solid #315f65 !important;
+  outline-offset: 2px;
+}
+/* Keep the title row fixed when switching between short and long names. */
+body.matte-editorial #modal.tx-sheet #txSelectedCategory {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.matte-editorial #modal.tx-sheet .category-picker .cat-choice::before,
+  body.matte-editorial #modal.tx-sheet .category-picker .cat-choice .category-icon {
+    transition: none !important;
+  }
+}
