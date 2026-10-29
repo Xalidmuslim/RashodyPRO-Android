@@ -70,3 +70,19 @@ jobs:
             --title "Расходы PRO — Premium Matte 3D v5.7 (тест)" \
             --notes "Отдельная тестовая версия без замены основных расходов. Установка: ru.rashody.pro.preview57. Данные основной программы не переносятся автоматически. Проверьте на телефоне стили, анимации и текст." \
             --prerelease --latest=false
+
+      - name: Publish raw APK on separate download branch
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-raw-apk-v57]') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          cp "$apk" "$RUNNER_TEMP/RashodyPRO-Premium-Matte-v5.7-PREVIEW.apk"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan apk-direct-download
+          cp "$RUNNER_TEMP/RashodyPRO-Premium-Matte-v5.7-PREVIEW.apk" ./RashodyPRO-Premium-Matte-v5.7-PREVIEW.apk
+          git add -- RashodyPRO-Premium-Matte-v5.7-PREVIEW.apk
+          git commit -m "Publish direct-download test APK v5.7"
+          git push origin HEAD:refs/heads/apk-direct-download
