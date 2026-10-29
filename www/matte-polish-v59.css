@@ -269,3 +269,236 @@ body.matte-editorial .mobile-nav button:not(.fab) span{
  font-size:clamp(9px,2.55vw,11px)!important;
  line-height:1.25!important;letter-spacing:-.025em;
 }
+
+/* Cross-screen finish — source audit of legacy inline styles.
+   Retain category/chart identity and native IME geometry. Only pigment, ink,
+   borders and static elevation are changed; no event handlers or DB changes. */
+body.matte-editorial{
+ --p59-ink:#192d32;
+ --p59-muted:#3d4c51;
+ --p59-quiet-border:rgba(35,50,52,.16);
+ --p59-soft-tint:#b9c6bd;
+ --p59-warm-tint:#c8b8a9;
+}
+body.matte-editorial #page :is(
+ .chart-panel,.summary-strip,.calendar-shell,.editorial-day-chart,
+ .chart-detail,.empty-receipt,.r49-history-toolbar,.r49-history-extra
+){
+ background-color:var(--p59-panel)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-medium)!important;
+ color:var(--p59-ink)!important;
+}
+body.matte-editorial #page :is(
+ .analytics-hero-title>span,.jump-label,.day-label,.ledger-count,
+ .pill,.week-stat,.clear-history-filters,.day-donut-legend-item,
+ .chart-detail-sub,.r49-empty-trend
+){
+ background-color:var(--p59-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+ text-shadow:none!important;
+}
+/* Figures and captions on tinted summary/card materials use the dark ink,
+   not historical white or medium-grey glyphs. WCAG body text >=4.5:1. */
+body.matte-editorial #page .trend-cards .trend-card,
+body.matte-editorial #page .trend-cards .trend-card :is(strong,span,small,.trend-icon,svg),
+body.matte-editorial #page .studio-stats .compare-metric,
+body.matte-editorial #page .studio-stats .compare-metric :is(strong,small,span,.compare-label,.soft-stat-symbol,svg),
+body.matte-editorial #page .color-category-grid .color-category-card,
+body.matte-editorial #page .color-category-grid .color-category-card :is(strong,small,span,.color-category-icon,svg),
+body.matte-editorial #page .analytics-category-grid .color-category-card,
+body.matte-editorial #page .analytics-category-grid .color-category-card :is(strong,small,span,.color-category-icon,svg),
+body.matte-editorial #page .history-tally :is(strong,small,.tally-symbol){
+ color:var(--p59-ink)!important;
+ text-shadow:none!important;
+}
+/* Category cards escaped the older nth-child and texture overrides. */
+body.matte-editorial #page :is(.color-category-grid,.analytics-category-grid) .color-category-card{
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-medium)!important;
+}
+body.matte-editorial #page :is(.color-category-grid,.analytics-category-grid) .color-category-card:nth-child(3n+1){
+ background:var(--p59-coral)!important;
+}
+body.matte-editorial #page :is(.color-category-grid,.analytics-category-grid) .color-category-card:nth-child(3n+2){
+ background:var(--p59-teal)!important;
+}
+body.matte-editorial #page :is(.color-category-grid,.analytics-category-grid) .color-category-card:nth-child(3n){
+ background:var(--p59-ochre)!important;
+}
+/* The old translucent white icon discs and inset bright highlights were
+   especially visible in cards, charts, settings and the history tally. */
+body.matte-editorial #page :is(
+ .trend-icon,.color-category-icon,.soft-stat-symbol,.tally-symbol,
+ .studio-settings-icon,.insight-icon,.metric-icon,.category-icon,
+ .empty-icon,.jump-label,.day-donut-caption
+){
+ background:var(--p59-soft-tint)!important;
+ background-image:none!important;
+ border:0!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+ filter:none!important;
+}
+body.matte-editorial #page :is(
+ .trend-card.coral .trend-icon,.history-tally.spent .tally-symbol,
+ .color-category-card:nth-child(3n+1) .color-category-icon
+){background:var(--p59-warm-tint)!important;}
+body.matte-editorial #page :is(
+ .feature-copy .eyebrow,.feature-copy p,.feature-income,
+ .record-subtitle,.record-meta,.period-caption,.setting-expl,
+ .section-caption,.compare-label,.legend-name,.legend-value small,
+ .ring-center-label,.ring-center-share,.day-donut-description,
+ .day-donut-legend,.day-donut-name,.chart-detail-sub,
+ .r49-save-hint,.day-donut-data
+){
+ color:var(--p59-muted)!important;
+ text-shadow:none!important;
+}
+/* Subtle frames replace white outlines, without erasing functional dividers
+   or the visible focus indicator on real controls. */
+body.matte-editorial #page :is(
+ .record-row,.setting-row,.ledger-heading,.analytics-ring-panel .legend-line,
+ .summary-strip .separator,.category-row
+){border-color:var(--p59-quiet-border)!important;}
+body.matte-editorial #page .analytics-ring-panel .legend-line.selected{
+ background:var(--p59-soft-tint)!important;
+ border-color:transparent!important;
+}
+body.matte-editorial #page .category-row{
+ background-image:none!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #page :is(
+ .r49-filter-btn,.clear-history-filters,.empty-add,
+ .chart-open-link,.calendar-title-row button,.filter-group button:not(.active),
+ .analytics-controls .period-toggle button:not(.active)
+){
+ background:var(--p59-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+ text-shadow:none!important;
+}
+/* Explicitly out-rank legacy nested !important styles for selected filters. */
+body.matte-editorial #page :is(
+ .filter-group button.active,.analytics-controls .period-toggle button.active
+){
+ background:#31575b!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-selected)!important;
+ color:#f9f5ec!important;
+}
+body.matte-editorial #page .analytics-controls .period-toggle button.active :is(span,strong),
+body.matte-editorial #page .filter-group button.active :is(span,strong){
+ color:#f9f5ec!important;
+}
+body.matte-editorial #page :is(.filter-group button,.period-toggle button,.trend-mode-toggle button,.font-toggle button){
+ text-shadow:none!important;
+}
+body.matte-editorial #page .switch-track::after{
+ background:var(--p59-panel)!important;
+ background-image:none!important;
+ border:0!important;
+ box-shadow:var(--p59-small)!important;
+}
+/* Side navigation, storage notices and generic dialogs are part of the app. */
+body.matte-editorial .sidebar :is(.navitem,.sidebar-add),
+body.matte-editorial .overlay .sheet :is(.mini-action,.secondary-btn,.icon-btn),
+body.matte-editorial .workspace>.storage-banner .storage-actions button{
+ background:var(--p59-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+}
+body.matte-editorial .sidebar .navitem.active{
+ background:#31575b!important;
+ background-image:none!important;
+ box-shadow:var(--p59-selected)!important;
+ color:#f9f5ec!important;
+}
+body.matte-editorial .overlay .sheet{
+ background:var(--p59-panel)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-large)!important;
+ color:var(--p59-ink)!important;
+}
+body.matte-editorial :is(.overlay .sheet .primary-btn,#modal .modal-actions .primary-btn){
+ background:#31575b!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-selected)!important;
+ color:#f9f5ec!important;
+}
+body.matte-editorial .workspace>.storage-banner{
+ background:var(--p59-warm-tint)!important;
+ background-image:none!important;
+ border-color:var(--p59-quiet-border)!important;
+ color:var(--p59-ink)!important;
+}
+body.matte-editorial #page .danger-btn,
+body.matte-editorial #modal .danger-btn{
+ background:#bb968d!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+}
+body.matte-editorial .toast{
+ background:#31575b!important;
+ background-image:none!important;
+ color:#f9f5ec!important;
+ border:0!important;
+ box-shadow:var(--p59-medium)!important;
+}
+/* Complete editor and category picker: field text, keys, small actions,
+   disabled save and empty search state all stay clear and non-reflective. */
+body.matte-editorial #modal :is(
+ .tx-date-control button,.tx-edit-actions button,.mini-action,
+ .r103-add-category,.r105-key-back,.tx-erase
+){
+ background:var(--p59-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+}
+body.matte-editorial #modal :is(
+ .field input,.field select,.field textarea,
+ .tx-details input,.tx-details textarea,.tx-category-search
+){
+ background:var(--p59-recess)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-well)!important;
+ color:var(--p59-ink)!important;
+}
+body.matte-editorial :is(#page,#modal) :is(input,textarea)::placeholder{
+ color:var(--p59-muted)!important;
+ opacity:1;
+}
+body.matte-editorial #modal.tx-sheet .tx-check:disabled{
+ background:var(--p59-recess)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-well)!important;
+ color:var(--p59-muted)!important;
+ opacity:1;
+}
+/* Responsive labels must never vanish behind painted controls. */
+body.matte-editorial #page :is(
+ .color-category-card,.history-tally,.setting-row,.analytics-hero-title,
+ .chart-detail,.category-row,.legend-line,.day-donut-legend-item
+){min-width:0;overflow-wrap:anywhere;}
+body.matte-editorial #page .color-category-card :is(strong,small,span){
+ max-width:100%;overflow-wrap:anywhere;
+}
