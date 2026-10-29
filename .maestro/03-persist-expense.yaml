@@ -1,0 +1,18 @@
+appId: ru.rashody.pro
+name: Rashody PRO - saved expense survives restart
+tags:
+  - regression
+---
+- launchApp:
+    clearState: true
+- tapOn: "Добавить операцию"
+- assertVisible: "Новый расход"
+- tapOn: "500"
+- assertVisible: "500"
+- tapOn: "Добавить операцию"
+- assertVisible: "Операции за день"
+- assertVisible: "Повторить"
+- stopApp
+- launchApp
+- assertVisible: "Операции за день"
+- assertVisible: "Повторить"
