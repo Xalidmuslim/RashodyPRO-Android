@@ -1,0 +1,260 @@
+/* Rashody PRO v5.9 — restrained sculptural matte refinement.
+   Deliberately last: wins over legacy bright rules without touching transactions.
+   All elevated surfaces use contact / local / ambient shadows, never white rims. */
+body.matte-editorial{
+ --p59-ground:#bfbbb4;
+ --p59-panel:#d4d0c8;
+ --p59-hero:#d8d3cb;
+ --p59-control:#cdc8c0;
+ --p59-recess:#c0bbb3;
+ --p59-ink:#20363b;
+ --p59-muted:#586667;
+ --p59-coral:#b8877b;
+ --p59-teal:#7fa198;
+ --p59-ochre:#c09b69;
+ --p59-sage:#afc5ba;
+ --p59-large:
+    0 2px 3px -1px rgba(36,42,42,.18),
+    0 9px 15px -8px rgba(36,42,42,.16),
+    0 23px 30px -18px rgba(36,42,42,.11);
+ --p59-medium:
+    0 2px 3px -1px rgba(36,42,42,.16),
+    0 7px 12px -6px rgba(36,42,42,.14),
+    0 17px 23px -15px rgba(36,42,42,.10);
+ --p59-small:
+    0 1px 2px -1px rgba(36,42,42,.17),
+    0 4px 7px -3px rgba(36,42,42,.14),
+    0 11px 15px -10px rgba(36,42,42,.09);
+ --p59-selected:
+    0 2px 3px -1px rgba(26,48,49,.21),
+    0 7px 11px -6px rgba(26,48,49,.18),
+    0 17px 22px -14px rgba(26,48,49,.12);
+ --p59-well:
+    inset 0 2px 3px rgba(31,41,41,.10),
+    inset 0 5px 9px rgba(31,41,41,.11);
+ --p58-ground:var(--p59-ground);
+ --p58-panel:var(--p59-panel);
+ --p58-panel-hero:var(--p59-hero);
+ --p58-control:var(--p59-control);
+ --p58-recess:var(--p59-recess);
+ --p58-coral:var(--p59-coral);
+ --p58-teal:var(--p59-teal);
+ --p58-ochre:var(--p59-ochre);
+ --p58-sage:var(--p59-sage);
+ --p58-ink:var(--p59-ink);
+ --p58-muted:var(--p59-muted);
+ --p58-hero:var(--p59-large);
+ --p58-card:var(--p59-medium);
+ --p58-key:var(--p59-small);
+ --p58-active:var(--p59-selected);
+ --p58-well:var(--p59-well);
+ color:var(--p59-ink);
+}
+/* Remove the expensive full-screen grain veil; pigment and cast shadow suffice. */
+body.matte-editorial::after{content:none!important;display:none!important;}
+html,body.matte-editorial{background-color:var(--p59-ground)!important;background-image:none!important;}
+/* Android transparent status bars must never show scrolling cards behind OS icons.
+   The sheet itself remains managed by visualViewport during keyboard animation. */
+html.rashody-native-android body.matte-editorial::before{
+ content:""!important;
+ position:fixed;
+ top:0;left:0;right:0;
+ height:max(var(--safe-area-inset-top,0px),env(safe-area-inset-top,0px),26px);
+ background:var(--p59-ground);
+ pointer-events:none;
+ z-index:85;
+}
+html.rashody-native-android{scroll-padding-bottom:140px;}
+html.rashody-native-android body.matte-editorial .workspace{
+ padding-bottom:calc(145px + env(safe-area-inset-bottom,0px))!important;
+}
+html.rashody-native-android body.matte-editorial #page :is(
+ .settings-actions button,.category-manage button,.trend-mode-toggle,
+ .record-row,.ring-panel-head,.setting-row
+){scroll-margin-bottom:145px;}
+/* Large panels must read as separate mineral slabs, never broad grey halos. */
+body.matte-editorial #page :is(
+ .feature-day,.day-ledger,.record-list,.panel,.period-controls,.toolbar,
+ .history-summary-card,.settings-grid .panel,.analytics-ring-panel,
+ .analytics-trend-panel,.analytics-category-grid
+),
+body.matte-editorial .mobile-nav,
+body.matte-editorial #modal.tx-sheet,
+body.matte-editorial #modal.cat-sheet{
+ background-color:var(--p59-panel)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-large)!important;
+}
+body.matte-editorial #page :is(.feature-day,.analytics-ring-panel){
+ background-color:var(--p59-hero)!important;
+}
+/* Explicit specificity beats older :is() with high-specificity branches. */
+body.matte-editorial #page .trend-cards .trend-card{
+ background-image:none!important;border-color:transparent!important;
+ box-shadow:var(--p59-medium)!important;
+}
+body.matte-editorial #page .trend-cards .trend-card.coral{background:var(--p59-coral)!important;}
+body.matte-editorial #page .trend-cards .trend-card.teal{background:var(--p59-teal)!important;}
+body.matte-editorial #page .trend-cards .trend-card.amber{background:var(--p59-ochre)!important;}
+body.matte-editorial #page :is(
+ .history-tally,.studio-stats .compare-metric,.color-category-card,
+ .category-row,.insight-tile,.premium-day-chart
+){background-image:none!important;border-color:transparent!important;
+ box-shadow:var(--p59-medium)!important;}
+/* One short contact-shadow language for buttons, not a luminous rim. */
+body.matte-editorial #page :is(
+ .week-day:not(.focus-day),.week-arrows .icon-btn,
+ .period-navigation .icon-btn,.header-csv,.today-btn,.feature-link,
+ .ghost-btn,.secondary-btn,.r49-filter-btn,.repeat-inline,
+ .category-manage button,.settings-actions button,
+ .period-toggle button:not(.active),.trend-mode-toggle button:not(.active),
+ .font-toggle button:not(.active)
+),
+body.matte-editorial .topbar.subpage-topbar :is(.screen-back,.header-csv),
+body.matte-editorial #modal.tx-sheet :is(
+ .r105-key,.tx-quick-amount > button,.r49-more-categories,.cat-choice
+),
+body.matte-editorial #modal.cat-sheet :is(.icon-choice,.icon-btn,.secondary-btn){
+ background-color:var(--p59-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+}
+/* Retain the functional green/coral distinctions but keep them painted matte. */
+body.matte-editorial #page :is(.repeat-inline,.subtle-add,.feature-link){
+ background-color:var(--p59-sage)!important;
+}
+body.matte-editorial #page :is(
+ .week-day.focus-day,.week-day.focus-day.has-expense,
+ .period-toggle button.active,.trend-mode-toggle button.active,
+ .font-toggle button.active
+),body.matte-editorial #modal.tx-sheet :is(
+ .type-switch button.active,.tx-check:not(:disabled)
+){
+ background-color:#31575b!important;background-image:none!important;
+ border-color:transparent!important;box-shadow:var(--p59-selected)!important;
+ color:#f9f5ec!important;
+}
+body.matte-editorial #page .week-day.focus-day :is(span,strong,small){
+ color:#f9f5ec!important;
+}
+/* Fixed dock: less swollen, a grounded coherent surface. */
+body.matte-editorial .mobile-nav{
+ padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px))!important;
+ background:var(--p59-panel)!important;
+ box-shadow:var(--p59-large)!important;
+}
+body.matte-editorial .mobile-nav button.active:not(.fab){
+ background:var(--p59-sage)!important;background-image:none!important;
+ border-color:transparent!important;box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial .mobile-nav .fab{
+ width:59px!important;height:59px!important;margin-top:-19px!important;
+ background:#ad7469!important;background-image:none!important;
+ border-color:transparent!important;box-shadow:var(--p59-selected)!important;
+}
+/* Settings: darkened toggle, recessed inputs, readable and flexible labels. */
+body.matte-editorial #page :is(
+ .search,.filter-select,.setting-select,.history-search-input,
+ .period-toggle,.trend-mode-toggle,.font-toggle,.filter-group
+),body.matte-editorial #modal.tx-sheet :is(
+ .tx-amount-block,.type-switch,.tx-category-search,.tx-details input
+),body.matte-editorial #modal.cat-sheet .field input{
+ background:var(--p59-recess)!important;background-image:none!important;
+ border-color:transparent!important;box-shadow:var(--p59-well)!important;
+ color:var(--p59-ink)!important;
+}
+body.matte-editorial #page .switch-track{
+ background:#b5afa7!important;border-color:transparent!important;
+ box-shadow:var(--p59-well)!important;
+}
+body.matte-editorial #page .switch input:checked + .switch-track{
+ background:#658f89!important;border-color:transparent!important;
+}
+body.matte-editorial #page .settings-grid .settings-actions button,
+body.matte-editorial #page .category-manage button,
+body.matte-editorial #page .settings-grid .setting-row .secondary-btn{
+ box-shadow:var(--p59-small)!important;
+ border-color:transparent!important;
+ background-image:none!important;
+ min-width:0;
+ max-width:100%;
+ overflow-wrap:anywhere;
+ white-space:normal!important;
+}
+body.matte-editorial #page .settings-grid .settings-actions button{
+ background-color:#c6d0c7!important;
+}
+body.matte-editorial #page .settings-grid :is(
+ .font-sample,.note-box,.analytics-insight
+){background-color:#bfcfc3!important;background-image:none!important;
+ border-color:transparent!important;box-shadow:var(--p59-small)!important;}
+/* Charts: no bright inner ring, no oversized drop-shadow repaint. */
+body.matte-editorial #page .day-donut-svg{
+ filter:drop-shadow(0 2px 2px rgba(31,44,43,.10))
+        drop-shadow(0 7px 5px rgba(31,44,43,.10))!important;
+}
+body.matte-editorial #page .analytics-ring-panel .ring-svg,
+body.matte-editorial #page .analytics-ring-panel .ring svg.ring-svg{
+ filter:drop-shadow(0 2px 2px rgba(31,44,43,.10))
+        drop-shadow(0 8px 6px rgba(31,44,43,.10))!important;
+}
+body.matte-editorial #page .day-donut-center,
+body.matte-editorial #page .analytics-ring-panel .ring-inner{
+ background:var(--p59-hero)!important;background-image:none!important;
+ border:0!important;
+ box-shadow:inset 0 2px 4px rgba(31,44,43,.08),
+            inset 0 5px 8px rgba(31,44,43,.09)!important;
+}
+body.matte-editorial #page .analytics-ring-panel .legend-line{
+ background-color:var(--p59-control)!important;
+ background-image:none!important;border-color:transparent!important;
+ box-shadow:var(--p59-small)!important;
+}
+/* Divider lines are functional separators, not white bevels. */
+body.matte-editorial #page :is(.setting-row,.record-row,.ledger-heading){
+ border-color:rgba(58,65,64,.13)!important;
+}
+/* Text fitting at default and larger UI font scales. */
+body.matte-editorial #page :is(
+ .trend-card,.record-row,.record-title,.record-amount,.feature-copy,
+ .day-donut-legend-item,.day-donut-description,.setting-row,
+ .setting-row>div:first-child,.history-tally,.compare-metric,
+ .ring-panel-head,.legend-line,.settings-actions button
+){min-width:0;max-width:100%;}
+body.matte-editorial #page :is(
+ .settings-actions button,.category-manage button,.record-title,
+ .record-subtitle,.feature-copy h2,.feature-copy p,
+ .legend-name,.day-donut-name,.day-donut-data,
+ .compare-metric strong,.history-tally strong
+){overflow-wrap:anywhere;word-break:normal;}
+body.matte-editorial #page .ledger-actions{flex-wrap:wrap;gap:8px;}
+body.matte-editorial #page .ledger-actions :is(.ghost-btn,.repeat-inline,.subtle-add){
+ min-width:0;white-space:normal;
+}
+@media(max-width:380px){
+ body.matte-editorial #page .trend-card>span:last-child{
+  font-size:clamp(10px,2.65vw,12px)!important;
+ }
+ body.matte-editorial #page .trend-card strong{
+  font-size:clamp(12px,3.35vw,17px)!important;
+ }
+ body.matte-editorial #page .settings-grid .setting-row{
+  grid-template-columns:minmax(0,1fr) auto;
+ }
+ body.matte-editorial #page .settings-grid .category-manage{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ }
+ body.matte-editorial #page .analytics-ring-panel .legend-line{
+  min-width:0;overflow-wrap:anywhere;
+ }
+}
+/* Feedback and motion: never animate shadow geometry or push the IME sheet. */
+body.matte-editorial :is(button,input,select,textarea):focus-visible{
+ outline:2px solid #2d6365!important;outline-offset:2px;
+}
+@media(prefers-reduced-motion:reduce){
+ body.matte-editorial .mobile-nav button{transition:none!important;}
+}
