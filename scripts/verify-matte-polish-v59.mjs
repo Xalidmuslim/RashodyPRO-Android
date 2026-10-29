@@ -95,3 +95,6 @@ for(const role of ['--p59-panel','--p59-recess']){
 assert.match(css,/\.toast\s*\{[\s\S]*?background:#31575b!important;/,
  'Notification surfaces need an opaque matte background');
 console.log('OK: cross-screen matte coverage, 4.5:1 role contrast, semantic alerts and active states');
+
+assert.match(css,/:is\(\.trend-card,\.color-category-card\)::after\s*\{/,
+ 'No decorative bright outline on money or category cards');
