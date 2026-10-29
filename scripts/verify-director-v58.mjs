@@ -35,6 +35,13 @@ for(const selector of [
  '.day-donut-legend','.record-amount','.history-tally strong',
  '.font-toggle','.analytics-trend-panel'
 ]) assert.ok(css.includes(selector),'Missing v5.8 coverage: '+selector);
+// Historic v4 uses :is() whose maximum specificity outranks a simple tile selector.
+for(const color of ['coral','teal','amber']) {
+ assert.ok(css.includes('#page .trend-cards .trend-card.'+color),
+   'Specificity regression: v4 color still overrides director '+color);
+}
+assert.ok(css.includes('#page .trend-cards .trend-card {'),
+ 'Specificity regression: v4 shadow still overrides three-stage card shadow');
 assert.match(css,/@media\s*\(max-width:\s*380px\)/,'Small screens must fit labels');
 assert.match(css,/:focus-visible/,'Preserve accessible focus affordance');
 assert.match(css,/prefers-reduced-motion/,'Honor motion preference');
