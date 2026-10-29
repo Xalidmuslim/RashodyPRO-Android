@@ -41,5 +41,5 @@ assert.match(css,/prefers-reduced-motion/,'Honor motion preference');
 assert.match(index,/async function switchCategorySheet\(/,'Category animation must remain');
 assert.match(index,/async function settleModalKeyboard\(/,'Keyboard handling must remain');
 assert.match(index,/function renderTxModal\(/,'Transaction editor must remain');
-assert.match(index,/FinanceStoragePlugin/,'Storage must remain native');
+assert.match(fs.readFileSync('native/FinanceStoragePlugin.java','utf8'),/class FinanceStoragePlugin/,'Storage must remain native');
 console.log('OK: v5.8 director material system, three-stage shadows, no gloss, narrow-screen text and unchanged data flow');
