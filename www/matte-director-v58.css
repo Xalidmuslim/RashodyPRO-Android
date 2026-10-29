@@ -293,3 +293,22 @@ body.matte-editorial :is(button,input,select,textarea):focus-visible {
    transition:none!important;
  }
 }
+
+
+/* v5.8 actual-cascade fix: v4 combined :is() selectors carry the maximum
+   specificity of their longest branch, not the matched branch. These explicit
+   three-class selectors win in the real Android browser cascade. */
+body.matte-editorial #page .trend-cards .trend-card {
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p58-card)!important;
+}
+body.matte-editorial #page .trend-cards .trend-card.coral {
+ background:var(--p58-coral)!important;
+}
+body.matte-editorial #page .trend-cards .trend-card.teal {
+ background:var(--p58-teal)!important;
+}
+body.matte-editorial #page .trend-cards .trend-card.amber {
+ background:var(--p58-ochre)!important;
+}
