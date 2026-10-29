@@ -23,6 +23,6 @@ fs.writeFileSync(stringsPath,strings,'utf8');
 let html=fs.readFileSync(htmlPath,'utf8');
 const marker='Расходы PRO 5.4 · Deep Matte';
 if(html.split(marker).length!==2)throw Error('Missing unique preview footer marker');
-html=html.replace(marker,'Расходы PRO 5.8 · Director Matte 3D');
+html=html.replace(marker,'Расходы PRO 5.9 · Sculptural Matte 3D');
 fs.writeFileSync(htmlPath,html,'utf8');
 console.log('Isolated QA package ru.rashody.pro.preview59 — not a production upgrade');
