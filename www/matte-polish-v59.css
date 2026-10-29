@@ -502,3 +502,10 @@ body.matte-editorial #page :is(
 body.matte-editorial #page .color-category-card :is(strong,small,span){
  max-width:100%;overflow-wrap:anywhere;
 }
+
+/* Remove decorative white circular outlines left by the earliest dashboard
+   and analytics cards. They are not data indicators or focus affordances. */
+body.matte-editorial #page :is(.trend-card,.color-category-card)::after{
+ content:none!important;
+ display:none!important;
+}
