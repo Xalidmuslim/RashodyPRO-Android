@@ -258,3 +258,14 @@ body.matte-editorial :is(button,input,select,textarea):focus-visible{
 @media(prefers-reduced-motion:reduce){
  body.matte-editorial .mobile-nav button{transition:none!important;}
 }
+
+/* Final small-width navigation label audit, including maximum user font size. */
+body.matte-editorial .mobile-nav button:not(.fab){
+ min-width:0!important;width:100%;padding-inline:2px!important;overflow:hidden;
+}
+body.matte-editorial .mobile-nav button:not(.fab) span{
+ display:block;min-width:0;max-width:100%;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+ font-size:clamp(9px,2.55vw,11px)!important;
+ line-height:1.25!important;letter-spacing:-.025em;
+}
