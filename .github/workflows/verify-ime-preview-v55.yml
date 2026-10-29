@@ -10,7 +10,7 @@ jobs:
   verify-preview:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -55,3 +55,18 @@ jobs:
           name: Rashody-PRO-v57-Premium-Matte-Preview-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
+      - name: Publish direct browser APK download
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-apk-v57]') }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          apk=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$apk"
+          cp "$apk" RashodyPRO-Premium-Matte-v5.7-PREVIEW.apk
+          gh release create premium-matte-v5.7-preview RashodyPRO-Premium-Matte-v5.7-PREVIEW.apk \
+            --target "$GITHUB_SHA" \
+            --title "Расходы PRO — Premium Matte 3D v5.7 (тест)" \
+            --notes "Отдельная тестовая версия без замены основных расходов. Установка: ru.rashody.pro.preview57. Данные основной программы не переносятся автоматически. Проверьте на телефоне стили, анимации и текст." \
+            --prerelease --latest=false
