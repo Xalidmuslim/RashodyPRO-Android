@@ -1,18 +1,22 @@
 appId: ru.rashody.pro
-name: Rashody PRO - saved expense survives restart
+name: Rashody PRO - verify saved expense and restart
 tags:
   - regression
 ---
 - launchApp:
     clearState: true
+- assertVisible: "Обзор"
 - tapOn: "Добавить операцию"
 - assertVisible: "Новый расход"
 - tapOn: "500"
-- assertVisible: "500"
 - tapOn: "Добавить операцию"
-- assertVisible: "Операции за день"
-- assertVisible: "Повторить"
+- takeScreenshot: expense-after-save
+- assertVisible: "Обзор"
+- tapOn: "Операции"
+- takeScreenshot: expense-history-before-restart
+- assertVisible: "500"
 - stopApp
 - launchApp
-- assertVisible: "Операции за день"
-- assertVisible: "Повторить"
+- tapOn: "Операции"
+- takeScreenshot: expense-history-after-restart
+- assertVisible: "500"
