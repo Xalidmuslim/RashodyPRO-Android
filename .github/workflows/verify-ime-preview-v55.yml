@@ -1,0 +1,88 @@
+name: Android Sculptural Matte v5.9 Preview QA
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [fix/keyboard-sheet-matte-v55]
+  workflow_dispatch:
+
+jobs:
+  verify-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Verify core, UI and IME regressions
+        run: |
+          python3 -m pip install --break-system-packages Pillow
+          npm install
+          npm run verify
+      - name: Install Android SDK 36
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKMANAGER=$(find "${ANDROID_HOME}/cmdline-tools" -type f -name sdkmanager | head -n 1)
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
+      - name: Generate isolated Android preview
+        run: |
+          npx cap add android
+          node scripts/prepare-android.mjs
+          npx cap sync android
+          node scripts/build-matte-preview-v57.mjs
+      - name: Build and inspect APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Check install ID and size
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          "${ANDROID_HOME}/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview59'"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Rashody-PRO-v59-Director-Matte-Preview-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+      - name: Publish direct browser APK download
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-apk-v59]') }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          apk=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$apk"
+          cp "$apk" RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk
+          gh release create premium-matte-v5.9-preview RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk \
+            --target "$GITHUB_SHA" \
+            --title "Расходы PRO — Premium Matte 3D v5.9 (тест)" \
+            --notes "Отдельная тестовая версия без замены основных расходов. Установка: ru.rashody.pro.preview59. Данные основной программы не переносятся автоматически. Проверьте на телефоне стили, анимации и текст." \
+            --prerelease --latest=false
+
+      - name: Publish raw APK on separate download branch
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-raw-apk-v59]') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          cp "$apk" "$RUNNER_TEMP/RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan apk-direct-download
+          cp "$RUNNER_TEMP/RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk" ./RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk
+          git add -- RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk
+          git commit -m "Publish direct-download test APK v5.9"
+          git push origin HEAD:refs/heads/apk-direct-download

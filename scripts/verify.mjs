@@ -32,8 +32,8 @@ const extract=(name,next)=> {
 };
 function modalScenario(native){
   let modalFocuses=0,inputFocuses=0,scrollCalls=0,keyboardCalls=0,historyPushes=0;
-  const overlay={hidden:true};
-  const modal={classList:{contains:(cls)=>cls==='tx-sheet',remove:()=>{}},
+  const overlay={hidden:true,style:{setProperty:()=>{},removeProperty:()=>{}}};
+  const modal={scrollTop:75,classList:{contains:(cls)=>cls==='tx-sheet',remove:()=>{}},
      setAttribute:()=>{},focus:()=>{modalFocuses++},contains:()=>false,
      querySelector:()=>null};
   const input={id:'txAmount',focus:()=>{inputFocuses++}};
@@ -41,10 +41,11 @@ function modalScenario(native){
   const body={style:{},classList:{added:[],add(name){this.added.push(name)},contains:()=>false,remove:()=>{}}};
   const document={activeElement:last,body,
      getElementById:id=>({overlay,modal,txAmount:input})[id]};
-  const window={scrollY:629,scrollTo:()=>{scrollCalls++}};
+  const window={scrollY:629,innerHeight:780,visualViewport:{height:780,offsetTop:0},scrollTo:({top}={})=>{if(typeof top==='number'&&top!==window.scrollY){scrollCalls++;window.scrollY=top;}}};
   const history={pushState:()=>{historyPushes++}};
   const context={document,window,console,history,navState:()=>({}),nativeAndroid:native,
     navReady:true,lastFocus:null,view:'dashboard',modalHistoryOpen:false,categorySheetNeedsRefresh:false,
+    modalViewportState:{backgroundY:0,fullHeight:0},syncModalViewport:()=>{},requestAnimationFrame:fn=>fn(),
     draft:{amount:1250},catDraft:null,financeNative:()=>({showAmountKeyboard:()=>{keyboardCalls++}})};
   vm.createContext(context);
   vm.runInContext(extract('openModal','hideModal')+'\n'+extract('hideModal','closeModal')+

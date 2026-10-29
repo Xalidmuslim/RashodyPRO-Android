@@ -34,6 +34,13 @@ if(fs.existsSync(manifest)){
  let xml=fs.readFileSync(manifest,'utf8');
  if(/android:allowBackup="[^"]*"/.test(xml))xml=xml.replace(/android:allowBackup="[^"]*"/,'android:allowBackup="false"');
  else xml=xml.replace(/<application\b/,'<application android:allowBackup="false"');
+ // Android IME must resize the WebView rather than pan the whole Activity.
+ if(/android:windowSoftInputMode="[^"]*"/.test(xml))
+  xml=xml.replace(/android:windowSoftInputMode="[^"]*"/,'android:windowSoftInputMode="adjustResize"');
+ else
+  xml=xml.replace(/(<activity\b[^>]*)(>)/,'$1 android:windowSoftInputMode="adjustResize"$2');
+ if(!xml.includes('android:windowSoftInputMode="adjustResize"'))
+  throw Error('Android keyboard resize mode was not applied to MainActivity');
  fs.writeFileSync(manifest,xml,'utf8');
  console.log('Android automatic data backup disabled (manual JSON backup enabled).');
 }

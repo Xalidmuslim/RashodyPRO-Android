@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F7F5EF">
+<meta name="theme-color" content="#bfbbb4">
 <meta name="color-scheme" content="light">
 <title>Расходы PRO</title>
 <style>
@@ -2174,6 +2174,9 @@ body.matte-editorial #page .day-donut-center .day-donut-caption{font-size:clamp(
 <link rel="stylesheet" href="premium-depth.css">
 <link rel="stylesheet" href="satin-finish.css">
 <link rel="stylesheet" href="deep-matte.css">
+<link rel="stylesheet" href="matte-premium-v57.css">
+<link rel="stylesheet" href="matte-director-v58.css">
+<link rel="stylesheet" href="matte-polish-v59.css">
 </head>
 <body class="matte-editorial">
 <noscript><div style="margin:24px;padding:20px;background:#fff7ed;color:#263943;border-radius:18px;font:16px/1.5 system-ui">Для запуска приложения требуется браузер с JavaScript. Откройте файл index.html в Chrome или Firefox, а не в просмотрщике документов.</div></noscript>
@@ -2607,6 +2610,57 @@ let txCategorySearchBeforeCategory='';
 let txExpandedBeforeCategory=false;
 let txPickerScrollBeforeCategory=0;
 let categorySheetNeedsRefresh=false;
+// v5.5 Android IME: track the visible WebView without moving the page.
+const modalViewportState={fullHeight:0,backgroundY:0};
+function syncModalViewport(){
+ if(!nativeAndroid)return;
+ const overlay=document.getElementById('overlay'),viewport=window.visualViewport;
+ if(!viewport||!overlay||overlay.hidden)return;
+ overlay.style.setProperty('--r-modal-visible-height',Math.round(viewport.height)+'px');
+ overlay.style.setProperty('--r-modal-visible-top',Math.round(viewport.offsetTop||0)+'px');
+}
+function keepModalBackgroundStationary(){
+ if(!nativeAndroid||document.getElementById('overlay').hidden)return;
+ if(Math.abs(window.scrollY-modalViewportState.backgroundY)>1)
+  window.scrollTo({top:modalViewportState.backgroundY,behavior:'instant'});
+}
+function isModalEditableFocused(){
+ const active=document.activeElement;
+ return !!(active?.closest?.('#modal')&&
+  (active.tagName==='INPUT'||active.tagName==='TEXTAREA')&&!active.readOnly&&!active.disabled);
+}
+async function settleModalKeyboard(){
+ if(!isModalEditableFocused())return;
+ document.activeElement.blur();
+ const viewport=window.visualViewport;
+ if(!nativeAndroid||!viewport||modalViewportState.fullHeight-viewport.height<96)return;
+ await new Promise(resolve=>{
+  let completed=false,settleTimer;
+  const finish=()=>{
+   if(completed)return;completed=true;
+   clearTimeout(deadline);clearTimeout(settleTimer);
+   viewport.removeEventListener('resize',onResize);resolve();
+  };
+  const onResize=()=>{
+   clearTimeout(settleTimer);
+   if(viewport.height>=modalViewportState.fullHeight-55)
+    settleTimer=setTimeout(finish,80);
+  };
+  const deadline=setTimeout(finish,480);
+  viewport.addEventListener('resize',onResize);
+  onResize();
+ });
+ syncModalViewport();keepModalBackgroundStationary();
+}
+if(nativeAndroid&&window.visualViewport){
+ const onViewportChange=()=>requestAnimationFrame(()=>{
+  // WebView/IME owns the resize animation. Do not scroll the document
+  // on every frame: that forced continuous paint and a visible snap.
+  syncModalViewport();
+ });
+ window.visualViewport.addEventListener('resize',onViewportChange,{passive:true});
+ window.visualViewport.addEventListener('scroll',onViewportChange,{passive:true});
+}
 async function switchCategorySheet(renderNext,focusId,scrollY=0){
  if(categorySheetBusy)return;
  categorySheetBusy=true;
@@ -2614,12 +2668,14 @@ async function switchCategorySheet(renderNext,focusId,scrollY=0){
  const reduced=typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  const motion=!reduced&&typeof modal?.animate==='function';
  const previousHeight=modal.style.height;
- const oldHeight=modal.getBoundingClientRect().height;
+ let oldHeight;
  modal.setAttribute('aria-busy','true');
  const animateContents=(frames,options)=>Promise.all([...modal.children]
   .filter(child=>typeof child.animate==='function')
   .map(child=>child.animate(frames,options).finished.catch(()=>{})));
  try {
+  await settleModalKeyboard();
+  oldHeight=modal.getBoundingClientRect().height;
   // Legacy Android CSS forces transform:none!important on #modal itself.
   // Animate actual content, not the sheet's blocked transform/opacity.
   if(motion)await animateContents([
@@ -2663,13 +2719,27 @@ function openModal(){
  // Do not change Android body geometry: fixed positioning caused jumps when opening +.
  if(navReady&&!nativeAndroid){try{history.pushState(navState(view,true,true),'');modalHistoryOpen=true}catch(e){}}
  document.getElementById('overlay').hidden=false;
- if(!nativeAndroid)document.body.style.overflow='hidden';
+ if(nativeAndroid){
+  modalViewportState.backgroundY=window.scrollY;
+  modalViewportState.fullHeight=window.visualViewport?.height||window.innerHeight;
+  syncModalViewport();
+ }else document.body.style.overflow='hidden';
  document.getElementById('modal').scrollTop=0;
  // On-screen numpad is displayed immediately; no focus or system keyboard here.
 }
 function hideModal(){
  document.getElementById('overlay').hidden=true;
- if(!nativeAndroid)document.body.style.overflow='';
+ if(nativeAndroid){
+  const overlay=document.getElementById('overlay');
+  overlay.style.removeProperty('--r-modal-visible-height');
+  overlay.style.removeProperty('--r-modal-visible-top');
+  const y=modalViewportState.backgroundY;
+  requestAnimationFrame(()=>{
+   // Restore only if Android actually moved the background; never
+   // bounce it unconditionally while the IME finishes its last frame.
+   if(Math.abs(window.scrollY-y)>1)window.scrollTo({top:y,behavior:'instant'});
+  });
+ }else document.body.style.overflow='';
  draft=null;catDraft=null;document.getElementById('modal').classList.remove('tx-sheet','cat-sheet','cat-from-expense');modalHistoryOpen=false;
  if(lastFocus?.isConnected)lastFocus.focus({preventScroll:true});
  if(categorySheetNeedsRefresh){
@@ -2690,7 +2760,21 @@ function closeModal(){
   },'dialog-title',modalScrollBeforeCategory);
   return;
  }
- const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;hideModal();if(shouldBack)history.back()}
+ if(isModalEditableFocused()){
+  if(modalCloseBusy)return;
+  modalCloseBusy=true;
+  void settleModalKeyboard().then(()=>{
+   if(!document.getElementById('overlay').hidden)finishCloseModal();
+  }).finally(()=>{modalCloseBusy=false});
+  return;
+ }
+ finishCloseModal();
+}
+let modalCloseBusy=false;
+function finishCloseModal(){
+ const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;
+ hideModal();if(shouldBack)history.back();
+}
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
 function startTx(type='expense',existing=null,preferredDay=null){txDraftBeforeCategory=null;if(type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён в настройках');const last=type==='expense'?sortTx(data.transactions.filter(t=>t.type==='expense'))[0]:null;draft=existing?{...existing}:{id:null,type,category:type==='income'?'salary':(last&&data.categories.some(c=>c.id===last.category&&c.type==='expense')?last.category:'food'),amount:'',note:'',date:preferredDay&&F.isDate(preferredDay)?preferredDay:dateLocal(),time:timeLocal()};renderTxModal();openModal()}
 function collectDraft(){if(!draft)return;const amount=document.getElementById('txAmount'),note=document.getElementById('txNote'),date=document.getElementById('txDate'),time=document.getElementById('txTime');if(amount)draft.amount=amount.value;if(note)draft.note=note.value;if(date)draft.date=date.value;if(time)draft.time=time.value}
@@ -2725,7 +2809,7 @@ function enterAmountDigit(key){
 }
 function updateTxConfirm(){const input=document.getElementById('txAmount');if(!input)return;const valid=!!F.parseAmount(input.value);document.querySelectorAll('#modal [data-action="save-tx"]').forEach(b=>{b.disabled=!valid;b.setAttribute('aria-disabled',String(!valid))})}
 function filterTxCategories(query){const term=String(query||'').trim().toLocaleLowerCase('ru');if(term){document.getElementById('txCategories')?.classList.add('expanded');document.getElementById('txMoreCategories')?.setAttribute('aria-expanded','true')}let visible=0;document.querySelectorAll('#txCategories [data-tx-category]').forEach(b=>{const name=getCat(b.dataset.txCategory).name.toLocaleLowerCase('ru');const show=!term||name.includes(term);b.hidden=!show;if(show)visible++});const el=document.getElementById('txSearchEmpty');if(el)el.hidden=visible!==0}
-async function saveTx(){collectDraft();if(draft.type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён');const amount=F.parseAmount(draft.amount);if(!amount){toast('Введите корректную сумму больше нуля');return}if(!F.isDate(draft.date)){toast('Укажите корректную дату');return}const tx={id:draft.id||newId(),type:draft.type,category:draft.category,amount,note:String(draft.note||'').trim().slice(0,200),date:draft.date,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(draft.time||'')?draft.time:''};const isEdit=!!draft.id;
+async function saveTx(){if(modalCloseBusy)return;collectDraft();if(draft.type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён');const amount=F.parseAmount(draft.amount);if(!amount){toast('Введите корректную сумму больше нуля');return}if(!F.isDate(draft.date)){toast('Укажите корректную дату');return}const tx={id:draft.id||newId(),type:draft.type,category:draft.category,amount,note:String(draft.note||'').trim().slice(0,200),date:draft.date,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(draft.time||'')?draft.time:''};const isEdit=!!draft.id;
  if(isEdit){const i=data.transactions.findIndex(x=>x.id===tx.id);if(i<0)return toast('Операция не найдена');data.transactions[i]=tx}else data.transactions.push(tx);
  month=dateFromMonth(tx.date);dashboardFocusDay=tx.date;dashboardWeekAnchor=tx.date;closeModal();render();await saveFeedback(isEdit?'Изменения сохранены':'Операция добавлена')}
 function quickRepeatLast(){
@@ -2734,7 +2818,7 @@ function quickRepeatLast(){
  startTx('expense',{...previous,id:null,date:dateLocal(),time:timeLocal(),amount:String(previous.amount)});
 }
 function repeatTx(){collectDraft();draft.id=null;draft.date=dateLocal();draft.time=timeLocal();renderTxModal();toast('Копия готова. Нажмите «Сохранить операцию»')}
-async function deleteTx(){if(!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
+async function deleteTx(){if(modalCloseBusy||!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
 const ICON_OPTIONS=['cart','coffee','car','home','heart','film','shirt','box','banknote','gift','briefcase','book','phone','fuel','plane','music','tool','drop','sun','wallet','salary'];
 let txDraftBeforeCategory=null;
 async function startCatFromTx(){
@@ -2768,7 +2852,7 @@ function startCat(id){catDraft=id?{...getCat(id)}:{id:null,name:'',icon:'box',ty
 function collectCat(){const n=document.getElementById('catName');if(n)catDraft.name=n.value}
 function renderCatModal(){const edit=!!catDraft.id;document.getElementById('modal').classList.add('cat-sheet');document.getElementById('modal').innerHTML=`<div class="sheet-header"><h2 id="dialog-title" tabindex="-1">${edit?'Изменить категорию':'Новая категория'}</h2><button class="icon-btn" data-action="close-modal" aria-label="Закрыть">${svg('x',20)}</button></div><div class="field"><label for="catName">Название категории</label><input id="catName" maxlength="26" placeholder="Например, обучение" value="${esc(catDraft.name)}"></div><div class="amount-label">ЗНАЧОК</div><div class="icon-picker">${ICON_OPTIONS.map(i=>`<button class="icon-choice ${catDraft.icon===i?'active':''}" data-cat-icon="${i}" aria-pressed="${catDraft.icon===i}" type="button" title="${i}" aria-label="Значок ${i}">${svg(i,19)}</button>`).join('')}</div><div class="modal-actions"><button class="primary-btn" data-action="save-category">${svg('check',17)} Сохранить категорию</button></div>${edit&&!expenseDefaults.some(c=>c.id===catDraft.id)?`<button class="mini-action danger-btn" style="margin-top:14px" data-action="delete-category">${svg('trash',16)} Удалить категорию</button>`:''}`}
 async function saveCat(){
- if(categorySheetBusy)return;
+ if(categorySheetBusy||modalCloseBusy)return;
  collectCat();const name=catDraft.name.trim();if(!name)return toast('Укажите название категории');
  let savedId=catDraft.id;
  if(savedId){const c=data.categories.find(x=>x.id===savedId);if(c)Object.assign(c,{name,icon:catDraft.icon})}

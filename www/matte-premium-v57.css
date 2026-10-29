@@ -1,0 +1,395 @@
+/* Расходы PRO / Design System v5.7 — understated sculptural matte.
+   Must load after deep-matte.css. No white rim, inner shine, gradients, or
+   oversized grey fog. Depth: contact / local / ambient; no shadow animation. */
+body.matte-editorial{
+ --p57-ground:#c9c6c0;
+ --p57-panel:#dbd7d0;
+ --p57-panel-top:#dfdbd4;
+ --p57-recess:#c5c2bb;
+ --p57-control:#d3cfc7;
+ --p57-sage:#bbd0c6;
+ --p57-coral:#c38d80;
+ --p57-teal:#7eaca3;
+ --p57-ochre:#c9a46e;
+ --p57-ink:#20353a;
+ --p57-muted:#526568;
+ --p57-contact:0 2px 3px -1px rgba(39,44,43,.17);
+ --p57-hero:0 2px 3px -1px rgba(39,44,43,.14),
+            0 9px 16px -10px rgba(39,44,43,.18),
+            0 26px 34px -20px rgba(39,44,43,.21);
+ --p57-card:0 2px 3px -1px rgba(39,44,43,.14),
+            0 7px 13px -8px rgba(39,44,43,.17),
+            0 18px 24px -16px rgba(39,44,43,.19);
+ --p57-key:0 1px 2px -1px rgba(39,44,43,.14),
+           0 5px 9px -5px rgba(39,44,43,.17),
+           0 12px 16px -11px rgba(39,44,43,.17);
+ --p57-active:0 2px 3px -1px rgba(24,50,51,.21),
+              0 7px 12px -6px rgba(24,50,51,.25),
+              0 19px 25px -13px rgba(24,50,51,.25);
+ --p57-well:inset 0 2px 3px rgba(39,44,43,.09),
+             inset 0 5px 11px rgba(39,44,43,.12);
+ --d5-canvas:var(--p57-ground);
+ --d5-surface-panel:var(--p57-panel);
+ --d5-surface-hero:var(--p57-panel-top);
+ --d5-surface-control:var(--p57-control);
+ --d5-surface-recessed:var(--p57-recess);
+ --d5-shadow-hero:var(--p57-hero);
+ --d5-shadow-card:var(--p57-card);
+ --d5-shadow-control:var(--p57-key);
+ --d5-well-shadow:var(--p57-well);
+ color:var(--p57-ink);
+}
+html,body.matte-editorial{
+ background:var(--p57-ground)!important;
+ background-image:none!important;
+}
+/* Physical hierarchy: do not cast the same massive shadow at every elevation. */
+body.matte-editorial #page :is(
+ .feature-day,.day-ledger,.record-list,.panel,.history-summary-card,
+ .analytics-ring-panel,.analytics-trend-panel,.analytics-category-grid,
+ .period-controls,.toolbar,.settings-grid .panel
+),
+body.matte-editorial :is(.mobile-nav,#modal.tx-sheet,#modal.cat-sheet){
+ background-color:var(--p57-panel)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-hero)!important;
+}
+body.matte-editorial #page :is(.feature-day,.analytics-ring-panel){
+ background-color:var(--p57-panel-top)!important;
+}
+body.matte-editorial #page :is(
+ .trend-card,.history-tally,.compare-metric,.studio-stats .compare-metric,
+ .color-category-card,.category-row,.insight-tile,.premium-day-chart
+){
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-card)!important;
+}
+body.matte-editorial #page :is(
+ .week-day,.period-navigation .icon-btn,.week-arrows .icon-btn,
+ .feature-link,.today-btn,.secondary-btn,.ghost-btn,.r49-filter-btn,
+ .category-manage button,.settings-actions button,.header-csv,
+ .repeat-inline,.subtle-add
+),
+body.matte-editorial .topbar.subpage-topbar :is(.screen-back,.header-csv),
+body.matte-editorial #modal.tx-sheet :is(
+ .r105-key,.tx-quick-amount > button,.r49-more-categories,.cat-choice,
+ .tx-date-control button,.tx-edit-actions button
+),
+body.matte-editorial #modal.cat-sheet :is(
+ .icon-choice,.icon-btn,.secondary-btn
+){
+ background-color:var(--p57-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-key)!important;
+ color:var(--p57-ink)!important;
+}
+/* Accessible selected pigments with cast shadows; no faux glowing perimeter. */
+body.matte-editorial #page :is(
+ .week-day.focus-day,.week-day.focus-day.has-expense,
+ .period-toggle button.active,.trend-mode-toggle button.active,
+ .font-toggle button.active,.primary-btn
+),
+body.matte-editorial #modal.tx-sheet :is(
+ .type-switch button.active,.tx-check:not(:disabled)
+),
+body.matte-editorial #modal.cat-sheet .primary-btn{
+ background-color:#315760!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-active)!important;
+ color:#f9f7f1!important;
+}
+body.matte-editorial #page .week-day.focus-day :is(span,strong,small){
+ color:#f9f7f1!important;
+}
+/* Large colored summary tiles: muted mineral pigments, not toy saturation. */
+body.matte-editorial #page .trend-card.coral,
+body.matte-editorial #page .studio-stats .compare-metric.main{
+ background:var(--p57-coral)!important;
+}
+body.matte-editorial #page .trend-card.teal,
+body.matte-editorial #page .studio-stats .compare-metric:nth-child(2){
+ background:var(--p57-teal)!important;
+}
+body.matte-editorial #page .trend-card.amber,
+body.matte-editorial #page .studio-stats .compare-metric:nth-child(3){
+ background:var(--p57-ochre)!important;
+}
+body.matte-editorial #page .trend-card :is(strong,span,small),
+body.matte-editorial #page .studio-stats .compare-metric :is(strong,span,small,div),
+body.matte-editorial #page .color-category-card :is(strong,span,small,div){
+ color:var(--p57-ink)!important;
+ text-shadow:none!important;
+}
+/* Removed old decorative rings, glossy pseudo-elements and white trims.
+   Colors and pictograms still distinguish categories. */
+body.matte-editorial #page :is(.trend-card,.color-category-card)::after{
+ content:none!important;
+ display:none!important;
+}
+body.matte-editorial #page :is(
+ .trend-icon,.studio-stats .soft-stat-symbol,.color-category-icon,
+ .record-row .category-icon
+){
+ background:rgba(30,66,64,.095)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-key)!important;
+}
+body.matte-editorial #page .trend-card{
+ padding:16px 13px!important;
+ gap:7px;
+ min-width:0;
+}
+body.matte-editorial #page .trend-card strong{
+ font-size:clamp(14px,3.7vw,calc(22px * var(--font-scale,1)))!important;
+ line-height:1.15!important;
+ max-width:100%;min-width:0;
+ overflow-wrap:anywhere;
+ font-variant-numeric:tabular-nums;
+}
+body.matte-editorial #page .trend-card>span:last-child{
+ font-size:clamp(10px,2.85vw,calc(13px * var(--font-scale,1)))!important;
+ line-height:1.3!important;
+ overflow-wrap:anywhere!important;
+}
+/* Week selector: subtle elevation; expense micro-total must fit inside. */
+body.matte-editorial #page .week-day:not(.focus-day){
+ background:var(--p57-control)!important;
+ box-shadow:var(--p57-key)!important;
+}
+body.matte-editorial #page .week-day :is(.week-day-amount,.week-day-total){
+ max-width:100%;min-width:0;
+ overflow:hidden;text-overflow:ellipsis;
+ font-variant-numeric:tabular-nums;
+}
+/* The summary ring should sit in the same material, not cast a heavy disc. */
+body.matte-editorial #page .day-donut{width:min(100%,174px);}
+body.matte-editorial #page .day-donut-svg{
+ filter:drop-shadow(0 2px 2px rgba(38,49,48,.12))
+        drop-shadow(0 9px 6px rgba(38,49,48,.16))!important;
+}
+body.matte-editorial #page .analytics-ring-panel .ring-svg,
+body.matte-editorial #page .analytics-ring-panel .ring svg.ring-svg{
+ filter:drop-shadow(0 2px 2px rgba(38,49,48,.12))
+        drop-shadow(0 9px 7px rgba(38,49,48,.17))!important;
+}
+body.matte-editorial #page .day-donut-center,
+body.matte-editorial #page .analytics-ring-panel .ring-inner{
+ background-color:var(--p57-panel)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:inset 0 2px 4px rgba(37,49,48,.10),
+            inset 0 6px 9px rgba(37,49,48,.10)!important;
+}
+body.matte-editorial #page .day-donut-base{stroke:#c5c1b8!important;}
+body.matte-editorial #page .day-donut-legend{
+ border-top:0!important;
+ padding-top:13px!important;
+ margin-top:3px!important;
+ gap:8px 12px;
+}
+body.matte-editorial #page .day-donut-legend :is(
+ .day-donut-name,.day-donut-data
+){color:var(--p57-muted)!important;}
+body.matte-editorial #page .day-donut-center :is(
+ .day-donut-total,.day-donut-caption
+){color:var(--p57-ink)!important;}
+/* Command group: consistent elevations, accessible labels, no crushed text. */
+body.matte-editorial #page .feature-copy,
+body.matte-editorial #page .feature-copy :is(h2,p,.feature-amount){
+ min-width:0;
+ max-width:100%;
+ overflow-wrap:anywhere;
+}
+body.matte-editorial #page .feature-copy :is(.eyebrow,p),
+body.matte-editorial #page .ledger-heading :is(h2,span),
+body.matte-editorial #page .record-row :is(.record-title,.record-amount){
+ color:var(--p57-ink)!important;
+}
+body.matte-editorial #page :is(.feature-link,.ledger-actions .ghost-btn,.repeat-inline){
+ background:var(--p57-control)!important;
+ color:var(--p57-ink)!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-key)!important;
+}
+body.matte-editorial #page .ledger-actions{
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ gap:9px;
+ min-width:0;
+}
+body.matte-editorial #page .ledger-actions :is(.ghost-btn,.repeat-inline,.subtle-add){
+ min-width:0;
+ max-width:100%;
+ white-space:normal;
+ overflow-wrap:anywhere;
+ line-height:1.25;
+ flex-shrink:1;
+}
+body.matte-editorial #page .ledger-actions .ghost-btn{
+ padding:11px 13px!important;
+ border-radius:16px;
+}
+body.matte-editorial #page .ledger-actions .repeat-inline{
+ background:var(--p57-sage)!important;
+ padding:11px 13px;
+}
+body.matte-editorial #page .ledger-actions .subtle-add{
+ background:var(--p57-sage)!important;
+ box-shadow:var(--p57-key)!important;
+}
+body.matte-editorial #page .record-row{min-width:0;}
+body.matte-editorial #page .record-row :is(.record-title,.record-subtitle){
+ min-width:0;overflow-wrap:anywhere;word-break:normal;
+}
+body.matte-editorial #page .record-row .record-amount{
+ min-width:0;overflow-wrap:anywhere;text-align:end;
+ font-size:clamp(11px,3.1vw,calc(15px * var(--font-scale,1)))!important;
+ font-variant-numeric:tabular-nums;
+}
+body.matte-editorial #page .ledger-count{
+ background:#c8d8d1!important;
+ background-image:none!important;
+ color:#365451!important;
+ border-color:transparent!important;
+}
+/* The dock is one tactile island with a restrained focal add action. */
+body.matte-editorial .mobile-nav{
+ background:var(--p57-panel)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-hero)!important;
+}
+body.matte-editorial .mobile-nav button.active:not(.fab){
+ background:var(--p57-sage)!important;
+ background-image:none!important;
+ box-shadow:var(--p57-key)!important;
+}
+body.matte-editorial .mobile-nav .fab{
+ background:#b97568!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-active)!important;
+}
+/* History, analytics, settings: coherent solid recessed inputs and grouped
+   switchers, rather than competing reflective backgrounds. */
+body.matte-editorial #page :is(
+ .search,.filter-select,.setting-select,.history-search-input,
+ .period-toggle,.trend-mode-toggle,.font-toggle,.filter-group
+){
+ background:var(--p57-recess)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-well)!important;
+}
+body.matte-editorial #page :is(
+ .period-toggle button:not(.active),.trend-mode-toggle button:not(.active),
+ .font-toggle button:not(.active),.category-manage button
+){
+ background:var(--p57-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-key)!important;
+ color:var(--p57-ink)!important;
+}
+body.matte-editorial #page .history-tally.spent{background:#cdb2a8!important;}
+body.matte-editorial #page .history-tally.earned{background:#b3ccc1!important;}
+body.matte-editorial #page :is(
+ .note-box,.font-sample,.analytics-insight,.storage-banner
+){
+ background:#cbd5cc!important;
+ background-image:none!important;
+ border-color:transparent!important;
+}
+/* Editor: solid, soft-touch keyboard, category tiles and clearly recessed fields. */
+body.matte-editorial #modal.tx-sheet,
+body.matte-editorial #modal.cat-sheet{
+ background:var(--p57-panel)!important;
+ background-image:none!important;
+}
+body.matte-editorial #modal.tx-sheet :is(
+ .tx-amount-block,.type-switch,.tx-category-search,.tx-details input
+),
+body.matte-editorial #modal.cat-sheet .field input{
+ background:var(--p57-recess)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-well)!important;
+ color:var(--p57-ink)!important;
+}
+body.matte-editorial #modal.tx-sheet :is(
+ .r105-key,.tx-quick-amount > button,.r49-more-categories,
+ .type-switch button:not(.active)
+),
+body.matte-editorial #modal.cat-sheet :is(.icon-choice,.icon-btn){
+ background:var(--p57-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-key)!important;
+ color:var(--p57-ink)!important;
+}
+body.matte-editorial #modal.tx-sheet :is(.r105-key:active,.tx-quick-amount > button:active){
+ background:#c2c6bf!important;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice{
+ background:var(--p57-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-key)!important;
+ color:var(--p57-ink)!important;
+}
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice::before{
+ background:#a9c5b9!important;
+}
+body.matte-editorial #modal.tx-sheet .r103-add-category{
+ background:var(--p57-sage)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p57-key)!important;
+}
+body.matte-editorial #modal.cat-sheet .icon-choice.active{
+ background:var(--p57-sage)!important;
+ background-image:none!important;
+ box-shadow:var(--p57-active)!important;
+}
+body.matte-editorial #modal.tx-sheet :is(.tx-section-title,.tx-selected-category){
+ color:var(--p57-ink)!important;
+}
+/* Stop double-easing on native IME: Android already animates the viewport.
+   The sheet tracks every visualViewport frame directly. Content swap still
+   uses the independent transform/opacity animation in switchCategorySheet. */
+html.rashody-native-android body.matte-editorial #overlay:not([hidden]){
+ transition:none!important;
+}
+html.rashody-native-android body.matte-editorial #modal.tx-sheet,
+html.rashody-native-android body.matte-editorial #modal.cat-sheet{
+ transition:none!important;
+}
+/* Screen-reader focus retains a dark accessible indicator; it is not a
+   decorative white rim. A forced-colors environment can retain system focus. */
+body.matte-editorial :is(button,input,select,textarea):focus-visible{
+ outline:2px solid #285a60!important;
+ outline-offset:2px;
+}
+@media(max-width:380px){
+ body.matte-editorial #page .trend-card{padding:13px 10px!important;}
+ body.matte-editorial #page .trend-card strong{
+   font-size:clamp(13px,3.5vw,18px)!important;
+ }
+ body.matte-editorial #page .feature-copy{max-width:65%;}
+ body.matte-editorial #page .day-donut{width:min(100%,148px);}
+ body.matte-editorial #page .ledger-actions{gap:7px;}
+ body.matte-editorial #page .ledger-actions .ghost-btn{margin-right:0;}
+}
+@media(prefers-reduced-motion:reduce){
+ body.matte-editorial #page button,
+ body.matte-editorial #modal button,
+ body.matte-editorial .mobile-nav button{
+   transition:none!important;
+ }
+}

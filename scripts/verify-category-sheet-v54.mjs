@@ -52,6 +52,7 @@ const modal={
 };
 const context={
  categorySheetBusy:false,
+ settleModalKeyboard:async()=>{},
  document:{getElementById(id){return id==='modal'?modal:{focus(){focusId=id}};}},
  window:{matchMedia(){return {matches:false}}},
  Promise

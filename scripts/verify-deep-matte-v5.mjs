@@ -44,3 +44,26 @@ for(const selector of [
   assert.ok(finish.includes(selector),"Cascade specificity fix missing: "+selector);
 }
 console.log("OK: all-screen deep matte v5 visual contract");
+
+
+// Natural matte depth v5.6: safeguard three layers and layout invariants.
+const v56start=css.indexOf('/* matte-depth-v56:');
+assert.ok(v56start>css.indexOf('/* matte-unified-v55'),'v5.6 must follow v5.5');
+const v56=css.slice(v56start);
+assert.ok(v56.trimEnd().endsWith('never decorative. */'),'v5.6 should be the last CSS pass');
+assert.doesNotMatch(v56,/(?:linear|radial|conic)-gradient\s*\(/i,'No glossy gradients');
+assert.doesNotMatch(v56,/border(?:-color)?\s*:\s*(?:white|#fff|rgba\(\s*255)/i,'No white rims');
+assert.doesNotMatch(v56,/(^|[;{}])\s*(?:position|top|left|right|bottom|height|width|overflow|transform|translate)\s*:/mi,'No layout or IME modifications');
+assert.doesNotMatch(v56,/transition(?:-property)?\s*:[^;]*(?:box-shadow|filter)/i,'Do not animate shadows');
+assert.equal((v56.match(/\{/g)||[]).length,(v56.match(/\}/g)||[]).length,'CSS braces balanced');
+for (const key of ['--d5-shadow-hero','--d5-shadow-card','--d5-shadow-control']) {
+  const mat=v56.match(new RegExp(key+'\\s*:\\s*([^;]+);'));
+  assert.ok(mat,'Missing shadow token '+key);
+  assert.equal((mat[1].match(/rgba\(/g)||[]).length,3,'Must use 3 real shadow layers: '+key);
+  assert.doesNotMatch(mat[1],/inset|255\s*,\s*255\s*,\s*255/,'No painted bright bevel on raised material');
+}
+for (const target of ['.feature-day','.analytics-ring-panel','.history-tally','.category-manage button','.mobile-nav','.mobile-nav .fab','#modal.tx-sheet','#modal.cat-sheet','.r105-key','.field input','.period-toggle button.active','.tx-amount-block']) {
+  assert.ok(v56.includes(target),'No depth coverage for '+target);
+}
+assert.match(css,/:focus-visible\s*\{/,'Keep keyboard accessibility outline');
+console.log('OK: natural v5.6 matte three-layer depth; no gloss, no geometry change');
