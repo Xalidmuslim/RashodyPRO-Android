@@ -51,3 +51,47 @@ assert.match(fs.readFileSync('native/FinanceStoragePlugin.java','utf8'),
  /class FinanceStoragePlugin/,'Native SQLite remains');
 assert.match(legacy,/--p58-hero:/,'v5.8 fallback stays intact');
 console.log('OK: v5.9 status bar, true 3-stage shadows, flat pigments, consistent controls, data isolation');
+
+
+/* Regression check: all source-audited bright components are covered by
+   the last stylesheet, and ink meets normal-text contrast on tinted cards. */
+const roleSelectors=[
+ '.color-category-grid .color-category-card',
+ '.studio-stats .compare-metric :is(',
+ '.switch-track::after',
+ '.analytics-hero-title>span',
+ '.r49-history-toolbar',
+ '.r49-filter-btn',
+ '.tx-check:disabled',
+ '.storage-banner',
+ '.trend-cards .trend-card :is(',
+ '.history-tally :is(',
+ '.day-donut-legend-item'
+];
+for(const selector of roleSelectors)assert.ok(css.includes(selector),'Uncovered matte role: '+selector);
+function luminance(hex){
+ const rgb=hex.slice(1).match(/../g).map(ch=>parseInt(ch,16)/255)
+  .map(ch=>ch<=0.04045?ch/12.92:((ch+0.055)/1.055)**2.4);
+ return 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
+}
+function contrast(fg,bg){
+ const a=luminance(fg),b=luminance(bg);
+ return (Math.max(a,b)+0.05)/(Math.min(a,b)+0.05);
+}
+const hexToken=name=>{
+ const matches=[...css.matchAll(new RegExp(name+':(#[a-fA-F0-9]{6})\\s*;','g'))];
+ assert.ok(matches.length,'Missing contrast role '+name);
+ return matches.at(-1)[1];
+};
+const ink=hexToken('--p59-ink'),muted=hexToken('--p59-muted');
+for(const role of ['--p59-coral','--p59-teal','--p59-ochre','--p59-sage',
+ '--p59-control','--p59-panel','--p59-recess']){
+ const bg=hexToken(role);
+ assert.ok(contrast(ink,bg)>=4.5,'Card ink contrast below 4.5: '+role);
+}
+for(const role of ['--p59-panel','--p59-recess']){
+ assert.ok(contrast(muted,hexToken(role))>=4.5,'Caption contrast below 4.5: '+role);
+}
+assert.match(css,/\.toast\s*\{[\s\S]*?background:#31575b!important;/,
+ 'Notification surfaces need an opaque matte background');
+console.log('OK: cross-screen matte coverage, 4.5:1 role contrast, semantic alerts and active states');
