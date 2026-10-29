@@ -312,3 +312,12 @@ body.matte-editorial #page .trend-cards .trend-card.teal {
 body.matte-editorial #page .trend-cards .trend-card.amber {
  background:var(--p58-ochre)!important;
 }
+
+
+/* v5.8 priority shadow correction — all three summary pigments must share
+   the same contact/local/ambient profile in the computed WebView style. */
+body.matte-editorial #page .trend-cards .trend-card.coral,
+body.matte-editorial #page .trend-cards .trend-card.teal,
+body.matte-editorial #page .trend-cards .trend-card.amber {
+ box-shadow:var(--p58-card)!important;
+}
