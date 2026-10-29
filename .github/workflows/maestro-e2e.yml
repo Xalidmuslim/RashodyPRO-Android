@@ -71,5 +71,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rashody-maestro-logs
-          path: maestro-output.log
+          path: |
+            maestro-output.log
+            .maestro/**/*.png
+            .maestro/*.png
+          include-hidden-files: true
           if-no-files-found: ignore
