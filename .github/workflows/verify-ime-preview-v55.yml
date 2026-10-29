@@ -1,4 +1,4 @@
-name: Android IME v5.5 Preview QA
+name: Android Premium Matte v5.7 Preview QA
 on:
   pull_request:
     branches: [main]
@@ -37,7 +37,7 @@ jobs:
           npx cap add android
           node scripts/prepare-android.mjs
           npx cap sync android
-          node scripts/build-keyboard-preview-v55.mjs
+          node scripts/build-matte-preview-v57.mjs
       - name: Build and inspect APK
         working-directory: android
         run: |
@@ -49,9 +49,9 @@ jobs:
           set -euo pipefail
           APK=android/app/build/outputs/apk/debug/app-debug.apk
           test -s "$APK"
-          "${ANDROID_HOME}/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview55'"
+          "${ANDROID_HOME}/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview57'"
       - uses: actions/upload-artifact@v4
         with:
-          name: Rashody-PRO-v55-IME-PREVIEW-APK
+          name: Rashody-PRO-v57-Premium-Matte-Preview-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
