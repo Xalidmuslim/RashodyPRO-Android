@@ -1,4 +1,4 @@
-name: Android Director Matte v5.8 Preview QA
+name: Android Sculptural Matte v5.9 Preview QA
 on:
   pull_request:
     branches: [main]
@@ -49,14 +49,14 @@ jobs:
           set -euo pipefail
           APK=android/app/build/outputs/apk/debug/app-debug.apk
           test -s "$APK"
-          "${ANDROID_HOME}/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview58'"
+          "${ANDROID_HOME}/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview59'"
       - uses: actions/upload-artifact@v4
         with:
-          name: Rashody-PRO-v58-Director-Matte-Preview-APK
+          name: Rashody-PRO-v59-Director-Matte-Preview-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
       - name: Publish direct browser APK download
-        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-apk-v58]') }}
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-apk-v59]') }}
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -64,25 +64,25 @@ jobs:
           set -euo pipefail
           apk=android/app/build/outputs/apk/debug/app-debug.apk
           test -s "$apk"
-          cp "$apk" RashodyPRO-Premium-Matte-v5.8-PREVIEW.apk
-          gh release create premium-matte-v5.8-preview RashodyPRO-Premium-Matte-v5.8-PREVIEW.apk \
+          cp "$apk" RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk
+          gh release create premium-matte-v5.9-preview RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk \
             --target "$GITHUB_SHA" \
-            --title "Расходы PRO — Premium Matte 3D v5.8 (тест)" \
-            --notes "Отдельная тестовая версия без замены основных расходов. Установка: ru.rashody.pro.preview58. Данные основной программы не переносятся автоматически. Проверьте на телефоне стили, анимации и текст." \
+            --title "Расходы PRO — Premium Matte 3D v5.9 (тест)" \
+            --notes "Отдельная тестовая версия без замены основных расходов. Установка: ru.rashody.pro.preview59. Данные основной программы не переносятся автоматически. Проверьте на телефоне стили, анимации и текст." \
             --prerelease --latest=false
 
       - name: Publish raw APK on separate download branch
-        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-raw-apk-v58]') }}
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-raw-apk-v59]') }}
         shell: bash
         run: |
           set -euo pipefail
           apk="android/app/build/outputs/apk/debug/app-debug.apk"
           test -s "$apk"
-          cp "$apk" "$RUNNER_TEMP/RashodyPRO-Premium-Matte-v5.8-PREVIEW.apk"
+          cp "$apk" "$RUNNER_TEMP/RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch --orphan apk-direct-download
-          cp "$RUNNER_TEMP/RashodyPRO-Premium-Matte-v5.8-PREVIEW.apk" ./RashodyPRO-Premium-Matte-v5.8-PREVIEW.apk
-          git add -- RashodyPRO-Premium-Matte-v5.8-PREVIEW.apk
-          git commit -m "Publish direct-download test APK v5.8"
+          cp "$RUNNER_TEMP/RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk" ./RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk
+          git add -- RashodyPRO-Premium-Matte-v5.9-PREVIEW.apk
+          git commit -m "Publish direct-download test APK v5.9"
           git push origin HEAD:refs/heads/apk-direct-download
