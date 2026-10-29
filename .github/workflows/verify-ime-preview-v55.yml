@@ -22,6 +22,7 @@ jobs:
           java-version: '21'
       - name: Verify core, UI and IME regressions
         run: |
+          python3 -m pip install --break-system-packages Pillow
           npm install
           npm run verify
       - name: Install Android SDK 36
@@ -33,7 +34,6 @@ jobs:
           "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
       - name: Generate isolated Android preview
         run: |
-          python3 -m pip install --break-system-packages Pillow
           npx cap add android
           node scripts/prepare-android.mjs
           npx cap sync android
