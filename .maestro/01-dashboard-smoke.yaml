@@ -1,0 +1,13 @@
+appId: ru.rashody.pro
+name: Rashody PRO - dashboard and add expense
+tags:
+  - smoke
+---
+- launchApp:
+    clearState: true
+- assertVisible: "Обзор"
+- tapOn:
+    text: "Добавить операцию"
+- assertVisible: "Новый расход"
+- tapOn: "Закрыть"
+- assertVisible: "Обзор"

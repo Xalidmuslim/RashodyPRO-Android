@@ -1,0 +1,11 @@
+appId: ru.rashody.pro
+name: Rashody PRO - navigate to analytics
+tags:
+  - regression
+---
+- launchApp:
+    clearState: true
+- tapOn: "Аналитика"
+- assertVisible: "Структура расходов"
+- tapOn: "Настройки"
+- assertVisible: "Настройки"
