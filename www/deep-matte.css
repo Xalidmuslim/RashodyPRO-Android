@@ -804,3 +804,96 @@ body.matte-editorial #modal.tx-sheet :is(
  .cat-choice,.cat-choice.active,.r49-more-categories,
  .tx-date-control button,.tx-check:not(:disabled),.tx-check:disabled
 ){background-image:none!important;}
+
+
+/* matte-depth-v56: natural three-stage cast shadows, no decorative rims.
+   Contact + short diffusion + broad ambient; shadows remain static.
+   Do not modify IME handling, layout geometry, persistence or finance data. */
+body.matte-editorial {
+  --d5-shadow-hero:
+    0 2px 4px -1px rgba(29,39,41,.17),
+    0 13px 22px -10px rgba(29,39,41,.25),
+    0 34px 46px -18px rgba(29,39,41,.35);
+  --d5-shadow-card:
+    0 2px 3px -1px rgba(29,39,41,.17),
+    0 8px 14px -7px rgba(29,39,41,.23),
+    0 23px 32px -15px rgba(29,39,41,.32);
+  --d5-shadow-control:
+    0 1px 2px -1px rgba(29,39,41,.17),
+    0 5px 9px -5px rgba(29,39,41,.23),
+    0 13px 19px -10px rgba(29,39,41,.27);
+  --d5-well-shadow:
+    inset 0 2px 3px rgba(33,45,46,.09),
+    inset 0 5px 10px rgba(33,45,46,.15);
+}
+/* Large islands: physical contact and distant ambient depth. */
+body.matte-editorial #page :is(
+ .feature-day,.day-ledger,.record-list,.panel,.period-controls,.toolbar,
+ .analytics-ring-panel,.analytics-trend-panel,.analytics-category-grid,
+ .history-summary-card,.settings-grid .panel
+),
+body.matte-editorial .mobile-nav,
+body.matte-editorial #modal.tx-sheet,
+body.matte-editorial #modal.cat-sheet {
+ border-color:transparent!important;
+ box-shadow:var(--d5-shadow-hero)!important;
+}
+/* Secondary cards have less height than their parent panel. */
+body.matte-editorial #page :is(
+ .trend-card,.studio-stats .compare-metric,.color-category-card,
+ .history-tally,.insight-tile,.premium-day-chart,.category-row
+) {
+ border-color:transparent!important;
+ box-shadow:var(--d5-shadow-card)!important;
+}
+/* Controls cast a short, believable shadow rather than a painted rim. */
+body.matte-editorial #page :is(
+ .week-day:not(.focus-day),.week-arrows .icon-btn,.period-navigation .icon-btn,
+ .today-btn,.feature-link,.r49-filter-btn,.header-csv,.secondary-btn,
+ .ghost-btn,.settings-actions button,.category-manage button
+),
+body.matte-editorial #modal.tx-sheet :is(
+ .r105-key,.tx-quick-amount > button,.r49-more-categories,
+ .cat-choice,.tx-date-control button
+),
+body.matte-editorial #modal.cat-sheet :is(.icon-choice,.icon-btn) {
+ border-color:transparent!important;
+ box-shadow:var(--d5-shadow-control)!important;
+}
+/* Active pigment keys have a deeper contact shadow, never a white edge. */
+body.matte-editorial #page :is(
+ .week-day.focus-day,.week-day.focus-day.has-expense,
+ .period-toggle button.active,.trend-mode-toggle button.active,
+ .font-toggle button.active
+),
+body.matte-editorial #modal.tx-sheet :is(
+ .type-switch button.active,.tx-check:not(:disabled)
+),
+body.matte-editorial #modal.cat-sheet .primary-btn {
+ border-color:transparent!important;
+ box-shadow:
+  0 2px 4px -1px rgba(18,42,48,.27),
+  0 9px 15px -7px rgba(18,42,48,.30),
+  0 20px 28px -12px rgba(18,42,48,.35)!important;
+}
+/* Input wells recede inward, distinct from elevated actions. */
+body.matte-editorial #page :is(
+ .search,.filter-select,.setting-select,.history-search-input,
+ .period-toggle,.trend-mode-toggle,.font-toggle
+),
+body.matte-editorial #modal.tx-sheet :is(
+ .tx-amount-block,.type-switch,.tx-category-search,.tx-details input
+),
+body.matte-editorial #modal.cat-sheet .field input {
+ border-color:transparent!important;
+ box-shadow:var(--d5-well-shadow)!important;
+}
+/* Coral add button stays matte, tactile, and visibly higher than nav dock. */
+body.matte-editorial .mobile-nav .fab {
+ border-color:transparent!important;
+ box-shadow:
+  0 2px 3px -1px rgba(83,41,39,.20),
+  0 8px 14px -7px rgba(83,41,39,.27),
+  0 23px 32px -14px rgba(83,41,39,.39)!important;
+}
+/* Focus-visible outline remains for accessibility, never decorative. */
