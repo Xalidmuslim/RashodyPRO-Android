@@ -4,7 +4,7 @@ on:
     branches: [fix/rashody-v60-frame-palette-2026-10-31]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   verify-preview:
     runs-on: ubuntu-latest
@@ -61,3 +61,18 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+      - name: Publish verified APK as direct GitHub Release download
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          apk="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          cp "$apk" RashodyPRO-Matte-3D-v6.0-TEST.apk
+          gh release create rashody-matte-v6.0-test RashodyPRO-Matte-3D-v6.0-TEST.apk \
+            --target "$GITHUB_SHA" \
+            --title "Расходы PRO — Matte 3D v6.0 (отдельная тестовая версия)" \
+            --notes "Исправления рамок, вложенных теней и цветов. Отдельный Android package ru.rashody.pro.preview60; основное приложение и пользовательские расходы не затрагиваются. Debug-тест, не production-релиз. Визуальная проверка на устройстве остаётся необходимой." \
+            --prerelease --latest=false
+          gh release view rashody-matte-v6.0-test --json tagName,assets
