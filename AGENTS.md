@@ -10,3 +10,6 @@ Automatically select matching repository skills:
 - `android-performance`: frame pacing, scroll, transitions, cold start.
 
 Select only relevant skills; do not apply all five mechanically. Make minimal, reviewable changes and avoid touching other projects. If a tool/device/build is inaccessible, disclose the limitation. Never change working application code just to install or maintain these skills.
+
+## Spec Kit (v5.9 pilot only)
+When working on Spec Kit specifications in this branch, read `.specify/memory/constitution.md` and `specs/001-matte-ui-v59/spec.md`. Spec Kit owns requirements/plans/task breakdown; existing `.agents/skills/android-*` own repository recon, Android verification, design/diff/performance. Preserve the actual v5.9 CSS stack and its previously verified improvements. Never apply the older v5.4 audit as an implementation patch.
