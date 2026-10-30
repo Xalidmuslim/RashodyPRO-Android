@@ -18,7 +18,7 @@ jobs:
           curl -fLSs --retry 4 --retry-delay 3 --output "$RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk" \
             "https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-matte-v6.0-test/RashodyPRO-Matte-3D-v6.0-TEST.apk"
           test "$(wc -c < "$RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk")" -eq 4623275
-          echo "ac1f11727212b0589a74becd5f7f42a22666ba23ac8dfd1f3ff7e65e8b34617b  $RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk" | sha256sum -c -
+          echo "99288bfa55861ba8d2ea0fa5d581c53df110fd85cac51353d862a52f19e11993  $RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk" | sha256sum -c -
           unzip -t "$RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk" >/dev/null
       - name: Publish binary to existing direct-download branch, preserving earlier files
         shell: bash
