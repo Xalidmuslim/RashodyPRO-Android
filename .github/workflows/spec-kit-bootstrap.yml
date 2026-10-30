@@ -1,0 +1,59 @@
+name: Spec Kit bootstrap (isolated)
+on:
+  push:
+    branches:
+      - experiment/spec-kit-rashodypro-2026-10-31
+    paths:
+      - .github/workflows/spec-kit-bootstrap.yml
+      - docs/SPEC_KIT_PILOT.md
+      - .specify/memory/constitution.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: speckit-bootstrap-isolated
+  cancel-in-progress: true
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Initialize pinned Spec Kit with Codex integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          before_agents="$(sha256sum AGENTS.md | cut -d ' ' -f1)"
+          before_package="$(sha256sum package.json | cut -d ' ' -f1)"
+          before_skills="$(find .agents/skills -type f -name SKILL.md -path '*/android-*/*' -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -d ' ' -f1)"
+          uvx --from git+https://github.com/github/spec-kit.git@v1.2.5 specify version
+          uvx --from git+https://github.com/github/spec-kit.git@v1.2.5 specify init --here --force --non-interactive --integration codex --ignore-agent-tools
+          test -f .specify/memory/constitution.md
+          test -d .specify/templates
+          test -f .agents/skills/speckit-specify/SKILL.md
+          test "$(sha256sum AGENTS.md | cut -d ' ' -f1)" = "$before_agents"
+          test "$(sha256sum package.json | cut -d ' ' -f1)" = "$before_package"
+          test "$(find .agents/skills -type f -name SKILL.md -path '*/android-*/*' -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -d ' ' -f1)" = "$before_skills"
+          git diff --exit-code -- AGENTS.md package.json www native .github/workflows/build-android.yml .github/workflows/build-preview-android.yml .agents/skills/android-recon .agents/skills/android-test .agents/skills/android-diff .agents/skills/android-design .agents/skills/android-performance
+
+      - name: Commit generated scaffolding only to the pilot branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "experiment/spec-kit-rashodypro-2026-10-31"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .specify .agents/skills/speckit-*
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: initialize official Spec Kit v1.2.5 scaffolding"
+            git push origin HEAD:experiment/spec-kit-rashodypro-2026-10-31
+          fi

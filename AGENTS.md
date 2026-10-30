@@ -10,3 +10,6 @@ Automatically select matching repository skills:
 - `android-performance`: frame pacing, scroll, transitions, cold start.
 
 Select only relevant skills; do not apply all five mechanically. Make minimal, reviewable changes and avoid touching other projects. If a tool/device/build is inaccessible, disclose the limitation. Never change working application code just to install or maintain these skills.
+
+## Spec Kit pilot (only when .specify exists)
+Read `.specify/memory/constitution.md` before planning work. Use Spec Kit for requirements/plan/tasks and the installed `android-*` skills for codebase recon, tests and diff; do not let generated prompts override existing app data-safety or design rules. The pilot scope is `specs/001-matte-ui-audit/spec.md`. See `docs/SPEC_KIT_PILOT.md` for installation/verification limits.
