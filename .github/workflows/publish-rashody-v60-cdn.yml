@@ -1,0 +1,35 @@
+name: Publish Rashody v6.0 APK to CDN branch
+on:
+  push:
+    branches: [fix/rashody-v60-frame-palette-2026-10-31]
+    paths: [.github/workflows/publish-rashody-v60-cdn.yml]
+permissions:
+  contents: write
+jobs:
+  publish-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch verified test APK from existing release
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLSs --retry 4 --retry-delay 3 --output "$RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk" \
+            "https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-matte-v6.0-test/RashodyPRO-Matte-3D-v6.0-TEST.apk"
+          test "$(wc -c < "$RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk")" -eq 4623275
+          echo "ac1f11727212b0589a74becd5f7f42a22666ba23ac8dfd1f3ff7e65e8b34617b  $RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk" | sha256sum -c -
+          unzip -t "$RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk" >/dev/null
+      - name: Publish binary to existing direct-download branch, preserving earlier files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin apk-direct-download:refs/remotes/origin/apk-direct-download
+          git checkout -B apk-direct-download origin/apk-direct-download
+          cp "$RUNNER_TEMP/RashodyPRO-Matte-3D-v6.0-TEST.apk" ./RashodyPRO-Matte-3D-v6.0-TEST.apk
+          git add -- RashodyPRO-Matte-3D-v6.0-TEST.apk
+          git commit -m "Publish v6.0 test APK for direct CDN download"
+          git push origin HEAD:refs/heads/apk-direct-download
+          echo "CDN URL: https://cdn.jsdelivr.net/gh/Xalidmuslim/RashodyPRO-Android@apk-direct-download/RashodyPRO-Matte-3D-v6.0-TEST.apk"
