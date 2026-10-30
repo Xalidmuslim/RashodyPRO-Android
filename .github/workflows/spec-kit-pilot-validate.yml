@@ -1,0 +1,90 @@
+name: Spec Kit pilot - verify and build isolated Android preview
+
+on:
+  push:
+    branches:
+      - experiment/spec-kit-rashodypro-2026-10-31
+    paths:
+      - .github/workflows/spec-kit-pilot-validate.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spec-kit-pilot-validation
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.ref == 'refs/heads/experiment/spec-kit-rashodypro-2026-10-31'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout tested revision
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Prepare Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKMANAGER=$(find "${ANDROID_HOME}/cmdline-tools" -type f -name sdkmanager | head -n 1)
+          test -n "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Run existing regression and matte style verifications
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --break-system-packages Pillow
+          npm install
+          npm run verify
+
+      - name: Create separate Android preview (never production ID)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx cap add android
+          node scripts/prepare-android.mjs
+          npx cap sync android
+          node scripts/build-preview-variant.mjs
+          node scripts/verify-preview-variant.mjs
+
+      - name: Build debug preview APK
+        working-directory: android
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Validate APK metadata and source immutability
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          "${ANDROID_HOME}/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview'"
+          "${ANDROID_HOME}/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='5.4-preview'"
+          sha256sum "$APK"
+          git diff --exit-code -- www native package.json .github/workflows/build-android.yml .github/workflows/build-preview-android.yml
+          echo "Verified APK was built only for separate preview package; on-device UI remains untested."
+
+      - name: Upload QA-only test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: RashodyPRO-SpecKit-PREVIEW-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
