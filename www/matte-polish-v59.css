@@ -509,3 +509,93 @@ body.matte-editorial #page :is(.trend-card,.color-category-card)::after{
  content:none!important;
  display:none!important;
 }
+
+/* v6.0: matte frame hierarchy and palette consistency.
+   Correct redundant parent elevations without changing layout or persisted state.
+   Elevation order: page surface < card < control. No specular borders/gradients. */
+body.matte-editorial{
+ --p59-ground:#d5d1cb;
+ --p59-panel:#e6e1da;
+ --p59-hero:#eae5de;
+ --p59-control:#dcd7d0;
+ --p59-recess:#d2ccc4;
+ --p59-ink:#1c3439;
+ --p59-muted:#48585e;
+ --p59-coral:#c3a299;
+ --p59-teal:#a5bbb2;
+ --p59-ochre:#cbb28e;
+ --p59-sage:#bed0c5;
+ --p59-soft-tint:#c3d1c8;
+ --p59-warm-tint:#d7bdb2;
+ --p59-large:
+  0 2px 3px -1px rgba(29,43,44,.11),
+  0 10px 18px -9px rgba(29,43,44,.13),
+  0 23px 32px -19px rgba(29,43,44,.10);
+ --p59-medium:
+  0 2px 3px -1px rgba(29,43,44,.10),
+  0 8px 13px -7px rgba(29,43,44,.11),
+  0 16px 23px -16px rgba(29,43,44,.08);
+ --p59-small:
+  0 1px 2px -1px rgba(29,43,44,.09),
+  0 4px 7px -4px rgba(29,43,44,.10),
+  0 10px 14px -11px rgba(29,43,44,.07);
+ --p59-selected:
+  0 2px 3px -1px rgba(25,56,57,.14),
+  0 7px 11px -6px rgba(25,56,57,.13),
+  0 16px 20px -15px rgba(25,56,57,.09);
+ --p59-well:inset 0 1px 3px rgba(31,45,46,.07);
+}
+/* Seven day calendar already uses raised day keys; the rectangular
+   parent should not be a second card behind those keys. */
+body.matte-editorial #page .calendar-shell{
+ background:transparent!important;
+ border-color:transparent!important;
+ box-shadow:none!important;
+ border-radius:18px!important;
+}
+/* Tally cards form the summary surface; don't draw a second container frame. */
+body.matte-editorial #page .summary-strip{
+ background:transparent!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:none!important;
+}
+/* Keep period switch as a single neutral track; only the stateful buttons
+   carry elevation. Applies to history, analytics and font settings. */
+body.matte-editorial #page :is(.period-toggle,.trend-mode-toggle,.font-toggle),
+body.matte-editorial #modal.tx-sheet .type-switch.type-switch{
+ background:var(--p59-recess)!important;
+ border-color:transparent!important;
+ box-shadow:none!important;
+}
+/* Lower inherited v4 shadows that survived in the statistics summary. */
+body.matte-editorial #page .studio-stats .compare-metric,
+body.matte-editorial #page .studio-stats .compare-metric.main{
+ box-shadow:var(--p59-medium)!important;
+ border-color:transparent!important;
+ background-image:none!important;
+}
+/* The toolbar has buttons and recessed search already; don't elevate both
+   the whole toolbar and every child to the same physical level. */
+body.matte-editorial #page .r49-history-toolbar,
+body.matte-editorial #page .toolbar.r49-history-toolbar{
+ box-shadow:var(--p59-medium)!important;
+}
+/* Recessed number editor is a well, not a raised panel with a thick rim. */
+body.matte-editorial #modal.tx-sheet .tx-amount-block{
+ border-color:transparent!important;
+ box-shadow:var(--p59-well)!important;
+}
+/* Preserve category feedback after the generic neutral button overrides. */
+body.matte-editorial #modal.tx-sheet .category-picker .cat-choice.active{
+ background-color:var(--p59-sage)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-selected)!important;
+ color:var(--p59-ink)!important;
+}
+/* Small selected controls and the existing FAB retain a visible state while
+   the decorative cards use lower contrast warm mineral pigments. */
+body.matte-editorial .mobile-nav{
+ box-shadow:var(--p59-medium)!important;
+}

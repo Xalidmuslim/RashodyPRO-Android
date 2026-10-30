@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const gradle=fs.readFileSync('android/app/build.gradle','utf8');
+const strings=fs.readFileSync('android/app/src/main/res/values/strings.xml','utf8');
+const manifest=fs.readFileSync('android/app/src/main/AndroidManifest.xml','utf8');
+const html=fs.readFileSync('android/app/src/main/assets/public/index.html','utf8');
+assert.match(gradle,/applicationId\s+["']ru\.rashody\.pro\.preview60["']/);
+assert.match(gradle,/versionCode\s+60/);
+assert.match(gradle,/versionName\s+["']6\.0-matte-preview["']/);
+assert.match(strings,/Расходы PRO 6\.0 ТЕСТ/);
+assert.match(html,/Расходы PRO 6\.0 · Matte 3D TEST/);
+assert.ok(!/android:sharedUserId=/.test(manifest));
+assert.match(manifest,/android:allowBackup="false"/);
+console.log('OK: separate v6.0 test package; production user data isolated');
