@@ -42,7 +42,7 @@
     for (const key of [
       'transform','transition','--depth-icon-x','--depth-icon-y',
       '--depth-text-x','--depth-text-y','--depth-shadow-x','--depth-shadow-y',
-      '--depth-light-x','--depth-light-y'
+      '--depth-light-x','--depth-light-y','--depth-from-transform','--depth-release'
     ]) el.style.removeProperty(key);
     el.style.willChange = '';
   }
@@ -88,10 +88,15 @@
     el.classList.add('depth-return');
     // Deliberately long deceleration with a restrained overshoot. Using
     // transforms only avoids animated blur, repaint and jank.
-    el.style.setProperty('transition',
-      'transform '+a.motion.release+'ms cubic-bezier(.17,1.31,.25,1),opacity 240ms ease','important');
-    el.style.setProperty('transform',
-      'perspective(920px) rotateX(0deg) rotateY(0deg) translate3d(0,0,0) scale(1)','important');
+    // Capture the actual in-flight pressed transform so the return never
+    // snaps. Keyframes include a perceptible 3-stage spring, not a cubic
+    // bezier whose overshoot finishes almost immediately.
+    const from=window.getComputedStyle(el).transform;
+    el.style.setProperty('--depth-from-transform',
+      from && from!=='none' ? from : 'scale('+a.motion.scale+')');
+    el.style.setProperty('--depth-release',a.motion.release+'ms');
+    el.style.removeProperty('transition');
+    el.style.removeProperty('transform');
     for (const [key,value] of [
       ['--depth-icon-x','0px'],['--depth-icon-y','0px'],
       ['--depth-text-x','0px'],['--depth-text-y','0px'],
