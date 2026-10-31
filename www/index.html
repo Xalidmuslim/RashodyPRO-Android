@@ -2497,9 +2497,7 @@ function renderTop(){let heading=view==='dashboard'?'':view==='transactions'?'И
 function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});window.RashodySculptedMotion?.afterRender({view});}
 function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
- if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
- const content=document.getElementById('page');
- if(content?.animate)content.animate([{opacity:.78},{opacity:1}],{duration:650,easing:'cubic-bezier(.2,.82,.25,1)'});
+ // Direction-aware spring content is owned by RashodyReferenceV78; never stack a second fade.
 }
 function navState(v,guard=true,modal=false){return {__rashodyNavV3:true,view:v,guard,modal}}
 function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}try{history.replaceState(navState('dashboard',false),'');history.pushState(navState('dashboard'),'');navReady=true}catch(e){console.info('История недоступна:',e.message)}
