@@ -70,3 +70,13 @@ v7.1 **заменяет v7.0**: в проверке Android CSS воспроиз
 - [CI: тесты и Android-сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v72-touch-depth.yml)
 
 APK имеет отдельный package `ru.rashody.pro.preview72`. Он не заменяет основное приложение и не переносит автоматически сохранённые в других пакетах расходы. Перформанс/ощущение на реальном Android-устройстве необходимо проверить вручную.
+
+## v7.3 — Premium Motion: длительные анимации кнопок и карточек
+
+Действующая тема Studio Matte. Новая система premium-motion-v73.js заменяет короткие отклики v7.2: удержание 205–310 мс, наклон до 7°, параллакс значка и текста, умеренное матовое освещение, смещение тени и пружинное возвращение в течение 0,86–1,22 с. Для цифровой клавиатуры — отдельный более быстрый отклик 175/690 мс. Анимируется только активный элемент, прокрутка, финансовые операции и SQLite не изменены. Переключатели периода и навигация получают отдельную 930-мс анимацию выбранного состояния.
+
+- [Прямая загрузка тестового APK v7.3](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-studio-v7.3-test/RashodyPRO-Studio-v7.3-TEST.apk)
+- [Страница релиза v7.3](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-studio-v7.3-test)
+- [Автоматические тесты и сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v73-premium-motion.yml)
+
+Версия v7.3 устанавливается отдельно (`ru.rashody.pro.preview73`), не заменяя основной пакет. Поведение анимаций на физическом Android требуется проверить отдельно.
