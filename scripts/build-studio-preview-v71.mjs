@@ -19,6 +19,6 @@ let html=fs.readFileSync(htmlPath,'utf8');
 const marker='Расходы PRO 5.4 · Deep Matte';
 if(html.split(marker).length!==2)throw new Error('Unexpected footer, stop package labeling');
 html=html.replace(marker,'Расходы PRO 7.1 · STUDIO MATTE TEST');
-if(!html.includes('href="studio-v71.css"'))throw new Error('Studio stylesheet not synced into APK');
+if(!html.includes('href="studio-v70.css"'))throw new Error('Studio stylesheet not synced into APK');
 fs.writeFileSync(htmlPath,html);
 console.log('Prepared isolated Studio 7.1: ru.rashody.pro.preview71');
