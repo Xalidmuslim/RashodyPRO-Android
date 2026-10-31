@@ -200,7 +200,7 @@ html body.matte-editorial #page .ledger-actions button:active{transform:translat
 .r77-detail-row strong{white-space:nowrap;color:#304a4b}
 .r77-detail-name{display:flex;flex-direction:column;gap:3px}
 .r77-detail-name small{font-size:11px;color:#6b766f}
-.r77-detail-open{overflow:hidden}
+.r77-detail-open{overscroll-behavior:contain}
 @media(max-width:370px){
  html body.matte-editorial #page .trend-cards{gap:6px!important}
  html body.matte-editorial #page .trend-cards button.trend-card{
