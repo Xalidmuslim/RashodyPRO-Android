@@ -102,6 +102,7 @@
  }
  function afterRender({view}={}){
   const newView=view||'';
+  window.RashodyReferenceV78?.afterRender({view:newView,changed:lastView!==null&&lastView!==newView});
   if(lastView!==newView){
    const current=document.querySelector('#mobile-nav button.active:not(.fab)');
    if(previousNav&&current){
@@ -178,3 +179,12 @@
  reduced?.addEventListener?.('change',()=>{if(reduced.matches&&modal)closeDetail()});
  window.RashodySculptedMotion={afterRender,transitionSector,markTransactionChange,beforeDayChange,enterAdd,closeDetail,isDetailOpen:()=>!!modal};
 })();
+/* Isolated reference skin loader. v7.7 behavior above remains unchanged. */
+if(document.createElement&&document.head){
+ for(const href of ['r78-header.css','r78-hero.css','r78-details.css']){
+  const link=document.createElement('link');link.rel='stylesheet';link.href=href;document.head.appendChild(link);
+ }
+ const script=document.createElement('script');script.src='r78-runtime.js';
+ script.onload=()=>window.RashodyReferenceV78?.afterRender({view:document.querySelector('#mobile-nav button.active:not(.fab)')?.dataset?.view||'dashboard'});
+ document.head.appendChild(script);
+}
