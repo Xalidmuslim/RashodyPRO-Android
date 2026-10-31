@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const gradle=fs.readFileSync('android/app/build.gradle','utf8');
+const strings=fs.readFileSync('android/app/src/main/res/values/strings.xml','utf8');
+const html=fs.readFileSync('android/app/src/main/assets/public/index.html','utf8');
+assert.match(gradle,/applicationId\s+["']ru\.rashody\.pro\.preview63["']/);
+assert.match(gradle,/versionCode\s+63/);
+assert.match(gradle,/versionName\s+["']6\.3-sculptural-preview["']/);
+assert.match(strings,/Расходы PRO 6\.3 ТЕСТ/);
+assert.match(html,/Расходы PRO 6\.3 · Measured Sculptural 3D TEST/);
+assert.match(fs.readFileSync('android/app/src/main/assets/public/matte-finish-v62.css','utf8'),/v6\.3 direct source correction/);
+console.log('OK: v6.3 package and muted source styles bundled');
