@@ -2788,6 +2788,7 @@ function openModal(){
   syncModalViewport();
  }else document.body.style.overflow='hidden';
  document.getElementById('modal').scrollTop=0;
+ window.RashodySculptedMotion?.enterAdd();
  // On-screen numpad is displayed immediately; no focus or system keyboard here.
 }
 function hideModal(){
@@ -2874,14 +2875,14 @@ function updateTxConfirm(){const input=document.getElementById('txAmount');if(!i
 function filterTxCategories(query){const term=String(query||'').trim().toLocaleLowerCase('ru');if(term){document.getElementById('txCategories')?.classList.add('expanded');document.getElementById('txMoreCategories')?.setAttribute('aria-expanded','true')}let visible=0;document.querySelectorAll('#txCategories [data-tx-category]').forEach(b=>{const name=getCat(b.dataset.txCategory).name.toLocaleLowerCase('ru');const show=!term||name.includes(term);b.hidden=!show;if(show)visible++});const el=document.getElementById('txSearchEmpty');if(el)el.hidden=visible!==0}
 async function saveTx(){if(modalCloseBusy)return;collectDraft();if(draft.type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён');const amount=F.parseAmount(draft.amount);if(!amount){toast('Введите корректную сумму больше нуля');return}if(!F.isDate(draft.date)){toast('Укажите корректную дату');return}const tx={id:draft.id||newId(),type:draft.type,category:draft.category,amount,note:String(draft.note||'').trim().slice(0,200),date:draft.date,time:/^([01]\d|2[0-3]):[0-5]\d$/.test(draft.time||'')?draft.time:''};const isEdit=!!draft.id;
  if(isEdit){const i=data.transactions.findIndex(x=>x.id===tx.id);if(i<0)return toast('Операция не найдена');data.transactions[i]=tx}else data.transactions.push(tx);
- month=dateFromMonth(tx.date);dashboardFocusDay=tx.date;dashboardWeekAnchor=tx.date;closeModal();render();await saveFeedback(isEdit?'Изменения сохранены':'Операция добавлена')}
+ month=dateFromMonth(tx.date);dashboardFocusDay=tx.date;dashboardWeekAnchor=tx.date;window.RashodySculptedMotion?.markTransactionChange(tx.id,isEdit?'edit':'add');closeModal();render();await saveFeedback(isEdit?'Изменения сохранены':'Операция добавлена')}
 function quickRepeatLast(){
  const previous=sortTx(data.transactions.filter(t=>t.type==='expense'))[0];
  if(!previous)return toast('Для повтора нужен хотя бы один расход');
  startTx('expense',{...previous,id:null,date:dateLocal(),time:timeLocal(),amount:String(previous.amount)});
 }
 function repeatTx(){collectDraft();draft.id=null;draft.date=dateLocal();draft.time=timeLocal();renderTxModal();toast('Копия готова. Нажмите «Сохранить операцию»')}
-async function deleteTx(){if(modalCloseBusy||!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
+async function deleteTx(){if(modalCloseBusy||!draft?.id)return;if(!confirm('Удалить эту операцию без возможности восстановления?'))return;window.RashodySculptedMotion?.markTransactionChange(draft.id,'delete');data.transactions=data.transactions.filter(x=>x.id!==draft.id);closeModal();render();await saveFeedback('Операция удалена')}
 const ICON_OPTIONS=['cart','coffee','car','home','heart','film','shirt','box','banknote','gift','briefcase','book','phone','fuel','plane','music','tool','drop','sun','wallet','salary'];
 let txDraftBeforeCategory=null;
 async function startCatFromTx(){
