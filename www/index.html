@@ -2176,7 +2176,9 @@ body.matte-editorial #page .day-donut-center .day-donut-caption{font-size:clamp(
 <link rel="stylesheet" href="deep-matte.css">
 <link rel="stylesheet" href="studio-v70.css">
 <link rel="stylesheet" href="studio-v75.css">
+<link rel="stylesheet" href="studio-v76.css">
 <script src="premium-motion-v73.js" defer></script>
+<script src="premium-motion-v76.js" defer></script>
 
 
 
@@ -2481,12 +2483,12 @@ function renderNav(){document.getElementById('sidebar').innerHTML=`<div class="b
  document.getElementById('mobile-nav').innerHTML=tabs.map(id=>id==='new'?`<button class="fab" data-action="new-expense" aria-label="Добавить операцию">${r75Icon('plus','actions',43)}</button>`:`<button class="${view===id||(id==='analytics'&&view==='analytics')?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${r75Icon(id,'nav',31)}<span>${labels[id]}</span></button>`).join('');
 }
 function renderTop(){let heading=view==='dashboard'?'':view==='transactions'?'История':view==='analytics'?'Аналитика':'Настройки';document.getElementById('topbar').className=`topbar ${view==='dashboard'?'dashboard-topbar':'subpage-topbar'}`;document.getElementById('topbar').innerHTML=(view==='dashboard'||view==='analytics')?'':`<div class="topbar-heading"><button class="icon-btn screen-back" data-action="navigate-back" aria-label="Назад">${svg('chevronLeft',22)}</button><div><div class="topline">ФИНАНСОВЫЙ ДНЕВНИК</div><h1>${heading}</h1></div></div><div class="topbar-right">${view==='transactions'?`<button type="button" class="header-csv" data-action="export-csv" aria-label="Экспортировать операции в CSV">${svg('download',16)}<span>CSV</span></button>`:''}<button class="primary-btn add-desktop" data-action="new-expense">${svg('plus',17)} Добавить</button></div>`}
-function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;}
+function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});}
 function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
  const content=document.getElementById('page');
- if(content?.animate)content.animate([{opacity:.45},{opacity:1}],{duration:205,easing:'cubic-bezier(.4,0,.2,1)'});
+ if(content?.animate)content.animate([{opacity:.78},{opacity:1}],{duration:650,easing:'cubic-bezier(.2,.82,.25,1)'});
 }
 function navState(v,guard=true,modal=false){return {__rashodyNavV3:true,view:v,guard,modal}}
 function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}try{history.replaceState(navState('dashboard',false),'');history.pushState(navState('dashboard'),'');navReady=true}catch(e){console.info('История недоступна:',e.message)}
