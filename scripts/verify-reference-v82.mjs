@@ -25,7 +25,7 @@ assert.match(html,/function persist\(\)/);
 assert.match(html,/function daySummaryRing\(/);
 assert.match(read('native/FinanceStoragePlugin.java'),/class FinanceStoragePlugin/);
 assert.match(motion,/r80-theme\.css/);
-assert.match(runtime,/rotateY\(-11deg\)/,'Transformer animation unchanged');
+assert.match(runtime,/function pageTransformer\(direction/,'Transformer animation unchanged');
 execFileSync('node',['scripts/bundle-runtime-theme-v80.mjs'],{stdio:'inherit'});
 execFileSync('python3',['scripts/generate-premium-icons.py'],{stdio:'inherit'});
 execFileSync('python3',['scripts/verify-premium-icon-alpha-v81.py'],{stdio:'inherit'});
