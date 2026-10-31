@@ -1,0 +1,24 @@
+/* Reference v7.8: warm matte base, header and seven-day strip */
+:root{--ref78-ground:#eee1d0;--ref78-paper:#f6ebdf;--ref78-ink:#26231f;--ref78-green:#405946;--ref78-terracotta:#da895f;--ref78-shadow:0 3px 5px rgba(77,54,38,.12),0 10px 17px -7px rgba(72,48,34,.22),0 22px 28px -20px rgba(59,42,31,.22)}
+html body.matte-editorial{background:var(--ref78-ground)!important;background-image:none!important;color:var(--ref78-ink)!important}
+html body.matte-editorial .shell,html body.matte-editorial .workspace{background:transparent!important}
+html body.matte-editorial #page .calendar-shell{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;margin-bottom:14px!important}
+html body.matte-editorial #page .calendar-title-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;min-height:72px!important;margin:0 0 14px!important}
+html body.matte-editorial #page .r78-brand{display:flex;align-items:center;gap:11px;min-width:0}
+html body.matte-editorial #page .r78-brand-icon{display:grid;place-items:center;flex:none;width:66px;height:66px;border-radius:19px;background:#415846;box-shadow:var(--ref78-shadow)}
+html body.matte-editorial #page .r78-brand-icon img{width:64px;height:64px;object-fit:contain}
+html body.matte-editorial #page .r78-brand h1{font-size:clamp(21px,6vw,30px)!important;line-height:1.04!important;font-weight:840!important;letter-spacing:-.045em!important;color:#25221e!important;white-space:nowrap!important;margin:0 0 5px!important}
+html body.matte-editorial #page .r78-brand p{font-size:clamp(11px,3.4vw,16px)!important;line-height:1.04!important;margin:0!important;color:#464038!important;white-space:nowrap!important}
+html body.matte-editorial #page .week-arrows{display:flex!important;gap:3px!important;flex:none!important}
+html body.matte-editorial #page .week-arrows .icon-btn{width:27px!important;height:34px!important;min-height:34px!important;border:0!important;border-radius:11px!important;background:#efe4d7!important;color:#425745!important;box-shadow:0 2px 4px rgba(73,52,34,.1)!important}
+html body.matte-editorial #page .calendar-shell .week-strip{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:7px!important;padding:0 1px 8px!important;overflow:visible!important}
+html body.matte-editorial #page .calendar-shell .week-strip .week-day{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:space-between!important;min-width:0!important;height:90px!important;min-height:90px!important;padding:9px 1px!important;gap:4px!important;border-radius:20px!important;background:#f3e9dd!important;background-image:none!important;border:0!important;color:#24221f!important;box-shadow:var(--ref78-shadow)!important}
+html body.matte-editorial #page .calendar-shell .week-strip .week-day::before,html body.matte-editorial #page .calendar-shell .week-strip .week-day::after{display:none!important}
+html body.matte-editorial #page .calendar-shell .week-strip .week-day.focus-day{background:#405946!important;color:#fff9ef!important;box-shadow:0 3px 4px rgba(44,61,44,.15),0 11px 16px -7px rgba(37,57,38,.34)!important}
+html body.matte-editorial #page .week-day .week-day-name{font-size:11px!important;line-height:1.1!important;color:inherit!important;font-weight:640!important}
+html body.matte-editorial #page .week-day .week-day-date{font-size:20px!important;line-height:1!important;color:inherit!important;font-weight:800!important}
+html body.matte-editorial #page .week-day .week-day-meter{width:60%!important;height:6px!important;border-radius:7px!important;background:#e8d6c2!important;overflow:hidden!important}
+html body.matte-editorial #page .week-day .week-day-meter-fill{height:100%!important;background:#da895f!important;border-radius:7px!important}
+html body.matte-editorial #page .week-day.focus-day .week-day-meter-fill{background:#ead7bf!important}
+html body.matte-editorial #page .week-day .week-day-total{max-width:100%!important;color:inherit!important;font-size:10px!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important}
+@media(max-width:370px){html body.matte-editorial #page .calendar-shell .week-strip{gap:4px!important}html body.matte-editorial #page .calendar-shell .week-strip .week-day{height:84px!important;min-height:84px!important;border-radius:16px!important}html body.matte-editorial #page .r78-brand-icon{width:53px;height:53px;border-radius:16px}html body.matte-editorial #page .r78-brand-icon img{width:51px;height:51px}html body.matte-editorial #page .r78-brand h1{font-size:21px!important}html body.matte-editorial #page .week-arrows .icon-btn{width:22px!important}}
