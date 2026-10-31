@@ -9,7 +9,7 @@ const runtime=read('www/r78-runtime.js');
 const theme=read('scripts/bundle-runtime-theme-v80.mjs');
 const motion=read('www/sculpted-motion-v77.js');
 const html=read('www/index.html');
-assert.match(runtime,/assets\/brand\/native-launcher\.png/,'Header must use factory launcher PNG');
+assert.doesNotMatch(runtime,/r78-brand-icon/,'The dashboard header must not be rendered in v8.4');
 assert.doesNotMatch(runtime,/img\('kpi-coins','kpi',64\)/,'Custom coin picture must no longer be used as brand');
 assert.match(launcher,/mipmap-xxxhdpi/,'Factory launcher must be sourced from Android actual installed resource');
 assert.match(launcher,/assets\/brand\/native-launcher\.png/,'Export app icon to WebView assets before Capacitor sync');
