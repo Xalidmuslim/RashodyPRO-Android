@@ -188,7 +188,7 @@ body.matte-editorial #page .switch input:checked+.switch-track{background:#87a89
 body.matte-editorial .mobile-nav{background-color:var(--ui-surface)!important;border:1px solid rgba(255,255,255,.35)!important;
  border-radius:29px!important;box-shadow:var(--ui-shadow-lg)!important;padding:9px 7px calc(9px + env(safe-area-inset-bottom,0px))!important;
 }
-body.matte-editorial .mobile-nav button:not(.fab){border-radius:18px!important;min-width:0!important;box-shadow:none!important}
+body.matte-editorial .mobile-nav button:not(.fab){border-radius:18px!important;min-width:0!important;background-color:var(--ui-control)!important;box-shadow:0 1px 2px rgba(30,41,42,.10),0 5px 9px -7px rgba(30,41,42,.12)!important}
 body.matte-editorial .mobile-nav button.active:not(.fab){background-color:var(--ui-sage)!important;box-shadow:var(--ui-shadow-sm)!important;color:var(--ui-dark)!important}
 body.matte-editorial .mobile-nav .fab{border:1px solid rgba(255,255,255,.25)!important;background:#a27c73!important;
  width:58px!important;height:58px!important;border-radius:50%!important;box-shadow:var(--ui-shadow-md)!important;color:#fff!important;
