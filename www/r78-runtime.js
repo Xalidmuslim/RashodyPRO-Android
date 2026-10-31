@@ -43,22 +43,32 @@
    icon.innerHTML=factory('transactions',25);ledgerTitle.prepend(icon);
   }
  }
- let transformer=null;
- function pageTransformer(){
+ let transformer=null,lastPageView='';
+ const viewOrder=['dashboard','transactions','analytics','settings'];
+ function pageTransformer(direction=1){
   const page=document.getElementById('page');
-  if(!page?.animate||window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches)return;
+  if(!page?.animate||window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches||document.hidden)return;
   transformer?.cancel();page.style.transformOrigin='center 28%';
+  const slide=direction>0?43:-43,tilt=direction>0?-7:7;
   transformer=page.animate([
-   {transform:'perspective(1100px) translate3d(0,25px,0) rotateY(-11deg) rotateX(4deg) scale(.915)',offset:0},
-   {transform:'perspective(1100px) translate3d(0,-5px,0) rotateY(2deg) rotateX(-1deg) scale(1.013)',offset:.76},
-   {transform:'perspective(1100px) translate3d(0,0,0) rotateY(0) rotateX(0) scale(1)',offset:1}
-  ],{duration:760,easing:'cubic-bezier(.2,.81,.22,1)',fill:'both'});
+   {transform:'perspective(1050px) translate3d('+slide+'px,12px,0) rotateY('+tilt+'deg) scale(.965)',opacity:.81,offset:0},
+   {transform:'perspective(1050px) translate3d('+(-Math.sign(slide)*7)+'px,-3px,0) rotateY('+(-tilt*.22)+'deg) scale(1.012)',opacity:1,offset:.76},
+   {transform:'perspective(1050px) translate3d(0,0,0) rotateY(0deg) scale(1)',opacity:1,offset:1}
+  ],{duration:480,easing:'cubic-bezier(.18,.85,.22,1)',fill:'both'});
   const active=transformer;
-  active.finished.then(()=>{if(transformer===active){active.cancel();page.style.transformOrigin='';transformer=null;}},()=>{if(transformer===active){page.style.transformOrigin='';transformer=null;}});
+  active.finished.then(()=>{
+   if(transformer===active){active.cancel();page.style.transformOrigin='';transformer=null;}
+  },()=>{
+   if(transformer===active){page.style.transformOrigin='';transformer=null;}
+  });
  }
  function afterRender({view='',changed=false}={}){
   if(view==='dashboard')enhanceDashboard();
-  if(changed)pageTransformer();
+  const before=viewOrder.indexOf(lastPageView),after=viewOrder.indexOf(view);
+  const direction=before>=0&&after>=0&&after<before?-1:1;
+  if(changed)pageTransformer(direction);
+  window.RashodyExpressiveMotion?.afterRender({view,changed,direction});
+  if(view)lastPageView=view;
  }
  window.RashodyReferenceV78={afterRender};
 })();
