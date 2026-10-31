@@ -6,7 +6,7 @@ const gradleSrc=fs.readFileSync('scripts/build-matte-preview-v61.mjs','utf8');
 assert.match(html,/<link rel="stylesheet" href="matte-polish-v59.css">\s*<link rel="stylesheet" href="sculptural-restore-v61.css">/,'v6.1 must be last material layer');
 assert.match(html,/style="--category-matte:\$\{categoryCardColor\(id\)\}"/,'Category color should be a themeable variable');
 assert.doesNotMatch(html,/style="background-color:\$\{categoryCardColor\(id\)\}!important"/,'Never block theme with important inline pigment');
-assert.match(html,/const explicit=\{food:'#9db7ab'/,'All category card colors must be desaturated');
+assert.match(html,/const explicit=\{food:'#b5c1b8'/,'All category card colors must be desaturated');
 assert.match(css,/--r61-radius-panel:32px/);
 assert.match(css,/--r61-radius-card:26px/);
 assert.match(css,/--r61-radius-control:19px/);
