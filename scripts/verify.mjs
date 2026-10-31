@@ -89,7 +89,7 @@ try{
  const days=Array.from({length:7},(_,i)=>'2026-10-'+(19+i)), amounts=[0,30,100,101,200,201,300];
  const weekContext={weekRangeFor:()=>days,monthExpenseMap:()=>Object.fromEntries(days.map((d,i)=>[d,amounts[i]])),
   dateLocal:()=>days[0],dashboardWeekAnchor:null,data:{transactions:[],settings:{currency:'₽'}},F:{money:n=>n},
-  compactMoney:n=>String(n),money:n=>String(n)+' ₽',matteDateLabel:n=>n,svg:()=>'',esc:n=>String(n)};
+  compactMoney:n=>String(n),money:n=>String(n)+' ₽',matteDateLabel:n=>n,svg:()=>'',r75Icon:()=>'',esc:n=>String(n)};
  vm.createContext(weekContext);
  vm.runInContext(section('weekSpendLevel','currentExpenseStreak'),weekContext,{timeout:2000});
  const calendar=vm.runInContext("compactWeekWidget('2026-10-21')",weekContext,{timeout:2000});
