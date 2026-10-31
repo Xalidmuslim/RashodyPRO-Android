@@ -29,3 +29,13 @@ Android package `ru.rashody.pro.preview61` устанавливается отд
 - [Автоматические тесты и сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v62-matte-qa.yml)
 
 Идентификатор тестового приложения `ru.rashody.pro.preview62`; основная программа не заменяется и данные автоматически не переносятся. APK не тестировался на устройстве, требуется визуальная QA-проверка.
+
+## v6.3 — проверенный в Chromium матовый дизайн (TEST)
+
+После проверки реально собранного APK v6.2 и воспроизведения экрана в Chromium исправлены применяемые стили, а не только номинальные переменные: фон, приглушённая палитра диаграмм и карточек, отступы переключателя аналитики, трёхслойные мягкие тени, геометрия панели ввода. Сохранены все операции, SQLite, логика клавиатуры и импорта/экспорта.
+
+- [Прямая загрузка v6.3 APK](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-measured-matte-v6.3-test/RashodyPRO-Measured-Matte-v6.3-TEST.apk)
+- [Страница тестового релиза](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-measured-matte-v6.3-test)
+- [Автоматическая Android-сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v63-measured-qa.yml)
+
+Тестовый пакет `ru.rashody.pro.preview63` устанавливается отдельно и не переносит автоматически расходы из v6.2. Предварительная проверка UI выполнена в Chromium (393dp), но не на физическом Android-устройстве.
