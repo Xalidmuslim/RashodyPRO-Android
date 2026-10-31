@@ -2140,7 +2140,7 @@ body.matte-editorial #modal.tx-sheet .r105-key:active{background:#DCEBE6!importa
 body.matte-editorial #modal.tx-sheet .r105-key-back{background:#E4EBE8!important}
 body.matte-editorial #modal.tx-sheet #txAmount[readonly]{caret-color:transparent!important;user-select:none!important;-webkit-user-select:none!important;}
 /* Modal is a stationary bottom sheet: no scaling or translating of its layout when appearing. */
-body.matte-editorial #overlay .sheet{animation:none!important;transform:none!important;
+body.matte-editorial #overlay .sheet{animation:none!important;transform:none;
  transition:opacity 205ms ease-out!important;overscroll-behavior:contain!important;}
 body.matte-editorial #overlay:not([hidden]) .sheet{opacity:1!important}
 body.matte-editorial #overlay .sheet *:active{translate:none!important;scale:1!important}
@@ -2502,7 +2502,7 @@ function softNavEnter(){
 }
 function navState(v,guard=true,modal=false){return {__rashodyNavV3:true,view:v,guard,modal}}
 function initNavigation(){try{history.scrollRestoration='manual'}catch(e){}try{history.replaceState(navState('dashboard',false),'');history.pushState(navState('dashboard'),'');navReady=true}catch(e){console.info('История недоступна:',e.message)}
- window.addEventListener('popstate',ev=>{const state=ev.state;if(!document.getElementById('overlay').hidden){hideModal()}
+ window.addEventListener('popstate',ev=>{const state=ev.state;if(!document.getElementById('overlay').hidden){void finishCloseModal(true)}
   if(state?.__rashodyNavV3){if(view!==state.view){view=state.view;render();scrollTop();softNavEnter()}if(!state.guard){try{history.pushState(navState('dashboard'),'')}catch(e){}view='dashboard';render();scrollTop();softNavEnter()}}
   else if(view!=='dashboard'){view='dashboard';render();scrollTop();softNavEnter()}
  });
@@ -2824,7 +2824,7 @@ function hideModal(){
  }
 }
 function closeModal(){
- if(categorySheetBusy)return;
+ if(categorySheetBusy||modalCloseBusy)return;
  if(catDraft&&txDraftBeforeCategory){
   void switchCategorySheet(()=>{
    draft=txDraftBeforeCategory;txDraftBeforeCategory=null;catDraft=null;
@@ -2845,9 +2845,29 @@ function closeModal(){
  finishCloseModal();
 }
 let modalCloseBusy=false;
-function finishCloseModal(){
- const shouldBack=modalHistoryOpen&&navReady&&history.state?.modal;
- hideModal();if(shouldBack)history.back();
+// Exit only animates the on-screen expense panel; geometry and IME state stay untouched.
+function animateExpenseClose(){
+ const overlay=document.getElementById('overlay');
+ const panel=document.getElementById('modal');
+ if(overlay.hidden||!panel.classList.contains('tx-sheet')||
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches||
+    !panel.animate||document.hidden)return Promise.resolve(null);
+ const effect=panel.animate([
+  {transform:'translate3d(0,0,0) rotateX(0deg)',opacity:1},
+  {transform:'translate3d(0,24px,0) rotateX(-3deg) scale(.987)',opacity:0}
+ ],{duration:260,easing:'cubic-bezier(.32,0,.25,1)',fill:'forwards'});
+ return effect.finished.then(()=>effect,()=>null);
+}
+function finishCloseModal(fromPopstate=false){
+ const overlay=document.getElementById('overlay');
+ if(overlay.hidden)return Promise.resolve();
+ modalCloseBusy=true;
+ const shouldBack=!fromPopstate&&modalHistoryOpen&&navReady&&history.state?.modal;
+ return animateExpenseClose().then(effect=>{
+  hideModal();
+  effect?.cancel(); // Release transform/opacity compositor allocation.
+  if(shouldBack)history.back();
+ }).finally(()=>{modalCloseBusy=false});
 }
 function timeLocal(){const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
 function startTx(type='expense',existing=null,preferredDay=null){txDraftBeforeCategory=null;if(type==='income'&&!data.settings.incomeEnabled)return toast('Учёт доходов отключён в настройках');const last=type==='expense'?sortTx(data.transactions.filter(t=>t.type==='expense'))[0]:null;draft=existing?{...existing}:{id:null,type,category:type==='income'?'salary':(last&&data.categories.some(c=>c.id===last.category&&c.type==='expense')?last.category:'food'),amount:'',note:'',date:preferredDay&&F.isDate(preferredDay)?preferredDay:dateLocal(),time:timeLocal()};renderTxModal();openModal()}
