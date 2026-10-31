@@ -45,6 +45,6 @@ if(fs.existsSync(manifest)){
  console.log('Android automatic data backup disabled (manual JSON backup enabled).');
 }
 
-// Install the approved matte 3D app launcher before Capacitor sync/Gradle.
+// Produce matte transparent PNGs from deterministic vector geometry before Capacitor sync.\nexecFileSync('python3',[path.resolve('scripts/generate-premium-icons.py')],{stdio:'inherit'});\n// Install the approved matte 3D app launcher before Capacitor sync/Gradle.
 // Assets are bundled in Git; this step never changes local expense records.
 execFileSync('python3',[path.resolve('scripts/install_android_icons.py')],{stdio:'inherit'});
