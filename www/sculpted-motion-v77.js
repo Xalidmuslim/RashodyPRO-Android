@@ -176,5 +176,5 @@
  },true);
  window.addEventListener('popstate',e=>{if(modal)closeDetail(true)});
  reduced?.addEventListener?.('change',()=>{if(reduced.matches&&modal)closeDetail()});
- window.RashodySculptedMotion={afterRender,transitionSector,markTransactionChange,beforeDayChange,enterAdd,closeDetail};
+ window.RashodySculptedMotion={afterRender,transitionSector,markTransactionChange,beforeDayChange,enterAdd,closeDetail,isDetailOpen:()=>!!modal};
 })();
