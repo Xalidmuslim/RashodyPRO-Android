@@ -285,3 +285,17 @@ html body.matte-editorial #page .fancy-empty strong{color:#2d2620!important}
   width:45px!important;height:45px!important;min-width:45px!important;
  }
 }
+
+/* R81 QA FIX: v7.7 uses a selector with an extra .trend-cards class,
+   so weaker background:none overrides leave the visible white icon disk.
+   Keep the object PNG itself transparent, never paint two backplates. */
+html body.matte-editorial #page .trend-cards button.trend-card .trend-icon,
+html body.matte-editorial #page .trend-cards .trend-card .trend-icon{
+ background:transparent!important;background-color:transparent!important;
+ background-image:none!important;border:0!important;box-shadow:none!important;
+ border-radius:0!important;
+}
+html body.matte-editorial #page .trend-cards .trend-card .trend-icon::before,
+html body.matte-editorial #page .trend-cards .trend-card .trend-icon::after{
+ display:none!important;content:none!important;
+}
