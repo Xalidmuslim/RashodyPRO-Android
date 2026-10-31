@@ -1,0 +1,101 @@
+name: Rashody PRO v8.3 Screenshot Visual QA Android APK
+on:
+  push:
+    branches: [design/rashody-v83-visual-qa-2026-10-31]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  android-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Generate PNG assets and immersive motion tests
+        run: |
+          set -euo pipefail
+          python3 -m pip install --break-system-packages Pillow
+          npm install
+          npm run verify
+          node scripts/verify-reference-v78.mjs
+          node scripts/verify-reference-v79.mjs
+          node scripts/verify-runtime-clean-v80.mjs
+          node scripts/verify-premium-v81.mjs
+          node scripts/verify-reference-v82.mjs
+          node scripts/verify-reference-v83.mjs
+      - name: Install Android SDK 36
+        run: |
+          set -euo pipefail
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
+      - name: Prepare isolated Android app and PNG assets
+        run: |
+          set -euo pipefail
+          npx cap add android
+          node scripts/prepare-android.mjs
+          node scripts/bundle-runtime-theme-v80.mjs
+          npx cap sync android
+          node scripts/build-studio-v83.mjs
+      - name: Compile Android debug APK
+        working-directory: android
+        run: |
+          set -euo pipefail
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Check built APK and packaged icon PNGs
+        run: |
+          set -euo pipefail
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview83'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='8.3-studio-matte-preview'"
+          unzip -t "$APK" >/dev/null
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/categories/food.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/nav/dashboard.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/actions/backspace.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/kpi/kpi-wallet.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/kpi/kpi-receipt.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/kpi/kpi-bag.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/kpi/kpi-coins.png'
+          unzip -l "$APK" | grep -q 'assets/public/r80-theme.css'
+          unzip -p "$APK" assets/public/r80-theme.css | grep -q 'RASHODY PRO 8.1'
+          unzip -l "$APK" | grep -q 'assets/public/r78-runtime.js'
+          unzip -l "$APK" | grep -q 'assets/public/assets/brand/native-launcher.png'
+          unzip -p "$APK" assets/public/r80-theme.css | grep -q '8.2 — Reference color/typography pass'
+          for old in r78-header.css r78-hero.css r78-details.css r79-visual-qa.css r81-premium.css r82-refinement.css; do
+            if unzip -Z1 "$APK" | grep -Fq "assets/public/$old"; then echo "Unused theme fragment packaged: $old"; exit 1; fi
+          done
+          unzip -p "$APK" assets/public/index.html | grep -q 'studio-v77.css'
+          unzip -p "$APK" assets/public/index.html | grep -q 'sculpted-motion-v77.js'
+          sha256sum "$APK"
+          git diff --exit-code -- www native package.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RashodyPRO-v83-Visual-QA-TEST-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+          if-no-files-found: error
+      - name: Publish direct APK download
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-v83]') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-v8.3-Visual-QA-TEST.apk
+          if gh release view rashody-studio-v8.3-visual-qa-preview >/dev/null 2>&1; then
+            gh release upload rashody-studio-v8.3-visual-qa-preview RashodyPRO-v8.3-Visual-QA-TEST.apk --clobber
+          else
+            gh release create rashody-studio-v8.3-visual-qa-preview RashodyPRO-v8.3-Visual-QA-TEST.apk \
+              --target "$GITHUB_SHA" \
+              --title "Расходы PRO — v8.3 Visual QA (тест)" \
+              --notes "Screenshot QA: empty-day chart no longer duplicates empty legend, smaller empty ring, strengthened typography and KPI size; factory icon, previous navigation, financial storage and all animations unchanged. Isolated ru.rashody.pro.preview83. Device QA remains required." \
+              --prerelease --latest=false
+          fi
