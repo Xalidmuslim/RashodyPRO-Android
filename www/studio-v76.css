@@ -157,3 +157,60 @@ html body.matte-editorial #page .trend-card.depth-return .trend-icon{
   animation:none!important;transition:none!important;
  }
 }
+
+/* v7.6.1 screenshot QA: Android edge-to-edge top chrome and aligned KPIs.
+   The two external floating overlays are owned by Android, not this WebView. */
+/* Status-bar opacity is independent from scroll-position padding: one-time
+   shell padding protects the top only at scroll=0, while a native-top scrim
+   prevents cards/labels scrolling under white Android status icons. */
+html.rashody-native-android body.matte-editorial::before{
+ content:""!important;
+ position:fixed!important;
+ inset:0 0 auto 0!important;
+ height:calc(max(var(--safe-area-inset-top,0px),env(safe-area-inset-top,0px),26px) + 3px)!important;
+ background:#f2ebe2!important;
+ opacity:1!important;
+ z-index:11002!important;
+ pointer-events:none!important;
+ transform:none!important;
+ box-shadow:none!important;
+ backdrop-filter:none!important;
+}
+@media(max-width:640px){
+ html body.matte-editorial #page .trend-cards{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:9px!important;
+ }
+ html body.matte-editorial #page .trend-cards .trend-card{
+  min-height:128px!important;
+  padding:13px 11px 13px!important;
+  gap:6px!important;
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+  justify-content:flex-start!important;
+  overflow:visible!important;
+ }
+ html body.matte-editorial #page .trend-cards .trend-card .trend-icon{
+  width:40px!important;height:40px!important;flex:0 0 40px!important;
+  margin:0 0 5px!important;border-radius:15px!important;
+ }
+ html body.matte-editorial #page .trend-cards .trend-card .trend-icon svg{
+  width:21px!important;height:21px!important;
+ }
+ html body.matte-editorial #page .trend-cards .trend-card strong{
+  font-size:clamp(16px,4.3vw,21px)!important;
+  font-weight:740!important;line-height:1.15!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+  letter-spacing:-.035em!important;flex:0 0 auto!important;
+ }
+ html body.matte-editorial #page .trend-cards .trend-card>span:last-child{
+  margin-top:auto!important;font-size:calc(11px * var(--font-scale,1))!important;
+  line-height:1.22!important;min-height:2.45em!important;
+  font-weight:520!important;overflow-wrap:normal!important;
+ }
+}
+@media(max-width:360px){
+ html body.matte-editorial #page .trend-cards{gap:6px!important}
+ html body.matte-editorial #page .trend-cards .trend-card{padding:12px 8px!important}
+ html body.matte-editorial #page .trend-cards .trend-card strong{font-size:clamp(14px,4.1vw,19px)!important}
+ html body.matte-editorial #page .trend-cards .trend-card>span:last-child{font-size:calc(10px * var(--font-scale,1))!important}
+}
