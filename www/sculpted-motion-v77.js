@@ -10,6 +10,7 @@
  const easing='cubic-bezier(.2,.78,.22,1)';
  const settling='cubic-bezier(.16,1.03,.26,1)';
  let modal=null,origin=null,overlayHistory=false,inFlight=null,lastView=null,previousNav=null,detailState='closed';
+ let sourceTravel='',sourceAnimation=null;
  let selectionAnimation=null,txChange=null,dayChange=null,oldSelectedRect=null,openSourceRect=null;
  const animate=(node,frames,options)=>{
   if(!ok()||!node?.animate)return null;
@@ -32,6 +33,16 @@
   detailState='opening';
   origin=card;
   const rect=card.getBoundingClientRect();
+  // The real KPI tile exits upwards: no cloned card or extra compositor layer.
+  const rise=Math.min(Math.max(rect.bottom+20,110),window.innerHeight*.78);
+  sourceTravel='translate3d(0,-'+rise.toFixed(1)+'px,0) perspective(800px) rotateX(-6deg) scale(.94)';
+  card.style.transform=sourceTravel;
+  card.style.opacity='.12';
+  card.style.pointerEvents='none';
+  sourceAnimation=animate(card,[
+   {transform:'none',opacity:1},
+   {transform:sourceTravel,opacity:.12}
+  ],{duration:540,easing:settling});
   modal=document.createElement('div');
   modal.className='r77-detail-scrim';
   modal.innerHTML='<section class="r77-detail-panel" role="dialog" aria-modal="true" aria-labelledby="r77-detail-title" tabindex="-1">'+detailsHtml(data)+'</section>';
@@ -58,6 +69,23 @@
   const closing=modal;
   const pane=closing.querySelector('.r77-detail-panel');
   inFlight?.cancel();inFlight=null;
+  sourceAnimation?.cancel();sourceAnimation=null;
+  const source=origin;
+  const back=source?.isConnected?animate(source,[
+   {transform:sourceTravel||'none',opacity:.12},
+   {transform:'none',opacity:1}
+  ],{duration:390,easing}):null;
+  if(source){
+   source.style.transform='none';source.style.opacity='1';
+  }
+  const clearSource=()=>{
+   if(!source)return;
+   source.style.removeProperty('transform');
+   source.style.removeProperty('opacity');
+   source.style.removeProperty('pointer-events');
+   sourceTravel='';
+  };
+  if(back)back.finished.then(clearSource,clearSource);else clearSource();
   const finish=()=>{
    closing.remove();
    if(modal===closing)modal=null;
