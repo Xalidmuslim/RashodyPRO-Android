@@ -183,3 +183,21 @@ html body.matte-editorial #modal.tx-sheet .cat-choice.cat-choice>.truncate{
  font-weight:600!important;font-size:calc(11px * var(--font-scale,1))!important;line-height:1.2!important;
 }
 html body.matte-editorial #modal.tx-sheet .tx-amount-block.tx-amount-block{background:#efdfca!important}
+
+/* PNG art is part of the existing depth motion: lift the raster layer, not only old SVG. */
+body.matte-editorial button.depth-engaged .r75-icon,
+body.matte-editorial button.depth-return .r75-icon{
+ transform:translate3d(var(--depth-icon-x,0px),var(--depth-icon-y,0px),11px)!important;
+ transition:transform 270ms cubic-bezier(.17,.84,.27,1)!important;
+ backface-visibility:hidden;
+}
+body.matte-editorial button.depth-return .r75-icon{
+ transform:translate3d(0,0,0)!important;
+ transition:transform 940ms cubic-bezier(.17,1.18,.25,1)!important;
+}
+@media(prefers-reduced-motion:reduce){
+ body.matte-editorial button.depth-engaged .r75-icon,
+ body.matte-editorial button.depth-return .r75-icon{
+  transform:none!important;transition:none!important;
+ }
+}
