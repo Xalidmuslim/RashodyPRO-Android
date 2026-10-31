@@ -116,7 +116,7 @@
   }
   if(dayChanged&&!full){
    const selected=root.querySelector('.week-day.focus-day');
-   enterCard(selected,0,17,7,760);
+   // Calendar press/selection spring is owned by v8.6; keep the meter animation only.
    const bar=selected?.querySelector('.week-day-meter-fill');
    animate(bar,[{transform:'scaleX(.10)'},{transform:'scaleX(1)'}],{duration:680,delay:150,easing:ease,fill:'both'});
   }
