@@ -10,7 +10,7 @@
  const easing='cubic-bezier(.2,.78,.22,1)';
  const settling='cubic-bezier(.16,1.03,.26,1)';
  let modal=null,origin=null,overlayHistory=false,inFlight=null,lastView=null,previousNav=null;
- let selectionAnimation=null,txChange=null,dayChange=null;
+ let selectionAnimation=null,txChange=null,dayChange=null,oldSelectedRect=null,openSourceRect=null;
  const animate=(node,frames,options)=>{
   if(!ok()||!node?.animate)return null;
   const a=node.animate(frames,{fill:'both',...options});
@@ -57,7 +57,7 @@
     {opacity:0,transform:'translate3d(0,15px,0) rotateX(8deg)'},
     {opacity:1,transform:'none'}
   ],{duration:460,delay:290+i*58,easing}));
-  modal.querySelector('.r77-detail-close').addEventListener('click',closeDetail);
+  modal.querySelector('.r77-detail-close').addEventListener('click',()=>closeDetail());
   modal.addEventListener('click',e=>{if(e.target===modal)closeDetail()});
   try{history.pushState({__r77Detail:true},'');overlayHistory=true}catch(_){overlayHistory=false}
   requestAnimationFrame(()=>panel.focus({preventScroll:true}));
@@ -132,12 +132,15 @@
    // Selection motion is owned by the existing calendar/diagram choreography;
    // keep only a keyed date transition, never restart the whole entrance.
    const card=document.querySelector('#page .week-day.focus-day');
-   animate(card,[{transform:'perspective(800px) scale(.86) rotateY(8deg)'},{transform:'perspective(800px) scale(1.08) rotateY(-2deg)',offset:.7},{transform:'none'}],{duration:740,easing:settling});
-   dayChange=null;
+   const rect=card?.getBoundingClientRect();
+   const dx=rect&&oldSelectedRect?oldSelectedRect.left-rect.left:0;
+   const dy=rect&&oldSelectedRect?oldSelectedRect.top-rect.top:0;
+   animate(card,[{transform:'translate3d('+dx+'px,'+dy+'px,0) perspective(900px) scale(.91) rotateY(7deg)',opacity:.85},{transform:'translate3d(0,-4px,0) scale(1.055)',opacity:1,offset:.68},{transform:'none',opacity:1}],{duration:760,easing:settling});
+   dayChange=null;oldSelectedRect=null;
   }
  }
  function markTransactionChange(id,type){txChange={id,type}}
- function beforeDayChange(day){dayChange=day}
+ function beforeDayChange(day){dayChange=day;oldSelectedRect=document.querySelector('#page .week-day.focus-day')?.getBoundingClientRect()||null}
  function startAdd(originButton){
   if(!originButton)return;
   previousNav=originButton.getBoundingClientRect();
@@ -145,8 +148,9 @@
  function enterAdd(){
   const panel=document.getElementById('modal');
   const source=document.querySelector('#mobile-nav .fab');
-  if(!panel||!source||!ok())return;
-  const from=source.getBoundingClientRect(),to=panel.getBoundingClientRect();
+  if(!panel||(!source&&!openSourceRect)||!ok())return;
+  const from=openSourceRect||(source&&source.getBoundingClientRect()),to=panel.getBoundingClientRect();
+  openSourceRect=null;
   const dx=from.left+from.width/2-(to.left+to.width/2),dy=from.top+from.height/2-(to.top+to.height/2);
   animate(panel,[
     {transform:'translate3d('+dx*.14+'px,'+Math.min(dy,85)+'px,0) perspective(1000px) rotateX(6deg) scale(.91)',opacity:.75},
@@ -155,6 +159,8 @@
   ],{duration:760,easing:settling});
  }
  window.addEventListener('pointerdown',e=>{
+  const row=e.target.closest?.('#page .record-row[data-tx]');
+  if(row)openSourceRect=row.getBoundingClientRect();
   const nav=e.target.closest?.('#mobile-nav button[data-view]');
   if(nav){const active=document.querySelector('#mobile-nav button.active:not(.fab)');previousNav=active?.getBoundingClientRect()||null}
  },{capture:true,passive:true});
