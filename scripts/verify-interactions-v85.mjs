@@ -18,7 +18,8 @@ assert.match(css,/\.record-row>span:first-child/,'Remove old record icon colored
 assert.match(css,/\.r105-key[^\{]*\{[\s\S]*?height:37px!important/,'Compact keypad buttons');
 assert.match(css,/\.r105-keypad/,'Compact keypad grid');
 assert.match(css,/\.r84-native-icon/,'Compact factory category icons');
-assert.match(css,/\.r85-transform-press/,'Button interaction physical press');
+assert.match(css,/\.cat-choice:active/,'Category controls use physical press transform');
+assert.match(css,/\.record-row:active/,'Transaction rows use physical press transform');
 assert.match(html,/function animateExpenseClose\(/,'Expense sheet exit needs animation');
 assert.match(expense,/animateExpenseClose/,'Close path must await animator');
 assert.doesNotMatch(html,/body\.matte-editorial #overlay \.sheet\{animation:none!important;transform:none!important/,'Remove CSS !important transform blocker');
