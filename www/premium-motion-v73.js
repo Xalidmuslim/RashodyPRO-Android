@@ -26,7 +26,8 @@
   const profile = el => {
     if (el.matches('.r105-key,.tx-quick-amount>button')) return {press:175,release:690,min:70,tilt:3.5,scale:.954};
     if (el.closest('.mobile-nav')) return {press:250,release:1020,min:145,tilt:5.3,scale:.928};
-    if (isCard(el)) return {press:310,release:1220,min:190,tilt:6.5,scale:.961};
+    if (el.matches('.week-day')) return {press:390,release:1430,min:175,tilt:7.5,scale:.955};
+    if (isCard(el)) return {press:410,release:1570,min:205,tilt:8.0,scale:.957};
     if (el.matches('.icon-btn') || el.getBoundingClientRect().width < 54)
       return {press:205,release:860,min:110,tilt:4.5,scale:.927};
     return {press:290,release:1160,min:170,tilt:7,scale:.945};
