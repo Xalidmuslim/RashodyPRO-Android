@@ -181,7 +181,7 @@
 })();
 /* Isolated reference skin loader. v7.7 behavior above remains unchanged. */
 if(document.createElement&&document.head){
- for(const href of ['r78-header.css','r78-hero.css','r78-details.css','r79-visual-qa.css']){
+ for(const href of ['r80-theme.css']){
   const link=document.createElement('link');link.rel='stylesheet';link.href=href;document.head.appendChild(link);
  }
  const script=document.createElement('script');script.src='r78-runtime.js';
