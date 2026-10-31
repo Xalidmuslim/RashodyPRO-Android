@@ -1,0 +1,177 @@
+/* v7.9 SCULPTED MATTE — screenshot-driven proportions, empty state and legibility.
+ * Loaded after r78. Do not override navigation, KPI, chart or keyboard animations. */
+@media(max-width:699px){
+ html body.matte-editorial .shell{
+  padding-bottom:calc(160px + env(safe-area-inset-bottom,0px))!important;
+ }
+ html body.matte-editorial #page .calendar-title-row{
+  min-height:58px!important;margin:0 0 11px!important;
+ }
+ html body.matte-editorial #page .r78-brand{gap:10px!important}
+ html body.matte-editorial #page .r78-brand-icon{
+  width:54px!important;height:54px!important;border-radius:16px!important;
+  box-shadow:0 3px 4px rgba(54,55,42,.13),0 10px 15px -8px rgba(39,55,43,.30)!important;
+ }
+ html body.matte-editorial #page .r78-brand-icon img{
+  width:52px!important;height:52px!important;
+ }
+ html body.matte-editorial #page .r78-brand h1{
+  font-family:Roboto,'Segoe UI',Arial,sans-serif!important;
+  font-size:clamp(21px,6vw,26px)!important;font-weight:800!important;
+  line-height:1.03!important;letter-spacing:-.045em!important;
+  color:#24211d!important;margin-bottom:4px!important;
+ }
+ html body.matte-editorial #page .r78-brand p{
+  font-size:12px!important;font-weight:450!important;color:#4e473e!important;
+ }
+ html body.matte-editorial #page .week-arrows .icon-btn{
+  width:26px!important;height:32px!important;min-height:32px!important;
+  border-radius:11px!important;box-shadow:0 2px 4px rgba(81,58,40,.1)!important;
+ }
+ html body.matte-editorial #page .calendar-shell .week-strip{
+  gap:6px!important;padding-bottom:8px!important;
+ }
+ html body.matte-editorial #page .calendar-shell .week-strip .week-day{
+  height:78px!important;min-height:78px!important;
+  padding:8px 1px 7px!important;border-radius:17px!important;
+  background:#f4e9db!important;
+  box-shadow:0 3px 4px rgba(79,59,42,.12),0 9px 14px -8px rgba(73,54,39,.23),0 16px 19px -15px rgba(66,48,32,.25)!important;
+ }
+ html body.matte-editorial #page .calendar-shell .week-strip .week-day.focus-day{
+  background:#405846!important;
+  box-shadow:0 3px 5px rgba(36,57,39,.21),0 11px 18px -9px rgba(35,56,36,.34)!important;
+ }
+ html body.matte-editorial #page .week-day .week-day-name{font-size:10px!important;font-weight:650!important}
+ html body.matte-editorial #page .week-day .week-day-date{font-size:18px!important;font-weight:760!important}
+ html body.matte-editorial #page .week-day .week-day-meter{height:5px!important;margin-top:1px!important}
+ html body.matte-editorial #page .week-day .week-day-total{font-size:9px!important}
+ html body.matte-editorial #page .trend-cards{
+  gap:7px!important;margin-bottom:12px!important;
+ }
+ html body.matte-editorial #page .trend-cards button.trend-card{
+  height:76px!important;min-height:76px!important;max-height:76px!important;
+  grid-template-columns:39px minmax(0,1fr)!important;
+  grid-template-rows:1fr 1fr!important;padding:8px 5px!important;
+  border-radius:18px!important;
+  box-shadow:0 2px 3px rgba(76,53,40,.12),0 8px 13px -7px rgba(66,48,36,.22),0 17px 20px -15px rgba(64,45,33,.18),inset 0 -2px 3px rgba(64,45,33,.055)!important;
+ }
+ html body.matte-editorial #page button.trend-card.coral{background:#dfaa86!important}
+ html body.matte-editorial #page button.trend-card.teal{background:#b9c7b4!important}
+ html body.matte-editorial #page button.trend-card.amber{background:#e6c4a2!important}
+ html body.matte-editorial #page button.trend-card .trend-icon{
+  width:40px!important;height:50px!important;align-self:center!important;
+ }
+ html body.matte-editorial #page button.trend-card .trend-icon img{
+  width:40px!important;height:50px!important;object-fit:contain!important;
+ }
+ html body.matte-editorial #page button.trend-card strong{
+  font-family:Roboto,'Segoe UI',Arial,sans-serif!important;
+  font-weight:800!important;font-size:clamp(13px,3.8vw,17px)!important;
+  letter-spacing:-.045em!important;
+ }
+ html body.matte-editorial #page button.trend-card>span:last-child{
+  font-size:clamp(9px,2.55vw,11px)!important;color:#494039!important;
+ }
+ html body.matte-editorial #page .feature-day{
+  padding:14px 12px 15px!important;
+  border-radius:25px!important;row-gap:7px!important;
+  box-shadow:0 3px 5px rgba(78,57,39,.12),0 12px 18px -9px rgba(67,49,36,.20),0 25px 30px -21px rgba(62,44,35,.16)!important;
+ }
+ html body.matte-editorial #page .r78-day-heading{gap:6px!important}
+ html body.matte-editorial #page .r78-day-icon{width:32px!important;height:35px!important;border-radius:11px!important}
+ html body.matte-editorial #page .r78-day-icon img{width:25px!important;height:25px!important}
+ html body.matte-editorial #page .feature-copy h2{
+  font-family:Roboto,'Segoe UI',Arial,sans-serif!important;
+  white-space:nowrap!important;overflow-wrap:normal!important;
+  font-size:clamp(12px,3.45vw,15px)!important;font-weight:800!important;
+  line-height:1.12!important;letter-spacing:-.035em!important;
+  margin:3px 0 0!important;
+ }
+ html body.matte-editorial #page .feature-copy .eyebrow{
+  font-size:9px!important;letter-spacing:.04em!important;
+ }
+ html body.matte-editorial #page .feature-copy .feature-amount{
+  font-family:Roboto,'Segoe UI',Arial,sans-serif!important;
+  font-weight:850!important;font-size:clamp(27px,8.5vw,42px)!important;
+  margin:8px 0 0!important;line-height:1!important;
+ }
+ html body.matte-editorial #page .feature-copy .feature-link{
+  min-height:38px!important;border-radius:18px!important;
+  font-size:clamp(10px,2.65vw,12px)!important;
+  box-shadow:0 3px 4px rgba(37,60,43,.17),0 10px 14px -9px rgba(35,57,40,.27)!important;
+ }
+ html body.matte-editorial #page .feature-day .day-donut{
+  max-width:188px!important;
+ }
+ html body.matte-editorial #page .feature-day .day-donut:not(:has(.is-selected)) .day-donut-sector:not(.is-selected){
+  opacity:1!important;
+ }
+ html body.matte-editorial #page .day-donut-legend{
+  padding-top:8px!important;
+ }
+ html body.matte-editorial #page .day-ledger{
+  border-radius:25px!important;padding:12px 12px 10px!important;
+ }
+ html body.matte-editorial #page .day-ledger .ledger-heading h2{
+  font-family:Roboto,'Segoe UI',Arial,sans-serif!important;
+  font-size:clamp(15px,4.15vw,19px)!important;font-weight:800!important;
+ }
+ html body.matte-editorial #page .day-ledger .fancy-empty{
+  min-height:0!important;max-height:none!important;
+  padding:6px 5px 5px!important;gap:5px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+ }
+ html body.matte-editorial #page .fancy-empty .empty-receipt{
+  display:none!important;
+ }
+ html body.matte-editorial #page .fancy-empty::before{
+  content:'';display:block;width:48px;height:48px;flex:none;
+  background:url('assets/icons/kpi/kpi-receipt.png') center / contain no-repeat;
+ }
+ html body.matte-editorial #page .fancy-empty strong{
+  font-family:Roboto,'Segoe UI',Arial,sans-serif!important;
+  font-size:15px!important;line-height:1.12!important;font-weight:750!important;
+  color:#302c26!important;
+ }
+ html body.matte-editorial #page .fancy-empty p{
+  font-size:11px!important;line-height:1.2!important;margin:0!important;
+  color:#71675a!important;
+ }
+ html body.matte-editorial #page .fancy-empty .empty-add{
+  min-height:36px!important;padding:7px 12px!important;border-radius:16px!important;
+  background:#d88d65!important;color:#fff8ef!important;
+  box-shadow:0 3px 5px rgba(115,69,39,.16),0 8px 12px -8px rgba(98,60,37,.22)!important;
+  font-size:11px!important;
+ }
+ html body.matte-editorial .mobile-nav{
+  max-width:min(500px,calc(100% - 22px))!important;
+  padding:6px 5px calc(6px + env(safe-area-inset-bottom,0px))!important;
+  min-height:68px!important;gap:2px!important;border-radius:26px!important;
+  background:#f1e5d7!important;
+ }
+ html body.matte-editorial .mobile-nav button{
+  border:0!important;min-height:57px!important;gap:4px!important;
+  font-size:clamp(9px,2.65vw,11px)!important;
+ }
+ html body.matte-editorial .mobile-nav button:not(.active):not(.fab){
+  background:transparent!important;box-shadow:none!important;
+ }
+ html body.matte-editorial .mobile-nav button.active:not(.fab){
+  border-radius:20px!important;
+  background:#405a46!important;color:#fff8ed!important;
+ }
+ html body.matte-editorial .mobile-nav .fab{
+  width:56px!important;height:56px!important;min-height:56px!important;
+  border-radius:50%!important;
+ }
+ html body.matte-editorial .mobile-nav button .r75-icon-nav{
+  width:24px!important;height:24px!important;
+ }
+}
+@media(max-width:355px){
+ html body.matte-editorial #page .calendar-shell .week-strip{gap:4px!important}
+ html body.matte-editorial #page .feature-copy h2{font-size:12px!important}
+ html body.matte-editorial #page .feature-day .day-donut{max-width:158px!important}
+ html body.matte-editorial #page .r78-brand h1{font-size:21px!important}
+ html body.matte-editorial #page .trend-cards button.trend-card{grid-template-columns:32px minmax(0,1fr)!important}
+}
