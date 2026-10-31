@@ -53,14 +53,8 @@ def render(name,kind):
         # sculpted body. Source geometry is 3x supersampled for Android.
         from PIL import ImageFont
         tone={"kpi-wallet":"#e7bdb1","kpi-receipt":"#b6d7c7","kpi-bag":"#ecd2a1"}[kind]
-        # Short, dark contact shadow. No bloom, reflection or glass.
-        tile=Image.new("RGBA",(N,N))
-        td=ImageDraw.Draw(tile)
-        td.rounded_rectangle((32,34,256,253),radius=67,fill=C(tone))
-        td.arc((37,36,250,242),190,314,fill=(255,250,237,130),width=5)
-        td.arc((45,43,248,247),18,119,fill=(46,48,45,40),width=6)
-        im.alpha_composite(tile)
-        d=ImageDraw.Draw(im)
+        # matte object-only: the final build will replace ALL icons with
+        # independent PNG objects; backplates belong exclusively to CSS.
         if kind=="kpi-wallet":
             rr((79,109,213,202),24,"#2a4b4e","#193a40",7)
             rr((79,90,199,143),20,"#40636a","#1f3d42",5)
@@ -219,4 +213,7 @@ if __name__=="__main__":
     "plus","close","check","back","forward","up","down","search","filter","calendar","backspace","delete","edit","export"]
     ids += ["kpi-wallet","kpi-receipt","kpi-bag","kpi-coins"]
     files=[render(i,i) for i in ids]
-    print("Generated",len(files),"matte PNG icons in",OUT)
+    # The renderer supersedes legacy flat icons with physically shaded miniatures.
+    import subprocess,sys
+    subprocess.run([sys.executable,"scripts/refine-premium-icons-v81.py"],check=True)
+    print("Generated",len(files),"premium matte PNG icons in",OUT)
