@@ -73,8 +73,12 @@ jobs:
         run: |
           set -euo pipefail
           cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-Studio-v7.3-Spring-TEST.apk
+          if gh release view rashody-studio-v7.3-spring-test >/dev/null 2>&1; then
+            gh release upload rashody-studio-v7.3-spring-test RashodyPRO-Studio-v7.3-Spring-TEST.apk --clobber
+          else
           gh release create rashody-studio-v7.3-spring-test RashodyPRO-Studio-v7.3-Spring-TEST.apk \
             --target "$GITHUB_SHA" \
             --title "Расходы PRO — Studio 3D Premium Motion v7.3 (тест)" \
             --notes "Длительные плавные премиальные анимации: мягкое вдавливание, 3D-наклон кнопок и карточек, параллакс слоёв, подвижная тень и возвращение 0.9–1.2 с. Переходы в меню с плавной пружиной. Эффект не перехватывает прокрутку; с учётом reduced motion. Финансовая логика и SQLite не переписывались. Устанавливается отдельно: ru.rashody.pro.preview73. Реальный Android-визуальный QA после установки обязателен." \
             --prerelease --latest=false
+          fi
