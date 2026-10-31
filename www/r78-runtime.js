@@ -3,34 +3,50 @@
 (()=>{
  'use strict';
  const green='#5c7867',terra='#d98b61';
- const img=(name,group='categories',size=36)=>'<img alt="" aria-hidden="true" draggable="false" width="'+size+'" height="'+size+'" src="assets/icons/'+group+'/'+name+'.png">';
- const categories=new Set(['food','cafe','transport','home','health','fun','shop','other']);
+ const categories={food:'cart',cafe:'coffee',transport:'car',home:'home',health:'heart',fun:'film',shop:'shirt',other:'box'};
+ const factory=(name,size=27)=>window.RashodyFactorySvg?.(name,size)||'';
+ let swipeInstalled=false;
+ function installWeekSwipe(){
+  if(swipeInstalled)return;
+  const page=document.getElementById('page');
+  if(!page)return;
+  swipeInstalled=true;
+  let touch=null;
+  page.addEventListener('touchstart',e=>{
+   const inside=e.target.closest?.('.week-strip');
+   touch=inside&&e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY}:null;
+  },{passive:true});
+  page.addEventListener('touchend',e=>{
+   if(!touch||!e.changedTouches.length)return;
+   const dx=e.changedTouches[0].clientX-touch.x,dy=e.changedTouches[0].clientY-touch.y;
+   touch=null;
+   if(Math.abs(dx)<45||Math.abs(dx)<Math.abs(dy)*1.4)return;
+   // The navigation buttons remain in DOM solely for existing business logic.
+   page.querySelector(dx<0?'[data-action="week-next"]':'[data-action="week-prev"]')?.click();
+  },{passive:true});
+  page.addEventListener('touchcancel',()=>{touch=null},{passive:true});
+ }
  function enhanceDashboard(){
   const page=document.getElementById('page');
   if(!page)return;
-  const brandTitle=page.querySelector('.calendar-title-row h1');
-  if(brandTitle){
-   const header=document.createElement('div');
-   header.className='r78-brand';
-   header.innerHTML='<span class="r78-brand-icon">'+'<img alt="" aria-hidden="true" draggable="false" width="64" height="64" src="assets/brand/native-launcher.png">'+'</span><div class="r78-brand-copy"><h1>Расходы Про</h1><p>Личные финансы</p></div>';
-   brandTitle.replaceWith(header);
-  }
+  installWeekSwipe();
+  // No app icon, app title, or visible navigation arrows above the week.
   const copy=page.querySelector('.feature-day .feature-copy');
   if(copy&&!copy.querySelector('.r78-day-heading')){
    const eyebrow=copy.querySelector('.eyebrow'),title=copy.querySelector('h2');
    if(eyebrow&&title){
     const wrapper=document.createElement('div');wrapper.className='r78-day-heading';
-    const square=document.createElement('span');square.className='r78-day-icon';square.innerHTML=img('calendar','actions',28);
-    const labels=document.createElement('div');
-    labels.append(eyebrow,title);wrapper.append(square,labels);
-    copy.prepend(wrapper);
+    const square=document.createElement('span');square.className='r78-day-icon';
+    square.innerHTML=factory('calendar',25);
+    const labels=document.createElement('div');labels.append(eyebrow,title);
+    wrapper.append(square,labels);copy.prepend(wrapper);
    }
   }
   page.querySelectorAll('.day-donut-legend-item[data-day-chart-category]').forEach(item=>{
    const id=item.dataset.dayChartCategory;
    if(!item.querySelector('.r78-category-icon')){
     const square=document.createElement('span');square.className='r78-category-icon';
-    square.innerHTML=img(categories.has(id)?id:'other');
+    square.innerHTML=factory(categories[id]||'box',28);
     item.prepend(square);
    }
    const swatch=item.querySelector('.day-donut-swatch');
@@ -45,7 +61,7 @@
   const ledgerTitle=page.querySelector('.day-ledger .ledger-heading h2');
   if(ledgerTitle&&!ledgerTitle.querySelector('.r78-ledger-icon')){
    const icon=document.createElement('span');icon.className='r78-ledger-icon';
-   icon.innerHTML=img('transactions','nav',25);ledgerTitle.prepend(icon);
+   icon.innerHTML=factory('transactions',25);ledgerTitle.prepend(icon);
   }
  }
  let transformer=null;
