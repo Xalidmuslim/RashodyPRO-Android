@@ -7,7 +7,7 @@
  'use strict';
  const reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)');
  const active=new Set();
- const state={view:'',week:'',day:'',period:'',selection:'',generation:0};
+ const state={view:'',week:'',day:'',period:'',selection:'',summary:'',chart:'',generation:0};
  const ease='cubic-bezier(.18,.86,.22,1)';
  const spring='cubic-bezier(.17,1.17,.29,1)';
  const page=()=>document.getElementById('page');
@@ -83,7 +83,7 @@
   const c=root.querySelector('.day-donut-center,.analytics-ring-panel .ring-inner');
   if(c)raiseInner(c,70);
  }
- function dashboard(root,full,dayChanged,selectionChanged){
+ function dashboard(root,full,dayChanged,selectionChanged,summaryChanged,chartChanged){
   if(full){
    const days=[...root.querySelectorAll('.week-strip .week-day')];
    days.forEach((el,i)=>{
@@ -97,18 +97,26 @@
     animate(meter,[{transform:'scaleX(0)'},{transform:'scaleX(1)'}],
       {duration:850,delay:560+i*110,easing:ease,fill:'both'});
    });
+  }
+  if(full||summaryChanged){
    root.querySelectorAll('.trend-cards .trend-card').forEach((el,i)=>{
-    enterCard(el,350+i*195,34,11,1390);
-    raiseInner(el.querySelector('.trend-icon'),620+i*195);
+    enterCard(el,full?350+i*195:110+i*160,34,11,1390);
+    raiseInner(el.querySelector('.trend-icon'),full?620+i*195:330+i*160);
    });
   }
-  if(full||dayChanged){
+  if(dayChanged&&!full){
+   const selected=root.querySelector('.week-day.focus-day');
+   enterCard(selected,0,19,10,1030);
+   const bar=selected?.querySelector('.week-day-meter-fill');
+   animate(bar,[{transform:'scaleX(.10)'},{transform:'scaleX(1)'}],{duration:950,delay:210,easing:ease,fill:'both'});
+  }
+  if(full||dayChanged||chartChanged){
    enterCard(root.querySelector('.feature-day'),full?850:80,25,5,1230);
    drawDonut(root,'dashboard',full?980:210);
   } else if(selectionChanged) selectReveal(root);
  }
- function analytics(root,full,periodChanged,selectionChanged){
-  if(full||periodChanged){
+ function analytics(root,full,periodChanged,selectionChanged,summaryChanged,chartChanged){
+  if(full||periodChanged||summaryChanged||chartChanged){
    root.querySelectorAll('.studio-stats .compare-metric').forEach((el,i)=>
     enterCard(el,160+i*190,32,11,1360));
    enterCard(root.querySelector('.analytics-ring-panel'),450,20,5,1360);
@@ -136,24 +144,32 @@
     ?.getAttribute('data-day-chart-category')||
     root.querySelector('.ring-slice.selected')?.getAttribute('data-chart-category')||'';
   const period=root.querySelector('.analytics-controls .period-caption')?.textContent?.trim()||'';
+  const summary=[...root.querySelectorAll('.trend-cards .trend-card strong,.studio-stats .compare-metric strong')]
+   .map(el=>el.textContent?.trim()).join('|');
+  const chart=[...root.querySelectorAll('.day-donut-sector,.ring-slice')]
+   .map(el=>(el.getAttribute('stroke-dasharray')||'')+':'+(el.getAttribute('stroke')||'')).join('|');
   const weekChanged=weekKey!==state.week,dayChanged=day!==state.day;
   const periodChanged=period!==state.period,selectionChanged=chartSel!==state.selection;
+  const summaryChanged=summary!==state.summary,chartChanged=chart!==state.chart;
    stop();
   const generation=++state.generation;
-  Object.assign(state,{view,week:weekKey,day,period,selection:chartSel});
+  Object.assign(state,{view,week:weekKey,day,period,selection:chartSel,summary,chart});
   if(!safe())return;
   // Avoid delaying first paint or input: start on next compositor frame.
   requestAnimationFrame(()=>{
    if(root!==page()||generation!==state.generation||!safe())return;
-   if(view==='dashboard')dashboard(root,full||weekChanged,dayChanged,selectionChanged);
-   else if(view==='analytics')analytics(root,full,periodChanged,selectionChanged);
+   if(view==='dashboard')dashboard(root,full||weekChanged,dayChanged,selectionChanged,summaryChanged,chartChanged);
+   else if(view==='analytics')analytics(root,full,periodChanged,selectionChanged,summaryChanged,chartChanged);
   });
  }
  // Window capture interrupts decorative entry BEFORE the existing document-level tilt handler.
  window.addEventListener('pointerdown',e=>{
   if(e.target.closest?.('#page .week-day,#page .trend-card,#page .feature-day,#page .ring,#page .day-donut'))stop();
  },{capture:true,passive:true});
- document.addEventListener('scroll',stop,{capture:true,passive:true});
+ // Do not cancel on programmatic scrollTo(0) after navigation; only real
+ // touch drag / wheel should interrupt the visual entrance animation.
+ document.addEventListener('touchmove',stop,{capture:true,passive:true});
+ document.addEventListener('wheel',stop,{capture:true,passive:true});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
  reduce?.addEventListener?.('change',()=>{if(reduce.matches)stop()});
  window.RashodyGrandMotion={afterRender,stop};
