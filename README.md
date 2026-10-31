@@ -73,10 +73,10 @@ APK имеет отдельный package `ru.rashody.pro.preview72`. Он не 
 
 ## v7.3 — Premium Motion: длительные анимации кнопок и карточек
 
-Действующая тема Studio Matte. Новая система premium-motion-v73.js заменяет короткие отклики v7.2: удержание 205–310 мс, наклон до 7°, параллакс значка и текста, умеренное матовое освещение, смещение тени и пружинное возвращение в течение 0,86–1,22 с. Для цифровой клавиатуры — отдельный более быстрый отклик 175/690 мс. Анимируется только активный элемент, прокрутка, финансовые операции и SQLite не изменены. Переключатели периода и навигация получают отдельную 930-мс анимацию выбранного состояния.
+Действующая тема Studio Matte. Новая система premium-motion-v73.js заменяет короткие отклики v7.2. Дополнительно проверен настоящий CSS-переход в Chromium и исправлено преждевременное затухание пружины (перелёт +2,7% на 35% времени, обратное движение -1,3% на 60%): удержание 205–310 мс, наклон до 7°, параллакс значка и текста, умеренное матовое освещение, смещение тени и пружинное возвращение в течение 0,86–1,22 с. Для цифровой клавиатуры — отдельный более быстрый отклик 175/690 мс. Анимируется только активный элемент, прокрутка, финансовые операции и SQLite не изменены. Переключатели периода и навигация получают отдельную 930-мс анимацию выбранного состояния.
 
-- [Прямая загрузка тестового APK v7.3](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-studio-v7.3-test/RashodyPRO-Studio-v7.3-TEST.apk)
-- [Страница релиза v7.3](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-studio-v7.3-test)
+- [Прямая загрузка тестового APK v7.3](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-studio-v7.3-spring-test/RashodyPRO-Studio-v7.3-Spring-TEST.apk)
+- [Страница релиза v7.3](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-studio-v7.3-spring-test)
 - [Автоматические тесты и сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v73-premium-motion.yml)
 
 Версия v7.3 устанавливается отдельно (`ru.rashody.pro.preview73`), не заменяя основной пакет. Поведение анимаций на физическом Android требуется проверить отдельно.
