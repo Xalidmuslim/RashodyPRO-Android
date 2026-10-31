@@ -37,6 +37,13 @@ assert.match(css,/\.r105-key\{/);
 assert.match(css,/prefers-reduced-motion/);
 assert.match(html,/<link rel="stylesheet" href="studio-v70\.css">/);
 assert.match(html,/<script src="premium-motion-v73\.js" defer><\/script>/);
+// Dynamic SVG donut hues are authored in HTML, not in the theme stylesheet.
+const chart = html.match(/const neutralChartColors=\[([^\]]+)\]/);
+assert.ok(chart,'No stable chart color mapping');
+const hues = [...chart[1].matchAll(/#[0-9a-f]{6}/gi)].map(x=>x[0]);
+assert.equal(new Set(hues).size,8,'Donut segments must not collapse into grey twins');
+assert.match(html,/food:'#4c8a80',cafe:'#be816f',transport:'#587e9b'/);
+assert.match(html,/const explicit=\{food:'#c9e7d8',cafe:'#f2d1c6'/);
 assert.match(motion,/prefers-reduced-motion: reduce/);
 assert.match(fs.readFileSync('native/FinanceStoragePlugin.java','utf8'),/class FinanceStoragePlugin/);
 console.log('OK: v7.4 perceptual contrast, button geometry, depth, modal, navigation, motion/SQLite invariants');
