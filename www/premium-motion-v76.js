@@ -7,7 +7,7 @@
  'use strict';
  const reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)');
  const active=new Set();
- const state={view:'',week:'',day:'',period:'',selection:''};
+ const state={view:'',week:'',day:'',period:'',selection:'',generation:0};
  const ease='cubic-bezier(.18,.86,.22,1)';
  const spring='cubic-bezier(.17,1.17,.29,1)';
  const page=()=>document.getElementById('page');
@@ -139,11 +139,12 @@
   const weekChanged=weekKey!==state.week,dayChanged=day!==state.day;
   const periodChanged=period!==state.period,selectionChanged=chartSel!==state.selection;
    stop();
+  const generation=++state.generation;
   Object.assign(state,{view,week:weekKey,day,period,selection:chartSel});
   if(!safe())return;
   // Avoid delaying first paint or input: start on next compositor frame.
   requestAnimationFrame(()=>{
-   if(root!==page()||!safe())return;
+   if(root!==page()||generation!==state.generation||!safe())return;
    if(view==='dashboard')dashboard(root,full||weekChanged,dayChanged,selectionChanged);
    else if(view==='analytics')analytics(root,full,periodChanged,selectionChanged);
   });
