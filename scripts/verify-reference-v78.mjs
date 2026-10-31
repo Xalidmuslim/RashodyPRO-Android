@@ -19,7 +19,7 @@ assert.doesNotMatch(runtime,/r78-brand-icon/,'Header removed by user request');
 assert.match(runtime,/r78-category-icon/);
 assert.match(runtime,/r78-ledger-icon/);
 assert.match(runtime,/perspective\(1100px\)/);
-assert.match(runtime,/rotateY\(-11deg\)/);
+assert.match(runtime,/function pageTransformer\(direction/);
 assert.match(runtime,/prefers-reduced-motion/);
 assert.doesNotMatch(runtime,/aria-label="Поиск"|aria-label="Уведомления"/);
 assert.match(css,/grid-template-columns:repeat\(7,minmax\(0,1fr\)\)/);
