@@ -2838,7 +2838,7 @@ function closeModal(){
   if(modalCloseBusy)return;
   modalCloseBusy=true;
   void settleModalKeyboard().then(()=>{
-   if(!document.getElementById('overlay').hidden)finishCloseModal();
+   if(!document.getElementById('overlay').hidden)return finishCloseModal();
   }).finally(()=>{modalCloseBusy=false});
   return;
  }
