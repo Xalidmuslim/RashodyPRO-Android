@@ -19,7 +19,7 @@ let html=fs.readFileSync(htmlPath,'utf8');
 const marker='Расходы PRO 5.4 · Deep Matte';
 if(html.split(marker).length!==2)throw new Error('Unexpected footer, stop package labeling');
 html=html.replace(marker,'Расходы PRO 7.8 · SCULPTED MATTE TEST');
-if(!html.includes('href="r78-header.css"')||!html.includes('src="sculpted-motion-v77.js"'))throw new Error('Premium Motion assets not synced into APK');
+if(!html.includes('href="studio-v77.css"')||!html.includes('src="sculpted-motion-v77.js"'))throw new Error('Premium Motion assets not synced into APK');
 fs.writeFileSync(htmlPath,html);
 if(!fs.existsSync('android/app/src/main/assets/public/r78-runtime.js')||!fs.existsSync('android/app/src/main/assets/public/r78-hero.css'))throw Error('Reference skin is absent in APK');
 if(!fs.existsSync('android/app/src/main/assets/public/assets/icons/kpi/kpi-coins.png'))throw Error('Matte coin PNG is missing');
