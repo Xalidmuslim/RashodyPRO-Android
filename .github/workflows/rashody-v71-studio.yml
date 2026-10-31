@@ -1,0 +1,79 @@
+name: Rashody PRO Studio v7.1 Native Safe Design and APK
+on:
+  push:
+    branches: [redesign/rashody-studio-v71-native-safe-2026-10-31]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  studio-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Check financial behavior, geometry contracts and icon assets
+        run: |
+          set -euo pipefail
+          python3 -m pip install --break-system-packages Pillow
+          npm install
+          npm run verify
+      - name: Install Android build platform
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)
+          test -n "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
+      - name: Prepare isolated Android preview
+        run: |
+          set -euo pipefail
+          npx cap add android
+          node scripts/prepare-android.mjs
+          npx cap sync android
+          node scripts/build-studio-preview-v71.mjs
+          node scripts/verify-studio-preview-v71.mjs
+      - name: Compile Android APK
+        working-directory: android
+        run: |
+          set -euo pipefail
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Verify APK identity, assets, ZIP integrity and untouched sources
+        run: |
+          set -euo pipefail
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview71'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='7.1-studio-matte-preview'"
+          unzip -t "$APK" >/dev/null
+          unzip -p "$APK" assets/public/index.html | grep -q 'studio-v70.css'
+          unzip -p "$APK" assets/public/studio-v70.css | grep -q 'RASHODY PRO / STUDIO SYSTEM v7.0'
+          sha256sum "$APK"
+          git diff --exit-code -- www native package.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RashodyPRO-Studio-v71-TEST-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+          if-no-files-found: error
+      - name: Publish direct mobile APK
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-v71]') }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-Studio-v7.1-TEST.apk
+          gh release create rashody-studio-v7.1-test RashodyPRO-Studio-v7.1-TEST.apk \
+            --target "$GITHUB_SHA" \
+            --title "Расходы PRO — Studio Matte 3D v7.1 (тест)" \
+            --notes "Единый Studio-дизайн: тёплая светлая основа, объёмные матовые карточки и кнопки, графитовая типографика, умеренные цвета, единые скругления. Устаревшие пять слоёв оформления отключены. Финансовая логика и SQLite не переписывались. Устанавливается отдельно: ru.rashody.pro.preview71. Реальный Android-визуальный QA после установки обязателен." \
+            --prerelease --latest=false
