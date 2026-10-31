@@ -15,7 +15,7 @@ assert.match(css,/\.r78-brand h1[\s\S]*?-webkit-text-stroke:/);
 assert.match(css,/\.trend-cards button\.trend-card \.trend-icon img[\s\S]*?scale\(1\.2/);
 assert.match(css,/\.trend-cards button\.trend-card strong[\s\S]*?font-weight:900/);
 assert.match(build,/r82-refinement\.css/);
-assert.match(runtime,/assets\/brand\/native-launcher\.png/);
+assert.doesNotMatch(runtime,/r78-brand-icon/);
 assert.match(prev,/r80-theme\.css/);
 assert.match(runtime,/rotateY\(-11deg\)/);
 assert.match(html,/function daySummaryRing\(/);
