@@ -23,9 +23,9 @@ for(const selector of ['.trend-cards .trend-card','.studio-stats .compare-metric
 assert.match(css,/html body\.matte-editorial #page \.feature-day\.feature-day/,'Outrank obsolete embedded theme specificity');
 assert.match(css,/html body\.matte-editorial #page \.panel\.panel/);
 assert.equal((css.match(/\{/g)||[]).length,(css.match(/\}/g)||[]).length,'Unbalanced stylesheet');
-const baseMaterial=css.split('/* Studio Touch Depth v7.2')[0];
+const baseMaterial=css.split('/* Premium Motion v7.3')[0];
 assert.doesNotMatch(baseMaterial,/(?:linear|radial|conic)-gradient\s*\(/,'No glossy base material gradients');
-assert.match(css,/button\.depth-engaged::after\s*\{[\s\S]*?radial-gradient/,'Only touched button may display diffuse matte lighting');
+assert.match(css,/button\.depth-engaged::after,[\s\S]*?radial-gradient/,'Only touched buttons may display diffuse matte lighting');
 assert.doesNotMatch(css,/transition\s*:[^;]*(?:box-shadow|filter)/,'Do not animate expensive paint');
 assert.match(css,/:focus-visible/);
 assert.match(css,/prefers-reduced-motion/);
