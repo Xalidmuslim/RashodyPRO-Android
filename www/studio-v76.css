@@ -1,0 +1,159 @@
+/* RASHODY PRO v7.6 — Sculptural Calendar, KPI tiles and long-motion chart.
+   Static depth lives here; motion is WAAPI compositor-driven in premium-motion-v76.js.
+   Do not animate shadows, filters or layout sizes while scrolling. */
+:root{
+ --r76-radius-tile:28px;
+ --r76-deep-shadow:0 3px 4px rgba(63,51,43,.15),
+ 0 12px 17px -9px rgba(58,48,42,.25),
+ 0 25px 36px -22px rgba(49,41,39,.21),
+ inset 0 2px 1px rgba(255,255,255,.68),
+ inset 0 -2px 4px rgba(64,49,44,.09);
+ --r76-calendar-shadow:0 3px 3px rgba(52,50,46,.14),
+ 0 11px 17px -9px rgba(48,45,40,.21),
+ inset 0 2px 1px rgba(255,255,255,.85),
+ inset 0 -3px 5px rgba(59,53,46,.08);
+}
+html body.matte-editorial #page .calendar-shell .week-strip .week-day{
+ position:relative!important;border-radius:24px!important;
+ border:1px solid rgba(255,253,246,.72)!important;
+ box-shadow:var(--r76-calendar-shadow)!important;
+ transform-origin:50% 65%;
+ backface-visibility:hidden;
+}
+html body.matte-editorial #page .calendar-shell .week-strip .week-day::before{
+ content:'';position:absolute;inset:2px;border-radius:21px;
+ background:linear-gradient(133deg,rgba(255,255,255,.30) 0%,rgba(255,255,255,0) 45%,rgba(63,61,56,.045) 100%);
+ pointer-events:none;
+}
+html body.matte-editorial #page .calendar-shell .week-strip .week-day.focus-day{
+ background:#2c6062!important;border-color:#275557!important;color:#fff!important;
+ box-shadow:0 4px 5px rgba(23,65,66,.22),
+ 0 15px 19px -10px rgba(24,65,66,.34),
+ inset 0 2px 2px rgba(255,255,255,.16),
+ inset 0 -4px 7px rgba(9,31,37,.18)!important;
+}
+html body.matte-editorial #page .week-day .week-day-meter{
+ background:rgba(35,66,67,.11)!important;
+ border-radius:20px!important;
+ box-shadow:inset 0 1px 2px rgba(36,47,47,.10)!important;
+}
+html body.matte-editorial #page .week-day .week-day-meter-fill{
+ transform-origin:0 50%;background:#6aada0!important;
+}
+html body.matte-editorial #page .week-day.focus-day .week-day-meter-fill{
+ background:#f2d09d!important;
+}
+html body.matte-editorial #page .trend-cards .trend-card{
+ border:1px solid rgba(255,255,255,.63)!important;
+ border-radius:29px!important;
+ padding:20px 17px 18px!important;
+ box-shadow:var(--r76-deep-shadow)!important;
+ transform-style:preserve-3d;
+ transform-origin:50% 75%;
+ isolation:isolate;
+}
+html body.matte-editorial #page .trend-cards .trend-card::before{
+ content:'';position:absolute;inset:0;z-index:0;
+ border-radius:inherit;pointer-events:none;
+ background:linear-gradient(144deg,rgba(255,255,255,.24) 0%,rgba(255,255,255,.045) 43%,rgba(54,55,52,.10) 100%);
+}
+html body.matte-editorial #page .trend-cards .trend-card::after{
+ content:'';position:absolute;inset:2px;z-index:0;
+ width:auto;height:auto;right:2px;bottom:2px;
+ border-radius:27px;border:1px solid rgba(255,255,255,.20);
+ pointer-events:none;
+}
+html body.matte-editorial #page .trend-cards .trend-card > *{
+ position:relative;z-index:1;transform:translateZ(12px);
+}
+html body.matte-editorial #page .trend-cards .trend-card .trend-icon{
+ width:45px!important;height:45px!important;border-radius:16px!important;
+ display:grid!important;place-items:center!important;
+ background:rgba(255,255,255,.31)!important;
+ border:1px solid rgba(255,255,255,.35)!important;
+ box-shadow:0 3px 4px rgba(51,57,51,.15),
+ 0 8px 12px -8px rgba(51,57,51,.22),
+ inset 0 1px 1px rgba(255,255,255,.76)!important;
+ transform:translateZ(23px);
+}
+html body.matte-editorial #page .trend-cards .trend-card strong{
+ text-shadow:0 1px 1px rgba(255,255,255,.10)!important;
+}
+html body.matte-editorial #page .feature-day{
+ border-radius:32px!important;
+ box-shadow:0 3px 4px rgba(46,46,43,.10),
+ 0 16px 24px -14px rgba(49,44,39,.24),
+ 0 25px 36px -23px rgba(46,46,43,.16),
+ inset 0 2px 1px rgba(255,255,255,.92)!important;
+ transform-origin:50% 65%;
+}
+html body.matte-editorial #page .day-donut{
+ isolation:isolate;
+ perspective:1000px;
+}
+html body.matte-editorial #page .day-donut::before{
+ content:'';pointer-events:none;
+ width:95%;height:95%;border-radius:50%;
+ position:absolute;inset:2.5%;
+ background:radial-gradient(circle at 50% 42%,rgba(255,255,255,0) 46%,
+ rgba(67,63,56,.06) 59%,rgba(255,255,255,.08) 69%,rgba(255,255,255,0) 80%);
+}
+html body.matte-editorial #page .day-donut-svg{
+ overflow:visible;will-change:auto;
+}
+html body.matte-editorial #page .day-donut-sector{
+ transition:opacity 600ms cubic-bezier(.2,.7,.2,1),stroke-width 580ms cubic-bezier(.2,.75,.2,1)!important;
+}
+html body.matte-editorial #page .day-donut-center{
+ box-shadow:0 4px 7px rgba(50,51,45,.13),
+ 0 10px 17px -10px rgba(51,51,45,.18),
+ inset 0 3px 7px rgba(52,48,42,.085),
+ inset 0 -2px 4px rgba(255,255,255,.65)!important;
+}
+html body.matte-editorial #page .studio-stats .compare-metric{
+ border-radius:27px!important;
+ border:1px solid rgba(255,255,255,.48)!important;
+ box-shadow:var(--r76-deep-shadow)!important;
+ transform-origin:50% 70%;
+}
+html body.matte-editorial #page .analytics-ring-panel{
+ border-radius:32px!important;
+ box-shadow:0 3px 4px rgba(49,48,43,.10),
+ 0 14px 20px -11px rgba(49,48,43,.19),
+ inset 0 1px 0 rgba(255,255,255,.95)!important;
+}
+html body.matte-editorial #page .analytics-ring-panel .ring-inner{
+ box-shadow:0 4px 8px rgba(60,57,51,.12),
+ inset 0 3px 8px rgba(58,54,48,.08),
+ inset 0 -3px 5px rgba(255,255,255,.72)!important;
+}
+html body.matte-editorial #page .ring-slice{
+ transition:stroke-width 650ms cubic-bezier(.2,.8,.25,1),opacity 650ms cubic-bezier(.2,.8,.25,1)!important;
+}
+html body.matte-editorial #page .compare-stick{
+ transform-origin:bottom center;
+}
+html body.matte-editorial #page .day-donut-legend-item,
+html body.matte-editorial #page .analytics-ring-panel .legend-line{
+ border-radius:19px!important;
+ transition:background-color 650ms ease,border-color 650ms ease!important;
+}
+html body.matte-editorial #page .trend-card.depth-engaged .trend-icon,
+html body.matte-editorial #page .trend-card.depth-return .trend-icon{
+ transform:translate3d(var(--depth-icon-x,0px),var(--depth-icon-y,0px),23px)!important;
+ transition:transform 370ms cubic-bezier(.17,.86,.27,1)!important;
+}
+html body.matte-editorial #page .trend-card.depth-return .trend-icon{
+ transform:translate3d(0,0,23px)!important;
+ transition:transform 1380ms cubic-bezier(.17,1.16,.25,1)!important;
+}
+@media (prefers-reduced-motion:reduce){
+ html body.matte-editorial #page .day-donut-sector,
+ html body.matte-editorial #page .ring-slice,
+ html body.matte-editorial #page .day-donut-legend-item,
+ html body.matte-editorial #page .analytics-ring-panel .legend-line,
+ html body.matte-editorial #page .trend-card.depth-engaged .trend-icon,
+ html body.matte-editorial #page .trend-card.depth-return .trend-icon{
+  animation:none!important;transition:none!important;
+ }
+}
