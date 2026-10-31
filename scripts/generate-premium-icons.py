@@ -40,7 +40,15 @@ def render(name,kind):
     def highlights(box):
         x,y,x2,y2=box
         d.arc((x+8,y+5,x2-8,y2-8),195,303,fill=(255,250,239,204),width=6)
-    if kind in ("kpi-wallet","kpi-receipt","kpi-bag"):
+    if kind=="kpi-coins":
+        # Transparent matte coin stacks, rendered at 3x native resolution.
+        for x,y,count in ((95,184,3),(154,157,5),(209,120,3)):
+            for j in range(count):
+                top=y-j*17
+                d.rounded_rectangle((x-33,top,x+33,top+21),radius=10,fill=C("#b58a5c"))
+                d.ellipse((x-33,top-12,x+33,top+11),fill=C("#e3bf91"),outline=C("#aa7c4f"),width=3)
+                d.arc((x-28,top-9,x+28,top+8),185,320,fill=C("#f5dbb6"),width=3)
+    elif kind in ("kpi-wallet","kpi-receipt","kpi-bag"):
         # Matte sculpted KPI miniatures — transparent PNGs with a restrained
         # sculpted body. Source geometry is 3x supersampled for Android.
         from PIL import ImageFont
@@ -209,6 +217,6 @@ def render(name,kind):
 if __name__=="__main__":
     ids=["food","cafe","transport","home","health","fun","shop","other","dashboard","transactions","analytics","settings",
     "plus","close","check","back","forward","up","down","search","filter","calendar","backspace","delete","edit","export"]
-    ids += ["kpi-wallet","kpi-receipt","kpi-bag"]
+    ids += ["kpi-wallet","kpi-receipt","kpi-bag","kpi-coins"]
     files=[render(i,i) for i in ids]
     print("Generated",len(files),"matte PNG icons in",OUT)
