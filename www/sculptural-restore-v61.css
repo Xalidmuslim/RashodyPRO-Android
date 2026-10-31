@@ -87,9 +87,9 @@ body.matte-editorial #page .trend-cards .trend-card.amber,
 body.matte-editorial #page .studio-stats .compare-metric:nth-child(3){
  background:var(--p59-ochre)!important;
 }
-body.matte-editorial #page .color-category-grid .color-category-card{
- /* The category mapping comes from the existing data via a CSS variable,
-    not an inline !important fill that ignores the theme. */
+body.matte-editorial #page .color-category-grid .color-category-card,
+body.matte-editorial #page :is(.color-category-grid,.analytics-category-grid) .color-category-card:nth-child(n){
+ /* Match and outrank legacy nth-child fills while preserving each category. */
  background:var(--category-matte,var(--p59-sage))!important;
  background-image:none!important;
  min-width:0!important;
