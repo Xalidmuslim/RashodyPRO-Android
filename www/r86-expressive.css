@@ -1,0 +1,53 @@
+/* Rashody v8.6 | Matte Expressive Motion
+ * Liquid indicator is a single transient layer; static shadows are retained.
+ * Calendar press and content springs are owned by r86-expressive-motion.js.
+ */
+html body.matte-editorial #page .week-strip .week-day{
+ transform-origin:center center!important;
+ -webkit-tap-highlight-color:transparent!important;
+ touch-action:pan-y!important;
+}
+html body.matte-editorial #page .week-strip .week-day:focus-visible{
+ outline:2px solid #52735e!important;outline-offset:2px!important;
+}
+html body.matte-editorial .mobile-nav{
+ isolation:isolate!important;
+ position:fixed!important;
+}
+html body.matte-editorial .mobile-nav .r86-liquid-indicator{
+ position:absolute!important;
+ display:block!important;
+ z-index:0!important;
+ pointer-events:none!important;
+ border-radius:22px!important;
+ background:#3d5746!important;
+ box-shadow:0 4px 7px rgba(43,63,44,.20),0 12px 17px -9px rgba(41,59,40,.29)!important;
+ transform-origin:center center!important;
+}
+html body.matte-editorial .mobile-nav > button[data-view]{
+ position:relative!important;
+ z-index:1!important;
+ background:transparent!important;
+ box-shadow:none!important;
+ isolation:isolate!important;
+}
+html body.matte-editorial .mobile-nav button.active:not(.fab){
+ background:transparent!important;
+ border:0!important;
+ box-shadow:none!important;
+ color:#fff8ec!important;
+}
+html body.matte-editorial .mobile-nav button.active:not(.fab) span{
+ color:#fff8ec!important;
+}
+html body.matte-editorial .mobile-nav button.active:not(.fab) img{
+ filter:brightness(1.32) saturate(.52)!important;
+}
+html body.matte-editorial .mobile-nav > .fab{
+ position:relative!important;
+ z-index:2!important;
+}
+@media (prefers-reduced-motion: reduce){
+ html body.matte-editorial .mobile-nav .r86-liquid-indicator{transition:none!important}
+ html body.matte-editorial #page .week-strip .week-day{transition:none!important}
+}
