@@ -6,8 +6,9 @@ const html=read('www/index.html'), runtime=read('www/r78-runtime.js'),motion=rea
 const style=read('www/r84-clean-motion.css'),bundler=read('scripts/bundle-runtime-theme-v80.mjs');
 const week=html.slice(html.indexOf('function compactWeekWidget('),html.indexOf('function currentExpenseStreak('));
 assert.match(style,/\.calendar-title-row[\s\S]*?display:none!important/,'Header removed visually, legacy navigation handlers remain');
-assert.match(runtime,/installWeekSwipe/,'Weeks remain reachable by touch swipe');
-assert.match(runtime,/data-action="week-next"/,'Invisible week navigation buttons remain available to swipes');
+assert.doesNotMatch(runtime,/installWeekSwipe|addEventListener\('touchstart'/,'Do not attach a second week touch handler');
+assert.match(html,/let weekTouch=null;document\.addEventListener\('touchstart'/,'The original native week swipe handler remains');
+assert.match(html,/changeWeek\(dx<0\?1:-1\)/,'Each gesture must move exactly one week');
 assert.match(html,/function r75Icon[\s\S]*?group==='nav'/,'Factory icons except original navigation');
 assert.match(html,/const factoryCategories=/);
 assert.doesNotMatch(html.slice(html.indexOf('function dashboard(){'),html.indexOf('function txRow(t)')),/assets\/icons\/kpi\/kpi-/,'KPI must use app factory icons');
