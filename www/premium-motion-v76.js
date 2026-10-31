@@ -20,7 +20,7 @@
  function stop(){
   for(const a of active)try{a.cancel()}catch(_){}
   active.clear();
-  page()?.classList.remove('r76-choreographing');
+  // Animations release their own compositor layers; no persistent DOM classes.
  }
  function animate(el,frames,options){
   if(!el?.animate||!safe())return;
