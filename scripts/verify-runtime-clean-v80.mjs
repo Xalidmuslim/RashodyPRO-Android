@@ -22,8 +22,8 @@ assert.match(read('native/FinanceStoragePlugin.java'),/class FinanceStoragePlugi
 execFileSync('node',['scripts/bundle-runtime-theme-v80.mjs'],{stdio:'inherit'});
 const output=read('www/r80-theme.css');
 const input=cssSources.map(name=>read('www/'+name));
-for(const source of input)assert.ok(output.includes(source),'Missing source rules in generated theme');
-for(let i=1;i<input.length;i++)assert.ok(output.indexOf(input[i-1])<output.indexOf(input[i]),'CSS cascade order changed');
+for(const source of input)assert.ok(output.includes(source.trim()),'Missing source rules in generated theme');
+for(let i=1;i<input.length;i++)assert.ok(output.indexOf(input[i-1].trim())<output.indexOf(input[i].trim()),'CSS cascade order changed');
 assert.ok(output.includes('.fancy-empty::before'),'Empty-state styling lost');
 assert.ok(output.includes('.day-donut-sector'),'Chart styling lost');
 assert.ok(output.includes('.mobile-nav'),'Navigation styling lost');
