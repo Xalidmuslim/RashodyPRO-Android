@@ -95,7 +95,8 @@ assert.equal(calls.filter(x=>!x.name.startsWith('cancel:')).length,firstCount,'N
 screen='analytics';
 window.RashodyGrandMotion.afterRender({view:'analytics'});
 assert.ok(calls.some(x=>x.name==='bar0'&&x.options.duration>=1200));
-assert.ok(calls.some(x=>x.name==='analyticsRing'));
+assert.ok(calls.some(x=>x.name==='ringPanel'),'Analytics ring panel must enter with depth');
+assert.ok(calls.some(x=>x.name==='chartSvg'),'Analytics donut SVG must animate');
 reduced=true;
 const at=calls.filter(x=>!x.name.startsWith('cancel:')).length;
 screen='dashboard';
