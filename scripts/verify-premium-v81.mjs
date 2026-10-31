@@ -13,6 +13,7 @@ assert.match(css,/\.r78-category-icon[\s\S]*?background:transparent!important/);
 assert.match(css,/\.record-row>span:first-child[\s\S]*?background:transparent!important/);
 assert.match(css,/\.category-icon[\s\S]*?background:transparent!important/);
 assert.match(css,/\.trend-icon[\s\S]*?background:transparent!important/);
+assert.match(css,/\.trend-cards \.trend-card \.trend-icon[\s\S]*?background:transparent!important/,'Must outrank v7.7 backplate selector');
 assert.match(css,/\.r78-brand h1[\s\S]*?font-weight:800!important/);
 assert.match(css,/\.feature-copy \.feature-amount[\s\S]*?font-weight:850!important/);
 assert.match(css,/\.mobile-nav button:not\(\.fab\)/);
