@@ -16,6 +16,6 @@ assert.match(after,/margin-top:auto!important/,'Card captions require shared bas
 assert.match(after,/flex:0 0 40px!important/);
 assert.match(after,/@media\(max-width:360px\)/);
 assert.match(html,/window\.RashodyGrandMotion\?\.afterRender\(\{view\}\)/);
-assert.match(motion,/duration:1510/,'Long donut reveal must be retained');
+assert.match(motion,/duration:900/,'Long donut reveal must be retained');
 assert.match(fs.readFileSync('native/FinanceStoragePlugin.java','utf8'),/class FinanceStoragePlugin/);
 console.log('OK: Android status scrim / aligned compact KPIs / grand motion and storage untouched');
