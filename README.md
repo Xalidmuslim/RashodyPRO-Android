@@ -39,3 +39,13 @@ Android package `ru.rashody.pro.preview61` устанавливается отд
 - [Автоматическая Android-сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v63-measured-qa.yml)
 
 Тестовый пакет `ru.rashody.pro.preview63` устанавливается отдельно и не переносит автоматически расходы из v6.2. Предварительная проверка UI выполнена в Chromium (393dp), но не на физическом Android-устройстве.
+
+## STUDIO MATTE v7.0 — единая дизайн-система (тестовая версия)
+
+Редизайн заменяет конфликтующие темы v5.7–v6.3 одной **Studio**-системой. Оставлены базовая разметка, сценарии операций и SQLite. Дизайн: тёплая светлая поверхность, контрастный графитовый текст, глубокий локальный 3D вместо серых широких теней, согласованные радиусы и спокойные акценты. Затронуты обзор, история, аналитика, настройки, диалоги и навигация.
+
+- **[Скачать APK v7.0](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-studio-v7.0-test/RashodyPRO-Studio-v7.0-TEST.apk)**
+- [Страница релиза v7.0](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-studio-v7.0-test)
+- [Проверки Android v7.0](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v70-studio.yml)
+
+Тестовый packageId `ru.rashody.pro.preview70` устанавливается отдельно, существующие расходы между версиями автоматически не переносятся. Проверено в Chromium на трёх ширинах, но не на физическом Android-устройстве.
