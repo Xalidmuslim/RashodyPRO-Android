@@ -12,7 +12,7 @@
   if(brandTitle){
    const header=document.createElement('div');
    header.className='r78-brand';
-   header.innerHTML='<span class="r78-brand-icon">'+img('kpi-coins','kpi',64)+'</span><div class="r78-brand-copy"><h1>Расходы Про</h1><p>Личные финансы</p></div>';
+   header.innerHTML='<span class="r78-brand-icon">'+<img alt="" aria-hidden="true" draggable="false" width="64" height="64" src="assets/brand/native-launcher.png">+'</span><div class="r78-brand-copy"><h1>Расходы Про</h1><p>Личные финансы</p></div>';
    brandTitle.replaceWith(header);
   }
   const copy=page.querySelector('.feature-day .feature-copy');
