@@ -1,0 +1,104 @@
+/* RASHODY PRO v7.6 / cinematic tactile motion.
+   Matte surfaces remain readable at rest; transitions animate only transforms,
+   opacity and a small bounded number of chart strokes, never layout sizes. */
+
+@property --stage-y{syntax:"<length>";initial-value:0px;inherits:false}
+@property --stage-rx{syntax:"<angle>";initial-value:0deg;inherits:false}
+@property --stage-ry{syntax:"<angle>";initial-value:0deg;inherits:false}
+@property --stage-scale{syntax:"<number>";initial-value:1;inherits:false}
+
+:root{
+ --v76-paper:#fff9f0;
+ --v76-ink:#233f44;
+ --v76-ambient:rgba(55,63,58,.16);
+ --v76-contact:rgba(38,59,54,.2);
+ --v76-spring:cubic-bezier(.18,.88,.18,1);
+}
+body.matte-editorial #page .week-strip{perspective:1050px;perspective-origin:50% 12%;overflow:visible!important}
+html body.matte-editorial #page .week-strip .week-day.week-day{
+ position:relative!important;isolation:isolate!important;
+ border-radius:25px!important;
+ border:1px solid rgba(255,255,255,.80)!important;
+ background-color:#fffaf2!important;background-image:linear-gradient(153deg,rgba(255,255,255,.77) 0%,rgba(255,255,255,0) 59%)!important;
+ box-shadow:0 3px 3px rgba(52,63,57,.14),0 12px 17px -9px rgba(52,63,57,.22),0 27px 33px -25px rgba(52,63,57,.20),inset 0 1px 0 rgba(255,255,255,.95)!important;
+ color:var(--v76-ink)!important;
+ transform:perspective(950px) translate3d(0,var(--stage-y),0) rotateX(var(--stage-rx)) rotateY(var(--stage-ry)) scale(var(--stage-scale))!important;
+ transform-origin:50% 78%!important;
+ backface-visibility:hidden;
+ transition:box-shadow 950ms var(--v76-spring),background-color 950ms var(--v76-spring),color 950ms var(--v76-spring)!important;
+}
+html body.matte-editorial #page .week-strip .week-day.week-day.focus-day{
+ background:#24575e!important;color:#fff9f1!important;
+ border-color:rgba(20,63,66,.44)!important;
+ box-shadow:0 4px 4px rgba(23,58,57,.26),0 17px 24px -12px rgba(23,58,57,.35),inset 0 2px 1px rgba(255,255,255,.21)!important;
+}
+html body.matte-editorial #page .week-strip .week-day.week-day.focus-day :is(.week-day-name,.week-day-date,.week-day-total){color:inherit!important}
+html body.matte-editorial #page .week-strip .week-day.week-day .week-day-meter-fill{
+ transition:width 1250ms cubic-bezier(.17,.86,.2,1)!important;
+}
+html body.matte-editorial #page .trend-cards{
+ perspective:1100px!important;perspective-origin:50% 40%!important;
+ overflow:visible!important;
+}
+html body.matte-editorial #page .trend-cards .trend-card.trend-card{
+ position:relative!important;isolation:isolate!important;
+ border-radius:28px!important;
+ border:1px solid rgba(255,255,255,.52)!important;
+ box-shadow:0 3px 4px rgba(56,58,51,.13),0 16px 22px -11px rgba(56,58,51,.23),0 31px 35px -27px rgba(56,58,51,.20),inset 0 2px 1px rgba(255,255,255,.47)!important;
+ transform:perspective(1000px) translate3d(0,var(--stage-y),0) rotateX(var(--stage-rx)) rotateY(var(--stage-ry)) scale(var(--stage-scale))!important;
+ transform-origin:50% 64%!important;
+ backface-visibility:hidden;
+ transition:background-color 950ms var(--v76-spring),border-color 950ms var(--v76-spring),box-shadow 950ms var(--v76-spring)!important;
+}
+html body.matte-editorial #page .trend-cards .trend-card.trend-card.coral{background:#d7a99d!important;color:#243d43!important}
+html body.matte-editorial #page .trend-cards .trend-card.trend-card.teal{background:#add4c1!important;color:#243d43!important}
+html body.matte-editorial #page .trend-cards .trend-card.trend-card.amber{background:#ead09f!important;color:#243d43!important}
+html body.matte-editorial #page .trend-cards .trend-card.trend-card .trend-icon{
+ border-radius:15px!important;
+ background:rgba(255,251,243,.30)!important;
+ box-shadow:0 2px 3px rgba(41,56,50,.13),0 7px 11px -7px rgba(41,56,50,.16),inset 0 1px rgba(255,255,255,.4)!important;
+}
+html body.matte-editorial #page .trend-cards .trend-card.trend-card :is(strong,span){color:#243d43!important}
+html body.matte-editorial #page .feature-day{
+ border-radius:34px!important;
+ box-shadow:0 3px 4px rgba(48,59,55,.11),0 16px 23px -14px rgba(48,59,55,.20),0 33px 37px -30px rgba(48,59,55,.18),inset 0 1px rgba(255,255,255,.9)!important;
+}
+html body.matte-editorial #page .day-donut,
+html body.matte-editorial #page .analytics-ring-panel .ring{
+ transform:perspective(960px) translate3d(0,var(--stage-y),0) rotateX(var(--stage-rx)) rotateY(var(--stage-ry)) scale(var(--stage-scale))!important;
+ transform-origin:center!important;backface-visibility:hidden;
+}
+html body.matte-editorial #page .day-donut-svg,
+html body.matte-editorial #page .analytics-ring-panel .ring-svg{
+ filter:drop-shadow(0 6px 5px rgba(56,59,53,.17))!important;
+}
+html body.matte-editorial #page .day-donut-center{
+ background:#fff9f0!important;
+ box-shadow:inset 0 6px 11px rgba(75,72,63,.12),inset 0 -3px 6px rgba(255,255,255,.55)!important;
+}
+html body.matte-editorial #page .day-donut-sector,
+html body.matte-editorial #page .analytics-ring-panel .ring-slice{
+ transition:stroke-width 880ms cubic-bezier(.2,.85,.23,1),opacity 880ms cubic-bezier(.2,.85,.23,1)!important;
+}
+html body.matte-editorial #page .day-donut-legend-item{
+ transition:background-color 850ms var(--v76-spring),box-shadow 850ms var(--v76-spring)!important;
+}
+html body.matte-editorial #page .day-donut-legend-item.is-selected{
+ box-shadow:0 3px 4px rgba(53,65,57,.13),0 11px 16px -10px rgba(53,65,57,.16),inset 0 1px rgba(255,255,255,.6)!important;
+}
+html body.matte-editorial #page .analytics-ring-panel{
+ border-radius:32px!important;
+}
+html body.matte-editorial #page .analytics-ring-panel .legend-line{
+ transition:background-color 900ms cubic-bezier(.19,.89,.21,1),color 900ms cubic-bezier(.19,.89,.21,1)!important;
+}
+@media(prefers-reduced-motion:reduce){
+ html body.matte-editorial #page .week-strip .week-day.week-day,
+ html body.matte-editorial #page .trend-cards .trend-card.trend-card,
+ html body.matte-editorial #page .day-donut,
+ html body.matte-editorial #page .analytics-ring-panel .ring{
+  transform:none!important;transition:none!important
+ }
+ html body.matte-editorial #page .day-donut-sector,
+ html body.matte-editorial #page .analytics-ring-panel .ring-slice{transition:none!important}
+}
