@@ -85,6 +85,16 @@
  }
  function dashboard(root,full,dayChanged,selectionChanged,summaryChanged,chartChanged){
   if(full){
+   animate(root.querySelector('.calendar-title-row h1'),[
+    {transform:'translate3d(0,14px,0) rotateX(8deg)',opacity:.25},
+    {transform:'translate3d(0,-2px,0)',opacity:1,offset:.78},
+    {transform:'none',opacity:1}
+   ],{duration:640,delay:0,easing:spring,fill:'both'});
+   root.querySelectorAll('.day-ledger .record-row').forEach((row,i)=>animate(row,[
+    {transform:'translate3d(0,22px,0) rotateX(7deg) scale(.96)',opacity:0},
+    {transform:'translate3d(0,-2px,0) rotateX(-1deg) scale(1.012)',opacity:1,offset:.75},
+    {transform:'none',opacity:1}
+   ],{duration:710,delay:600+i*52,easing:spring,fill:'both'}));
    const days=[...root.querySelectorAll('.week-strip .week-day')];
    days.forEach((el,i)=>{
     const phase=i%2===0?1:-1;
