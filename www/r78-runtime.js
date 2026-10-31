@@ -5,31 +5,10 @@
  const green='#5c7867',terra='#d98b61';
  const categories={food:'cart',cafe:'coffee',transport:'car',home:'home',health:'heart',fun:'film',shop:'shirt',other:'box'};
  const factory=(name,size=27)=>window.RashodyFactorySvg?.(name,size)||'';
- let swipeInstalled=false;
- function installWeekSwipe(){
-  if(swipeInstalled)return;
-  const page=document.getElementById('page');
-  if(!page)return;
-  swipeInstalled=true;
-  let touch=null;
-  page.addEventListener('touchstart',e=>{
-   const inside=e.target.closest?.('.week-strip');
-   touch=inside&&e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY}:null;
-  },{passive:true});
-  page.addEventListener('touchend',e=>{
-   if(!touch||!e.changedTouches.length)return;
-   const dx=e.changedTouches[0].clientX-touch.x,dy=e.changedTouches[0].clientY-touch.y;
-   touch=null;
-   if(Math.abs(dx)<45||Math.abs(dx)<Math.abs(dy)*1.4)return;
-   // The navigation buttons remain in DOM solely for existing business logic.
-   page.querySelector(dx<0?'[data-action="week-next"]':'[data-action="week-prev"]')?.click();
-  },{passive:true});
-  page.addEventListener('touchcancel',()=>{touch=null},{passive:true});
- }
  function enhanceDashboard(){
   const page=document.getElementById('page');
   if(!page)return;
-  installWeekSwipe();
+  // Core owns the single touchstart/touchend swipe handler for weeks.
   // No app icon, app title, or visible navigation arrows above the week.
   const copy=page.querySelector('.feature-day .feature-copy');
   if(copy&&!copy.querySelector('.r78-day-heading')){
