@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const g=fs.readFileSync('android/app/build.gradle','utf8');
+const h=fs.readFileSync('android/app/src/main/assets/public/index.html','utf8');
+const n=fs.readFileSync('android/app/src/main/res/values/strings.xml','utf8');
+const css=fs.readFileSync('android/app/src/main/assets/public/studio-v70.css','utf8');
+assert.match(g,/applicationId\s+["']ru\.rashody\.pro\.preview73["']/);
+assert.match(g,/versionCode\s+73/);
+assert.match(g,/versionName\s+["']7\.3-studio-matte-preview["']/);
+assert.match(h,/Расходы PRO 7\.3 · STUDIO MATTE TEST/);
+assert.match(n,/Расходы PRO 7\.3 ТЕСТ/);
+assert.match(css,/--ui-panel-radius:29px/);
+assert.match(h,/href="studio-v70.css"/);
+assert.match(h,/src="premium-motion-v73.js" defer/);
+const motion=fs.readFileSync('android/app/src/main/assets/public/premium-motion-v73.js','utf8');
+assert.match(motion,/requestAnimationFrame/);
+assert.match(css,/Touch Depth v7\.3/);
+console.log('OK: Studio 7.3 premium motion bundled, independent Android install');
