@@ -19,3 +19,13 @@
 - [Сборка/проверки](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v61-sculptural-qa.yml)
 
 Android package `ru.rashody.pro.preview61` устанавливается отдельно от основного приложения; его данные не переносятся автоматически. Визуальный тест на реальном устройстве обязателен перед слиянием в основную ветку.
+
+## v6.2 — приглушённый матовый 3D и исправления наложений
+
+Исправлены исходные цвета SVG-диаграмм и связанных легенд, уменьшены конфликты теней вложенных карточек, исправлен заход модального окна расхода под Android status bar и просвечивание содержимого ниже плавающей навигации. Изменения дизайна изолированы от финансовых данных.
+
+- [Скачать APK v6.2 напрямую](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-muted-matte-v6.2-test/RashodyPRO-Muted-Matte-v6.2-TEST.apk)
+- [Страница тестового релиза v6.2](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-muted-matte-v6.2-test)
+- [Автоматические тесты и сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v62-matte-qa.yml)
+
+Идентификатор тестового приложения `ru.rashody.pro.preview62`; основная программа не заменяется и данные автоматически не переносятся. APK не тестировался на устройстве, требуется визуальная QA-проверка.
