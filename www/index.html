@@ -2419,19 +2419,19 @@ function byMonth(){return data.transactions.filter(t=>t.date.startsWith(monthKey
 function sortTx(list){return [...list].sort((a,b)=>(b.date+(b.time||'')).localeCompare(a.date+(a.time||'')))}
 function panelEmpty(title,detail,action=''){return `<div class="empty"><div class="empty-icon">${svg('receipt',28)}</div><strong>${esc(title)}</strong>${esc(detail)}${action?`<div><button class="secondary-btn" data-action="new-expense">${svg('plus',16)} ${esc(action)}</button></div>`:''}</div>`}
 function activeCategory(map){const entries=Object.entries(map).sort((a,b)=>b[1]-a[1]);return entries.some(([id])=>id===chartSelection)?chartSelection:entries[0]?.[0]||null}
-const neutralChartColors=['#a19088','#788e85','#aa9b8b','#71878a','#94a59a','#b8aaa0','#9d959d','#929c93'];
+const neutralChartColors=['#be816f','#4c8a80','#ad9568','#587e9b','#72a58b','#ac8270','#927e9f','#7b8e92'];
 // Color is a property of category identity, not a temporary ranking position.
-const categoryColorById={food:'#788e85',cafe:'#a19088',transport:'#71878a',home:'#aa9b8b',health:'#9d959d',fun:'#94a59a',shop:'#a89c89',other:'#929c93',salary:'#738e84',sidejob:'#929c93',sales:'#aa9b8b',gifts:'#a19088','other-income':'#94a59a'};
+const categoryColorById={food:'#4c8a80',cafe:'#be816f',transport:'#587e9b',home:'#ad9568',health:'#927e9f',fun:'#72a58b',shop:'#ac8270',other:'#7b8e92',salary:'#4c8a80',sidejob:'#7b8e92',sales:'#ad9568',gifts:'#be816f','other-income':'#72a58b'};
 function categoryColor(id){
- if(id==='__other__')return '#85958b';
+ if(id==='__other__')return '#7b8e92';
  if(Object.prototype.hasOwnProperty.call(categoryColorById,id))return categoryColorById[id];
  let hash=2166136261;for(const code of String(id))hash=Math.imul(hash^code.charCodeAt(0),16777619)>>>0;
  return neutralChartColors[hash%neutralChartColors.length];
 }
 function categoryCardColor(id){
- const explicit={food:'#b5c1b8',cafe:'#c5b5ae',transport:'#bcc3bf',home:'#cdc1ac',health:'#c4bac3',fun:'#b9c8bd',shop:'#cabbab',other:'#c1c8bd'};
+ const explicit={food:'#c9e7d8',cafe:'#f2d1c6',transport:'#d0e1ee',home:'#efe0bd',health:'#e3d4e8',fun:'#d3e9d3',shop:'#ebd7c7',other:'#d9e4e3'};
  if(Object.prototype.hasOwnProperty.call(explicit,id))return explicit[id];
- const order=['#b5c1b8','#c5b5ae','#bcc3bf','#cdc1ac','#c4bac3','#b9c8bd','#cabbab','#c1c8bd'];
+ const order=['#c9e7d8','#f2d1c6','#d0e1ee','#efe0bd','#e3d4e8','#d3e9d3','#ebd7c7','#d9e4e3'];
  const swatch=categoryColor(id);const pos=neutralChartColors.indexOf(swatch);
  return order[(pos<0?0:pos)%order.length];
 }
