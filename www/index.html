@@ -2177,8 +2177,10 @@ body.matte-editorial #page .day-donut-center .day-donut-caption{font-size:clamp(
 <link rel="stylesheet" href="studio-v70.css">
 <link rel="stylesheet" href="studio-v75.css">
 <link rel="stylesheet" href="studio-v76.css">
+<link rel="stylesheet" href="studio-v77.css">
 <script src="premium-motion-v73.js" defer></script>
 <script src="premium-motion-v76.js" defer></script>
+<script src="sculpted-motion-v77.js" defer></script>
 
 
 
@@ -2483,7 +2485,7 @@ function renderNav(){document.getElementById('sidebar').innerHTML=`<div class="b
  document.getElementById('mobile-nav').innerHTML=tabs.map(id=>id==='new'?`<button class="fab" data-action="new-expense" aria-label="Добавить операцию">${r75Icon('plus','actions',43)}</button>`:`<button class="${view===id||(id==='analytics'&&view==='analytics')?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${r75Icon(id,'nav',31)}<span>${labels[id]}</span></button>`).join('');
 }
 function renderTop(){let heading=view==='dashboard'?'':view==='transactions'?'История':view==='analytics'?'Аналитика':'Настройки';document.getElementById('topbar').className=`topbar ${view==='dashboard'?'dashboard-topbar':'subpage-topbar'}`;document.getElementById('topbar').innerHTML=(view==='dashboard'||view==='analytics')?'':`<div class="topbar-heading"><button class="icon-btn screen-back" data-action="navigate-back" aria-label="Назад">${svg('chevronLeft',22)}</button><div><div class="topline">ФИНАНСОВЫЙ ДНЕВНИК</div><h1>${heading}</h1></div></div><div class="topbar-right">${view==='transactions'?`<button type="button" class="header-csv" data-action="export-csv" aria-label="Экспортировать операции в CSV">${svg('download',16)}<span>CSV</span></button>`:''}<button class="primary-btn add-desktop" data-action="new-expense">${svg('plus',17)} Добавить</button></div>`}
-function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});}
+function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});window.RashodySculptedMotion?.afterRender({view});}
 function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
@@ -2544,7 +2546,9 @@ function daySummaryRing(items){
  const arcs=entries.map(([id,amount],i)=>{
    const span=amount/all*circumference, gap=entries.length>1?Math.min(2.5,span*.12):0;
    const len=Math.max(.05,span-gap),stroke=categoryColor(id),isSelected=id===selected;
-   const part=`<circle class="day-donut-sector ${isSelected?'is-selected':''}" data-day-chart-category="${esc(id)}" role="button" tabindex="0" aria-pressed="${isSelected}" aria-label="${esc(dayChartName(id))}: ${esc(money(amount))}, ${dayChartPercent(amount,all)}%" cx="100" cy="100" r="65" stroke="${stroke}" stroke-dasharray="${len.toFixed(4)} ${(circumference-len).toFixed(4)}" stroke-dashoffset="${(-offset).toFixed(4)}" transform="rotate(-90 100 100)"><title>${esc(dayChartName(id))} · ${esc(money(amount))}</title></circle>`;
+   const mid=(offset+span/2)/65;
+   const outX=Math.cos(mid)*9.5,outY=Math.sin(mid)*9.5;
+   const part=`<circle style="--r77-x:${outX.toFixed(2)}px;--r77-y:${outY.toFixed(2)}px" class="day-donut-sector ${isSelected?'is-selected':''}" data-day-chart-category="${esc(id)}" role="button" tabindex="0" aria-pressed="${isSelected}" aria-label="${esc(dayChartName(id))}: ${esc(money(amount))}, ${dayChartPercent(amount,all)}%" cx="100" cy="100" r="65" stroke="${stroke}" stroke-dasharray="${len.toFixed(4)} ${(circumference-len).toFixed(4)}" stroke-dashoffset="${(-offset).toFixed(4)}" ><title>${esc(dayChartName(id))} · ${esc(money(amount))}</title></circle>`;
    offset+=span;return part;
  }).join('');
  const legend=entries.map(([id,amount],i)=>{
@@ -2553,17 +2557,59 @@ function daySummaryRing(items){
    return `<button type="button" class="day-donut-legend-item ${selected===id?'is-selected':''}" data-day-chart-category="${esc(id)}" aria-pressed="${selected===id}"><span class="day-donut-swatch" style="background:${color}"></span><span class="day-donut-description"><span class="day-donut-name" title="${esc(name)}">${esc(name)}</span><span class="day-donut-data">${percent}% · ${esc(money(amount))}</span></span></button>`;
  }).join('');
  return `<div class="day-donut" aria-label="Круговая диаграмма расходов за выбранный день">
- <svg class="day-donut-svg" viewBox="0 0 200 200" aria-label="${all?'Категории расходов':'Расходов нет'}"><circle class="day-donut-base" cx="100" cy="100" r="65"/>${arcs}</svg>
+ <svg class="day-donut-svg" viewBox="0 0 200 200" aria-label="${all?'Категории расходов':'Расходов нет'}"><circle class="day-donut-base" cx="100" cy="100" r="65"/><g transform="rotate(-90 100 100)">${arcs}</g></svg>
  <button type="button" class="day-donut-center" data-day-chart-reset aria-label="Показать все расходы дня: ${esc(money(all))}"><span class="day-donut-category" title="${esc(categoryTitle)}">${esc(categoryTitle)}</span><span class="day-donut-total num" title="${esc(money(shown))}">${esc(dayDonutAmount(shown))}</span><span class="day-donut-caption">${caption}</span></button>
  </div><div class="day-donut-legend">${all?legend:'<div class="day-donut-empty-legend">За выбранный день расходов нет</div>'}</div>`;
 }
 function updateDayChartSelection(id){
- const day=dashboardFocusDay||dateLocal();const {entries}=dayChartBreakdown(expensesOfDay(day));
+ const day=dashboardFocusDay||dateLocal(),items=expensesOfDay(day);
+ const {all,entries}=dayChartBreakdown(items);
  if(id!==null&&!entries.some(([key])=>key===id))return;
- dayChartSelection=dayChartSelection===id?null:id;
- // Dashboard only: re-render from existing transactions; no mutation of financial data.
- render();
+ const previous=dayChartSelection, next=id===previous?null:id;
+ dayChartSelection=next;
+ const chosen=entries.find(([key])=>key===next);
+ const sum=chosen?chosen[1]:all;
+ document.querySelectorAll('#page [data-day-chart-category]').forEach(el=>{
+  const active=!!next&&el.dataset.dayChartCategory===next;
+  el.classList.toggle('is-selected',active);
+  el.setAttribute('aria-pressed',String(active));
+ });
+ const center=document.querySelector('#page .day-donut-center');
+ if(center){
+  const name=center.querySelector('.day-donut-category');
+  const total=center.querySelector('.day-donut-total');
+  const share=center.querySelector('.day-donut-caption');
+  if(name){name.textContent=next?dayChartName(next):'Все расходы';name.title=name.textContent}
+  if(total){total.textContent=dayDonutAmount(sum);total.title=money(sum)}
+  if(share)share.textContent=next?dayChartPercent(sum,all)+'% расходов':'за день';
+ }
+ const detail=document.getElementById('r77DaySelection');
+ if(detail){
+  const html=next?daySelectedOperations(items,next):'';
+  window.RashodySculptedMotion?.transitionSector(previous,next,detail,()=>{detail.innerHTML=html;detail.hidden=!next;});
+  if(!window.RashodySculptedMotion){detail.innerHTML=html;detail.hidden=!next}
+ }
 }
+
+function daySelectedOperations(items,id){
+ if(!id)return '';
+ const {entries}=dayChartBreakdown(items);
+ const common=new Set(entries.filter(([key])=>key!=='__other__').map(([key])=>key));
+ const list=items.filter(t=>t.type==='expense'&&(id==='__other__'?!common.has(t.category):t.category===id));
+ const total=list.reduce((sum,t)=>sum+t.amount,0);
+ return '<div class="r77-selection-header"><strong>'+esc(dayChartName(id))+'</strong><span>'+esc(money(total))+' · '+expenseCountLabel(list.length)+'</span></div><div class="r77-selection-list">'+list.slice(0,5).map(txRow).join('')+'</div>'+(list.length>5?'<span class="r77-selection-more">Показаны первые 5 операций</span>':'');
+}
+function sculptedDetails(kind){
+ const day=dashboardFocusDay||dateLocal();
+ const week=weekRangeFor(dashboardWeekAnchor||day);
+ const current=expensesOfDay(day),weekly=sortTx(data.transactions.filter(t=>t.type==='expense'&&week.includes(t.date)));
+ const weekTotal=weekly.reduce((sum,t)=>sum+t.amount,0),maximum=weekly.reduce((max,t)=>!max||t.amount>max.amount?t:max,null);
+ if(kind==='week')return {title:'За неделю',number:money(weekTotal),sub:expenseCountLabel(weekly.length),icon:'kpi-wallet',rows:week.map(d=>({name:matteDateLabel(d),value:money(weekly.filter(t=>t.date===d).reduce((sum,t)=>sum+t.amount,0))}))};
+ if(kind==='daily')return {title:'Операции за день',number:String(current.length),sub:matteDateLabel(day),icon:'kpi-receipt',rows:current.slice(0,6).map(t=>({name:getCat(t.category).name,value:money(t.amount),note:t.note||''}))};
+ if(kind==='max')return {title:'Максимальная покупка',number:money(maximum?.amount||0),sub:maximum?matteDateLabel(maximum.date):'За неделю покупок нет',icon:'kpi-bag',rows:maximum?[{name:getCat(maximum.category).name,value:money(maximum.amount),note:maximum.note||''}]:[]};
+ return null;
+}
+window.RashodySculptedDetails=sculptedDetails;
 
 function dashboard(){
  const summary=currentSummary(),today=dateLocal(),inThisMonth=monthKey(month)===today.slice(0,7),latest=F.latestExpenseDay(data.transactions,today).day,chosen=dashboardFocusDay||(latest.startsWith(monthKey(month))?latest:(inThisMonth?today:monthKey(month)+'-01'));
@@ -2572,8 +2618,8 @@ function dashboard(){
  const count=summary.items.filter(t=>t.type==='expense').length,average=summary.expense/Math.max(1,inThisMonth?new Date().getDate():new Date(month.getFullYear(),month.getMonth()+1,0).getDate()),byCat=F.expenseCategories(summary.items),picked=chosenItems.reduce((sum,t)=>sum+t.amount,0);
  
  return `${compactWeekWidget(chosen)}
- <div class="trend-cards"><div class="trend-card coral"><span class="trend-icon">${svg('wallet',21)}</span><strong class="num" title="${esc(money(weekTotal))}">${summaryMoney(weekTotal)}</strong><span>За неделю</span></div><div class="trend-card teal"><span class="trend-icon">${svg('receipt',21)}</span><strong class="num">${chosenItems.length}</strong><span>Операций за день</span></div><div class="trend-card amber"><span class="trend-icon">${svg('chart',21)}</span><strong class="num" title="${esc(money(largestExpense))}">${summaryMoney(largestExpense)}</strong><span>Макс. покупка</span></div></div>
- <section class="feature-day"><div class="feature-copy"><div class="eyebrow">ВЫБРАННЫЙ ДЕНЬ</div><h2>${esc(matteDateLabel(chosen))}</h2><div class="feature-amount num" title="${esc(money(picked))}">${summaryMoney(picked)}</div><p>${chosenItems.length?`${expenseCountLabel(chosenItems.length)} · Категорий: ${Object.keys(F.expenseCategories(chosenItems)).length}`:'Расходов за этот день нет'}</p><button class="feature-link" data-action="view-focus-day">Смотреть операции ${svg('chevronRight',18)}</button></div><div class="day-category-graphic">${daySummaryRing(chosenItems)}</div></section>
+ <div class="trend-cards"><button type="button" class="trend-card coral" data-sculpted-detail="week" aria-label="Развернуть статистику за неделю"><span class="trend-icon"><img src="assets/icons/kpi/kpi-wallet.png" width="50" height="50" alt="" decoding="async"></span><strong class="num" title="${esc(money(weekTotal))}">${summaryMoney(weekTotal)}</strong><span>За неделю</span></button><button type="button" class="trend-card teal" data-sculpted-detail="daily" aria-label="Развернуть операции за день"><span class="trend-icon"><img src="assets/icons/kpi/kpi-receipt.png" width="50" height="50" alt="" decoding="async"></span><strong class="num">${chosenItems.length}</strong><span>Операций за день</span></button><button type="button" class="trend-card amber" data-sculpted-detail="max" aria-label="Развернуть максимальную покупку"><span class="trend-icon"><img src="assets/icons/kpi/kpi-bag.png" width="50" height="50" alt="" decoding="async"></span><strong class="num" title="${esc(money(largestExpense))}">${summaryMoney(largestExpense)}</strong><span>Макс. покупка</span></button></div>
+ <section class="feature-day"><div class="feature-copy"><div class="eyebrow">ВЫБРАННЫЙ ДЕНЬ</div><h2>${esc(matteDateLabel(chosen))}</h2><div class="feature-amount num" title="${esc(money(picked))}">${summaryMoney(picked)}</div><p>${chosenItems.length?`${expenseCountLabel(chosenItems.length)} · Категорий: ${Object.keys(F.expenseCategories(chosenItems)).length}`:'Расходов за этот день нет'}</p><button class="feature-link" data-action="view-focus-day">Смотреть операции ${svg('chevronRight',18)}</button></div><div class="day-category-graphic">${daySummaryRing(chosenItems)}</div><div class="r77-day-selection" id="r77DaySelection" ${dayChartSelection?"":"hidden"}>${dayChartSelection?daySelectedOperations(chosenItems,dayChartSelection):""}</div></section>
  <section class="panel day-ledger"><div class="section-heading ledger-heading"><h2>Операции за день</h2><span class="ledger-count">${expenseCountLabel(chosenItems.length)}</span></div>${chosenItems.length?`<div class="day-items">${chosenItems.slice(0,5).map(txRow).join('')}</div><div class="ledger-actions"><button class="ghost-btn" data-action="view-focus-day">${chosenItems.length>5?'Все операции':'История'} →</button>${data.transactions.some(t=>t.type==='expense')?`<button class="repeat-inline" data-action="quick-repeat">${svg('repeat',16)} Повторить</button>`:''}<button class="subtle-add" data-action="new-expense-day" aria-label="Добавить расход за выбранный день">${svg('plus',20)}</button></div>`:`<div class="fancy-empty"><div class="empty-receipt" aria-hidden="true"><span></span><span></span><span></span><i>${svg('plus',23)}</i></div><strong>Пока нет операций</strong><p>Добавьте первый расход за этот день.</p><button class="empty-add" data-action="new-expense-day">${svg('plus',20)} Добавить расход</button></div>`}</section>
 `;
 }
@@ -2982,9 +3028,9 @@ async function clearData(){if(!data.transactions.length)return toast('Истор
 function actions(a){switch(a){case 'navigate-back':return navigateBack();case 'week-prev':return changeWeek(-1);case 'week-next':return changeWeek(1);case 'week-today':return resetWeek();case 'history-prev':return historyStep(-1);case 'history-next':return historyStep(1);case 'history-today':return historyToday();case 'history-reset-filters':filters={type:'all',category:'all',search:'',allDates:false};return render();case 'toggle-history-filters':historyFiltersOpen=!historyFiltersOpen;return render();case 'view-focus-day':historyPeriod='day';historyAnchor=(dashboardFocusDay&&F.isDate(dashboardFocusDay)?dashboardFocusDay:dateLocal());filters={type:'expense',category:'all',search:'',allDates:false};return go('transactions');case 'analytics-prev':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,-1);chartSelection=null;return render();case 'analytics-next':analyticsAnchor=F.shiftPeriod(analyticsAnchor,analyticsPeriod,1);chartSelection=null;return render();case 'analytics-today':analyticsAnchor=dateLocal();chartSelection=null;return render();case 'prev-month':return changeMonth(-1);case 'next-month':return changeMonth(1);case 'new-expense':return startTx('expense');case 'new-expense-day':return startTx('expense',null,dashboardFocusDay);case 'new-income':return startTx('income');case 'close-modal':return closeModal();case 'tx-clear-amount':{const input=document.getElementById('txAmount');if(input){input.value='';if(draft)draft.amount='';updateTxConfirm()}return}
 case 'tx-more-categories':{const picker=document.getElementById('txCategories');if(!picker)return;const on=picker.classList.toggle('expanded');const b=document.getElementById('txMoreCategories');if(b){b.setAttribute('aria-expanded',String(on));b.textContent=on?'Свернуть ↑':'Все категории ↓'}return}case 'tx-today':{const el=document.getElementById('txDate');if(el){el.value=dateLocal();if(draft)draft.date=el.value}return}
 case 'save-tx':return saveTx();case 'delete-tx':return deleteTx();case 'repeat-tx':return repeatTx();case 'quick-repeat':return quickRepeatLast();case 'reset-corrupt':return resetCorruptStorage();case 'storage-dismiss':storagePartialDismissed=true;storageWarning(null);return;case 'new-category':return startCat();case 'tx-add-category':return startCatFromTx();case 'save-category':return saveCat();case 'delete-category':return deleteCat();case 'export-json':return exportJSON();case 'export-csv':return exportCSV();case 'import-json':return document.getElementById('importFile').click();case 'import-old-csv':return openLegacyCSV();case 'confirm-old-csv':return importLegacyCSV();case 'load-month-demo':return loadMonthlyDemo();case 'remove-month-demo':return removeMonthlyDemo();case 'clear-data':return clearData()}}
-document.addEventListener('click',e=>{const dayPiece=e.target.closest('[data-day-chart-category]');if(dayPiece){updateDayChartSelection(dayPiece.dataset.dayChartCategory);return}if(e.target.closest('[data-day-chart-reset]')){dayChartSelection=null;render();return}const slice=e.target.closest('.ring-slice');if(slice){updateChartSelection(slice.dataset.chartCategory);slice.blur?.();return}const btn=e.target.closest('button');if(!btn)return;
+document.addEventListener('click',e=>{const dayPiece=e.target.closest('[data-day-chart-category]');if(dayPiece){updateDayChartSelection(dayPiece.dataset.dayChartCategory);return}if(e.target.closest('[data-day-chart-reset]')){updateDayChartSelection(null);return}const slice=e.target.closest('.ring-slice');if(slice){updateChartSelection(slice.dataset.chartCategory);slice.blur?.();return}const btn=e.target.closest('button');if(!btn)return;
  if(btn.hasAttribute('data-numpad')&&draft){enterAmountDigit(btn.dataset.numpad);return}
- if(btn.dataset.jumpDay){dayChartSelection=null;dashboardFocusDay=btn.dataset.jumpDay;dashboardWeekAnchor=btn.dataset.jumpDay;return view==='dashboard'?render():undefined}
+ if(btn.dataset.jumpDay){window.RashodySculptedMotion?.beforeDayChange(btn.dataset.jumpDay);dayChartSelection=null;dashboardFocusDay=btn.dataset.jumpDay;dashboardWeekAnchor=btn.dataset.jumpDay;return view==='dashboard'?render():undefined}
  if(btn.hasAttribute('data-chart-open')){const id=btn.dataset.category;filters={type:'expense',category:id,search:'',allDates:false};historyPeriod=view==='analytics'?analyticsPeriod:'month';historyAnchor=view==='analytics'?analyticsAnchor:dateLocal(month);go('transactions');return render()}
  if(btn.dataset.quickAmount&&draft){const amount=document.getElementById('txAmount');amount.value=btn.dataset.quickAmount;draft.amount=amount.value;updateTxConfirm();return}
  if(btn.dataset.action)return actions(btn.dataset.action);
