@@ -1,7 +1,7 @@
 name: Rashody PRO v7.6 Tactile PNG & Motion APK
 on:
   push:
-    branches: [redesign/rashody-v76-3d-icons-compact-ime-2026-10-31]
+    branches: [redesign/rashody-v76-cinematic-calendar-charts-2026-10-31]
   workflow_dispatch:
 permissions:
   contents: write
@@ -70,12 +70,12 @@ jobs:
         run: |
           set -euo pipefail
           cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-Studio-v7.6-CINEMATIC-TEST.apk
-          if gh release view rashody-studio-v7.6-3d-png-preview >/dev/null 2>&1; then
-            gh release upload rashody-studio-v7.6-3d-png-preview RashodyPRO-Studio-v7.6-CINEMATIC-TEST.apk --clobber
+          if gh release view rashody-studio-v7.6-cinematic-preview >/dev/null 2>&1; then
+            gh release upload rashody-studio-v7.6-cinematic-preview RashodyPRO-Studio-v7.6-CINEMATIC-TEST.apk --clobber
           else
-            gh release create rashody-studio-v7.6-3d-png-preview RashodyPRO-Studio-v7.6-CINEMATIC-TEST.apk \
+            gh release create rashody-studio-v7.6-cinematic-preview RashodyPRO-Studio-v7.6-CINEMATIC-TEST.apk \
               --target "$GITHUB_SHA" \
-              --title "Расходы PRO — v7.6 3D PNG & Compact Calculator (тест)" \
+              --title "Расходы PRO — v7.6 Cinematic Matte Motion (тест)" \
               --notes "Cinematic 3D calendar 7-day cascade, staggered 3 metrics and 2s SVG donut draws with reduced-motion support. Isolated ru.rashody.pro.preview76. Real-device QA required." \
               --prerelease --latest=false
           fi
