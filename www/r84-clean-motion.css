@@ -1,0 +1,199 @@
+/* v8.4 — WEEK FIRST / FACTORY SVG / BOTTOM KPI SHEET.
+   Intentional one-layer chrome. Static shadows only; transform/opacity animation
+   handled by existing Motion JS. No backdrop-filter or permanent will-change. */
+:root{
+ --r84-paper:#efe3d5;--r84-ink:#29241f;
+ --r84-dark:#3d5645;--r84-clay:#d68a63;
+ --r84-soft-shadow:0 3px 5px rgba(77,54,40,.15),
+ 0 11px 19px -8px rgba(79,53,38,.24),0 21px 28px -22px rgba(65,44,31,.24);
+ --r84-key-shadow:0 3px 5px rgba(67,48,33,.16),
+ 0 10px 16px -9px rgba(71,50,34,.24);
+}
+/* Dashboard starts with the week: hide header, app mark and arrows as requested.
+   Previous and next weeks are reached by the accessible week-strip swipe. */
+html body.matte-editorial #page .calendar-title-row{
+ display:none!important;visibility:hidden!important;
+}
+html body.matte-editorial #page .calendar-shell{
+ margin-top:0!important;margin-bottom:10px!important;padding-top:0!important;
+}
+html body.matte-editorial #page .calendar-shell .week-strip{
+ padding-top:3px!important;padding-bottom:8px!important;
+ touch-action:pan-y!important;
+}
+html body.matte-editorial #page .trend-cards{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:7px!important;margin:0 0 12px!important;
+}
+html body.matte-editorial #page .trend-cards button.trend-card{
+ height:68px!important;min-height:68px!important;max-height:68px!important;
+ display:grid!important;grid-template-columns:29px minmax(0,1fr)!important;
+ grid-template-rows:1fr 1fr!important;column-gap:4px!important;row-gap:1px!important;
+ padding:9px 7px!important;border-radius:18px!important;
+ box-shadow:var(--r84-soft-shadow)!important;
+}
+html body.matte-editorial #page .trend-cards button.trend-card .trend-icon{
+ display:grid!important;place-items:center!important;
+ grid-column:1!important;grid-row:1/3!important;width:29px!important;height:39px!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;filter:none!important;transform:none!important;
+}
+html body.matte-editorial #page .trend-cards button.trend-card .trend-icon > svg{
+ display:block!important;width:29px!important;height:29px!important;
+ color:#4a3a2c!important;stroke-width:1.8!important;
+ filter:drop-shadow(0 2px 1px rgba(46,36,28,.18));
+}
+html body.matte-editorial #page button.trend-card strong{
+ font-weight:830!important;font-size:clamp(12px,3.4vw,17px)!important;
+ letter-spacing:-.045em!important;line-height:1!important;
+ white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+}
+html body.matte-editorial #page button.trend-card>span:last-child{
+ font-size:clamp(9px,2.45vw,11px)!important;line-height:1.12!important;
+ font-weight:570!important;margin-top:2px!important;
+}
+html body.matte-editorial #page .feature-day .day-donut::before{
+ display:none!important;content:none!important;box-shadow:none!important;
+}
+html body.matte-editorial #page .feature-day .day-donut-base{
+ display:none!important;opacity:0!important;stroke:none!important;
+}
+html body.matte-editorial #page .feature-day .day-donut-svg{
+ filter:drop-shadow(0 4px 2px rgba(75,48,34,.19))!important;
+}
+html body.matte-editorial #page .feature-day .day-donut-center{
+ background:#f5eadd!important;
+ box-shadow:inset 0 3px 7px rgba(67,49,38,.09)!important;
+}
+html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend){
+ grid-template-columns:minmax(0,1fr)!important;padding-bottom:16px!important;
+}
+html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend) .day-donut{
+ display:none!important;
+}
+html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend) .feature-copy{
+ grid-column:1!important;
+}
+/* Only the native built-in vector drawings outside bottom navigation. */
+html body.matte-editorial .r84-native-icon{
+ display:inline-grid!important;place-items:center!important;flex:none!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ width:auto!important;height:auto!important;
+}
+html body.matte-editorial .r84-native-icon > svg{display:block;stroke-width:1.85!important}
+html body.matte-editorial #page .r78-category-icon,
+html body.matte-editorial #page .r78-day-icon,
+html body.matte-editorial #page .r78-ledger-icon{
+ display:grid!important;place-items:center!important;
+ background:#eee2d4!important;box-shadow:var(--r84-key-shadow)!important;
+ border:0!important;color:#3e5548!important;
+}
+html body.matte-editorial #page .r78-category-icon svg,
+html body.matte-editorial #page .r78-day-icon svg,
+html body.matte-editorial #page .r78-ledger-icon svg{
+ width:25px!important;height:25px!important;stroke-width:1.9!important;
+}
+html body.matte-editorial #page .day-ledger .record-row .category-icon{
+ background:transparent!important;border:0!important;
+ box-shadow:none!important;min-width:43px!important;width:43px!important;height:43px!important;
+}
+html body.matte-editorial #page .record-row .category-icon .r84-native-icon{
+ display:grid!important;place-items:center!important;
+ width:43px!important;height:43px!important;border-radius:13px!important;
+ background:#eee0d0!important;box-shadow:var(--r84-key-shadow)!important;
+}
+html body.matte-editorial #page .record-row .category-icon svg{
+ width:26px!important;height:26px!important;color:#4f624f!important;
+}
+html body.matte-editorial #page .day-donut-legend-item .r78-category-icon{
+ width:35px!important;height:35px!important;border-radius:11px!important;
+}
+html body.matte-editorial #page .day-donut-legend-item .r78-category-icon svg{
+ width:23px!important;height:23px!important;
+}
+/* Bottom-attached KPI sheet: one transformed surface with an opacity scrim.
+   Existing document-level back and Escape handlers are retained. */
+.r77-detail-scrim{
+ display:grid!important;place-items:end center!important;
+ align-items:end!important;justify-items:center!important;
+ padding:0 8px 0!important;
+ background:rgba(19,36,34,.26)!important;
+ overflow:hidden!important;perspective:none!important;
+}
+.r77-detail-panel{
+ width:min(100%,520px)!important;max-height:min(82dvh,750px)!important;
+ margin:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;
+ border-radius:29px 29px 0 0!important;
+ padding:23px 21px calc(23px + env(safe-area-inset-bottom,0px))!important;
+ transform-origin:center bottom!important;
+ background:#f6ebde!important;color:#28241f!important;
+ box-shadow:0 -6px 20px rgba(49,40,33,.14),0 -18px 36px -18px rgba(40,32,27,.22)!important;
+ border:0!important;outline:none!important;
+}
+.r77-detail-head{gap:12px!important}
+.r77-detail-icon{
+ width:54px!important;height:54px!important;display:grid!important;
+ place-items:center!important;border-radius:16px!important;
+ background:#e8d8c5!important;box-shadow:var(--r84-key-shadow)!important;
+ transform-style:flat!important;
+}
+.r77-detail-icon svg{width:35px!important;height:35px!important;stroke:#475847}
+.r77-detail-close{
+ background:#eee0d1!important;color:#302822!important;
+ box-shadow:var(--r84-soft-shadow)!important;
+}
+.r77-detail-row{
+ background:#f4e8db!important;border:0!important;
+ box-shadow:var(--r84-key-shadow)!important;
+}
+.r77-detail-number{font-variant-numeric:tabular-nums!important;font-weight:850!important}
+.r77-detail-open{overscroll-behavior:contain!important}
+/* All ordinary action controls retain a static, matte 3D contact shadow.
+   Do not reintroduce white/gradient borders or animated blur layers. */
+html body.matte-editorial #page .feature-link,
+html body.matte-editorial #page .ghost-btn,
+html body.matte-editorial #page .repeat-inline,
+html body.matte-editorial #page .subtle-add,
+html body.matte-editorial #page .empty-add,
+html body.matte-editorial #page .primary-btn,
+html body.matte-editorial #page .secondary-btn,
+html body.matte-editorial #page .icon-btn,
+html body.matte-editorial #page .today-btn,
+html body.matte-editorial #page .r49-filter-btn,
+html body.matte-editorial #page .header-csv,
+html body.matte-editorial .overlay button,
+html body.matte-editorial .r77-detail-close{
+ box-shadow:var(--r84-soft-shadow)!important;border:0!important;
+}
+html body.matte-editorial #page button,
+html body.matte-editorial .overlay button,
+html body.matte-editorial .r77-detail-close{
+ transition:box-shadow 220ms ease, background-color 220ms ease!important;
+ -webkit-tap-highlight-color:transparent!important;
+}
+html body.matte-editorial #page button:focus-visible,
+html body.matte-editorial .overlay button:focus-visible,
+html body.matte-editorial .r77-detail-close:focus-visible{
+ outline:2px solid #526e5b!important;outline-offset:3px!important;
+}
+html body.matte-editorial .mobile-nav{box-shadow:var(--r84-soft-shadow)!important}
+html body.matte-editorial .mobile-nav button.active:not(.fab),
+html body.matte-editorial .mobile-nav .fab{
+ box-shadow:var(--r84-soft-shadow)!important;
+}
+@media(max-width:370px){
+ html body.matte-editorial #page .trend-cards button.trend-card{
+  height:65px!important;min-height:65px!important;max-height:65px!important;
+  grid-template-columns:25px minmax(0,1fr)!important;padding:7px 4px!important;
+ }
+ html body.matte-editorial #page .trend-cards button.trend-card .trend-icon{
+  width:25px!important;height:35px!important;
+ }
+ html body.matte-editorial #page .trend-cards button.trend-card .trend-icon > svg{
+  width:25px!important;height:25px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html body.matte-editorial #page button,
+ html body.matte-editorial .r77-detail-close{transition:none!important}
+}
