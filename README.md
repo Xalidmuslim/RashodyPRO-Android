@@ -59,3 +59,14 @@ v7.1 **заменяет v7.0**: в проверке Android CSS воспроиз
 - [Проверки исходников и Android-сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v71-studio.yml)
 
 Отдельный тестовый идентификатор `ru.rashody.pro.preview71`; данные других версий автоматически не переносятся. Физический Android-устройственный тест ещё требуется.
+
+
+## 7.2 — Studio Touch Depth Motion (Android TEST)
+
+Тактильные интерактивные эффекты на кнопках и днях календаря: perspective tilt, раздельный параллакс текста/иконок, слабое матовое освещение, динамическая тень, вдавливание при касании и пружинное возвращение. Делегированные Pointer Events работают на всех разделах и открываемых динамически формах, без перехвата событий, прокрутки и изменения финансовой логики. При включённом системном reduced motion анимация не применяется.
+
+- [Скачать тестовый APK v7.2 напрямую](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-studio-v7.2-test/RashodyPRO-Studio-v7.2-TEST.apk)
+- [Страница релиза v7.2](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-studio-v7.2-test)
+- [CI: тесты и Android-сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v72-touch-depth.yml)
+
+APK имеет отдельный package `ru.rashody.pro.preview72`. Он не заменяет основное приложение и не переносит автоматически сохранённые в других пакетах расходы. Перформанс/ощущение на реальном Android-устройстве необходимо проверить вручную.
