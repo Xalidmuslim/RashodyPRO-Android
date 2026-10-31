@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const gradle=fs.readFileSync('android/app/build.gradle','utf8');
+const strings=fs.readFileSync('android/app/src/main/res/values/strings.xml','utf8');
+const html=fs.readFileSync('android/app/src/main/assets/public/index.html','utf8');
+assert.match(gradle,/applicationId\s+["']ru\.rashody\.pro\.preview61["']/);
+assert.match(gradle,/versionCode\s+61/);
+assert.match(gradle,/versionName\s+["']6\.1-sculptural-preview["']/);
+assert.match(strings,/Расходы PRO 6\.1 ТЕСТ/);
+assert.match(html,/Расходы PRO 6\.1 · Sculptural Matte 3D TEST/);
+assert.match(html,/sculptural-restore-v61\.css/);
+assert.match(fs.readFileSync('android/app/src/main/assets/public/sculptural-restore-v61.css','utf8'),/--r61-radius-panel:32px/);
+console.log('OK: built v6.1 APK has independent package and new matte style');
