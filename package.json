@@ -8,7 +8,7 @@
     "android:sync": "npx cap sync android",
     "android:open": "npx cap open android",
     "android:build": "cd android && ./gradlew assembleDebug",
-    "verify": "node scripts/verify-studio-v70.mjs && node scripts/verify-android-keyboard-matte-v55.mjs && node scripts/verify-category-sheet-v54.mjs && node scripts/verify-category-selection-v53.mjs && node scripts/verify-category-motion-v52.mjs && node scripts/verify-release-distribution.mjs && node scripts/verify.mjs && node scripts/verify-icons.mjs"
+    "verify": "node scripts/verify-studio-native-v71.mjs && node scripts/verify-studio-v70.mjs && node scripts/verify-android-keyboard-matte-v55.mjs && node scripts/verify-category-sheet-v54.mjs && node scripts/verify-category-selection-v53.mjs && node scripts/verify-category-motion-v52.mjs && node scripts/verify-release-distribution.mjs && node scripts/verify.mjs && node scripts/verify-icons.mjs"
   },
   "dependencies": {
     "@capacitor/core": "^8.0.0",
