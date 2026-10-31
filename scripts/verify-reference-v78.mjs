@@ -11,10 +11,11 @@ assert.match(motion,/window\.RashodyReferenceV78\?\.afterRender/);
 const bundle=read('scripts/bundle-runtime-theme-v80.mjs');
 for(const x of ['r78-header.css','r78-hero.css','r78-details.css'])assert.ok(motion.includes(x)||bundle.includes(x),'Missing source '+x);
 assert.ok(motion.includes('r78-runtime.js'),'Dashboard enhancement missing');
-assert.match(runtime,/Расходы Про/);
-assert.match(runtime,/Личные финансы/);
-assert.match(runtime,/r78-brand-icon/);
+
+
+
 assert.match(runtime,/r78-day-icon/);
+assert.doesNotMatch(runtime,/r78-brand-icon/,'Header removed by user request');
 assert.match(runtime,/r78-category-icon/);
 assert.match(runtime,/r78-ledger-icon/);
 assert.match(runtime,/perspective\(1100px\)/);
