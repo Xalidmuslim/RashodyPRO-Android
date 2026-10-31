@@ -69,3 +69,10 @@ def refine_launcher_icons():
         circular.save(round_icon,'PNG',optimize=True)
 
 refine_launcher_icons()
+
+# Header asset is a byte-for-byte copy of the installed factory Android launcher.
+source = DEST / 'mipmap-xxxhdpi' / 'ic_launcher.png'
+web_icon = ROOT / 'www/assets/brand/native-launcher.png'
+web_icon.parent.mkdir(parents=True, exist_ok=True)
+shutil.copyfile(source, web_icon)
+print(f'Exported approved launcher to {web_icon.relative_to(ROOT)}')
