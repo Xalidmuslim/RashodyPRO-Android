@@ -165,10 +165,11 @@ html body.matte-editorial .overlay button,
 html body.matte-editorial .r77-detail-close{
  box-shadow:var(--r84-soft-shadow)!important;border:0!important;
 }
+/* Do not overwrite transitions on functional controls: existing motion owners
+   (Grand Motion and Sculpted Motion) keep their independently tuned timings. */
 html body.matte-editorial #page button,
 html body.matte-editorial .overlay button,
 html body.matte-editorial .r77-detail-close{
- transition:box-shadow 220ms ease, background-color 220ms ease!important;
  -webkit-tap-highlight-color:transparent!important;
 }
 html body.matte-editorial #page button:focus-visible,
