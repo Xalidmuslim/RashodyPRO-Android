@@ -34,15 +34,17 @@
   origin=card;
   const rect=card.getBoundingClientRect();
   // The real KPI tile exits upwards: no cloned card or extra compositor layer.
-  const rise=Math.min(Math.max(rect.bottom+20,110),window.innerHeight*.78);
-  sourceTravel='translate3d(0,-'+rise.toFixed(1)+'px,0) perspective(800px) rotateX(-6deg) scale(.94)';
-  card.style.transform=sourceTravel;
-  card.style.opacity='.12';
-  card.style.pointerEvents='none';
-  sourceAnimation=animate(card,[
-   {transform:'none',opacity:1},
-   {transform:sourceTravel,opacity:.12}
-  ],{duration:540,easing:settling});
+  if(ok()){
+   const rise=Math.min(Math.max(rect.bottom+20,110),window.innerHeight*.78);
+   sourceTravel='translate3d(0,-'+rise.toFixed(1)+'px,0) perspective(800px) rotateX(-6deg) scale(.94)';
+   card.style.transform=sourceTravel;
+   card.style.opacity='.12';
+   card.style.pointerEvents='none';
+   sourceAnimation=animate(card,[
+    {transform:'none',opacity:1},
+    {transform:sourceTravel,opacity:.12}
+   ],{duration:540,easing:settling});
+  }
   modal=document.createElement('div');
   modal.className='r77-detail-scrim';
   modal.innerHTML='<section class="r77-detail-panel" role="dialog" aria-modal="true" aria-labelledby="r77-detail-title" tabindex="-1">'+detailsHtml(data)+'</section>';
