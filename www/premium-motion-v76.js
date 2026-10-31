@@ -51,7 +51,7 @@
    {transform:'translate3d(0,12px,0) scale(.75)',opacity:0},
    {transform:'translate3d(0,-3px,0) scale(1.065)',opacity:1,offset:.77},
    {transform:'translate3d(0,0,0) scale(1)',opacity:1}
-  ],{duration:1060,delay,easing:spring,fill:'both'});
+  ],{duration:690,delay,easing:spring,fill:'both'});
  }
  function drawDonut(root,mode,delay=180){
   const holder=mode==='dashboard'?root.querySelector('.day-donut'):root.querySelector('.analytics-ring-panel .ring');
@@ -64,11 +64,11 @@
    {transform:'perspective(1000px) rotate(-13deg) rotateX(12deg) scale(.82)',opacity:.7},
    {transform:'perspective(1000px) rotate(2deg) rotateX(-3deg) scale(1.035)',opacity:1,offset:.70},
    {transform:'none',opacity:1}
-  ],{duration:1510,delay,easing:spring,fill:'both'});
+  ],{duration:900,delay,easing:spring,fill:'both'});
   const selector=mode==='dashboard'?'.day-donut-sector':'.ring-slice';
-  svg.querySelectorAll(selector).forEach((c,i)=>calibrateArc(c,i,delay+180,1460));
+  svg.querySelectorAll(selector).forEach((c,i)=>calibrateArc(c,i,delay+90,790));
   const center=holder.querySelector(mode==='dashboard'?'.day-donut-center':'.ring-inner');
-  raiseInner(center,delay+530);
+  raiseInner(center,delay+290);
   const legend=mode==='dashboard'?root.querySelectorAll('.day-donut-legend-item'):
    root.querySelectorAll('.analytics-ring-panel .legend-line');
   legend.forEach((el,i)=>{
@@ -76,7 +76,7 @@
     {transform:'translate3d(-14px,8px,0) scale(.94)',opacity:0},
     {transform:'translate3d(3px,-2px,0) scale(1.015)',opacity:1,offset:.78},
     {transform:'none',opacity:1}
-   ],{duration:940,delay:delay+670+i*85,easing:ease,fill:'both'});
+   ],{duration:590,delay:delay+350+i*60,easing:ease,fill:'both'});
   });
  }
  function selectReveal(root){
@@ -92,41 +92,41 @@
       {transform:'perspective(820px) translate3d(0,38px,0) rotateY('+(phase*12)+'deg) rotateX(17deg) scale(.84)',opacity:.05},
       {transform:'perspective(820px) translate3d(0,-8px,0) rotateY('+(phase*-2)+'deg) rotateX(-3deg) scale(1.045)',opacity:1,offset:.72},
       {transform:'none',opacity:1}
-    ],{duration:1200,delay:i*108,easing:spring,fill:'both'});
+    ],{duration:760,delay:i*65,easing:spring,fill:'both'});
     const meter=el.querySelector('.week-day-meter-fill');
     animate(meter,[{transform:'scaleX(0)'},{transform:'scaleX(1)'}],
-      {duration:850,delay:560+i*110,easing:ease,fill:'both'});
+      {duration:570,delay:310+i*65,easing:ease,fill:'both'});
    });
   }
   if(full||summaryChanged){
    root.querySelectorAll('.trend-cards .trend-card').forEach((el,i)=>{
-    enterCard(el,full?350+i*195:110+i*160,34,11,1390);
-    raiseInner(el.querySelector('.trend-icon'),full?620+i*195:330+i*160);
+    enterCard(el,full?235+i*105:90+i*90,24,7,850);
+    raiseInner(el.querySelector('.trend-icon'),full?310+i*105:170+i*90);
    });
   }
   if(dayChanged&&!full){
    const selected=root.querySelector('.week-day.focus-day');
-   enterCard(selected,0,19,10,1030);
+   enterCard(selected,0,17,7,760);
    const bar=selected?.querySelector('.week-day-meter-fill');
-   animate(bar,[{transform:'scaleX(.10)'},{transform:'scaleX(1)'}],{duration:950,delay:210,easing:ease,fill:'both'});
+   animate(bar,[{transform:'scaleX(.10)'},{transform:'scaleX(1)'}],{duration:680,delay:150,easing:ease,fill:'both'});
   }
   if(full||dayChanged||chartChanged){
-   enterCard(root.querySelector('.feature-day'),full?850:80,25,5,1230);
-   drawDonut(root,'dashboard',full?980:210);
+   enterCard(root.querySelector('.feature-day'),full?400:65,18,4,870);
+   drawDonut(root,'dashboard',full?480:95);
   } else if(selectionChanged) selectReveal(root);
  }
  function analytics(root,full,periodChanged,selectionChanged,summaryChanged,chartChanged){
   if(full||periodChanged||summaryChanged||chartChanged){
    root.querySelectorAll('.studio-stats .compare-metric').forEach((el,i)=>
-    enterCard(el,160+i*190,32,11,1360));
-   enterCard(root.querySelector('.analytics-ring-panel'),450,20,5,1360);
-   drawDonut(root,'analytics',650);
+    enterCard(el,150+i*115,22,6,850));
+   enterCard(root.querySelector('.analytics-ring-panel'),325,15,4,900);
+   drawDonut(root,'analytics',420);
    root.querySelectorAll('.compare-stick').forEach((el,i)=>{
     animate(el,[
      {transform:'scaleY(.02)',transformOrigin:'bottom center'},
      {transform:'scaleY(1.045)',transformOrigin:'bottom center',offset:.82},
      {transform:'scaleY(1)',transformOrigin:'bottom center'}
-    ],{duration:1290,delay:530+i*85,easing:spring,fill:'both'});
+    ],{duration:800,delay:360+i*60,easing:spring,fill:'both'});
    });
   } else if(selectionChanged) selectReveal(root);
  }
