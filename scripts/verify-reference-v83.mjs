@@ -17,7 +17,7 @@ assert.match(css,/\.trend-cards button\.trend-card strong[\s\S]*?font-weight:900
 assert.match(build,/r82-refinement\.css/);
 assert.doesNotMatch(runtime,/r78-brand-icon/);
 assert.match(prev,/r80-theme\.css/);
-assert.match(runtime,/rotateY\(-11deg\)/);
+assert.match(runtime,/function pageTransformer\(direction/);
 assert.match(html,/function daySummaryRing\(/);
 assert.match(html,/function persist\(\)/);
 assert.match(fs.readFileSync('native/FinanceStoragePlugin.java','utf8'),/class FinanceStoragePlugin/);
