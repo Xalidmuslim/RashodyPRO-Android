@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const gradle=fs.readFileSync('android/app/build.gradle','utf8');
+const strings=fs.readFileSync('android/app/src/main/res/values/strings.xml','utf8');
+const html=fs.readFileSync('android/app/src/main/assets/public/index.html','utf8');
+assert.match(gradle,/applicationId\s+["']ru\.rashody\.pro\.preview62["']/);
+assert.match(gradle,/versionCode\s+62/);
+assert.match(gradle,/versionName\s+["']6\.2-sculptural-preview["']/);
+assert.match(strings,/Расходы PRO 6\.2 ТЕСТ/);
+assert.match(html,/Расходы PRO 6\.2 · Muted Sculptural 3D TEST/);
+assert.match(html,/matte-finish-v62\.css/);
+assert.match(fs.readFileSync('android/app/src/main/assets/public/matte-finish-v62.css','utf8'),/max-height:calc\(100dvh - 62px\)/);
+console.log('OK: isolated v6.2 package and bundled CSS');
