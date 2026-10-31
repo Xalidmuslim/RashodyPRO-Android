@@ -19,7 +19,7 @@
   let raf = 0;
   let releaseTimer = 0;
   let cleanupTimer = 0;
-  const frameTimers = new WeakMap();
+  let returning = null;
 
   const clamp = (x, min, max) => Math.min(max, Math.max(min, x));
   const isCard = el => el.matches('.trend-card,.compare-metric,.history-tally,.color-category-card');
@@ -48,7 +48,11 @@
   }
   function cancelTimers() {
     if (releaseTimer) {clearTimeout(releaseTimer);releaseTimer=0;}
-    if (cleanupTimer) {clearTimeout(cleanupTimer);cleanupTimer=0;}
+    if (cleanupTimer) {
+      clearTimeout(cleanupTimer); cleanupTimer=0;
+      if(returning) reset(returning);
+      returning=null;
+    }
     if (raf) {cancelAnimationFrame(raf);raf=0;}
   }
   function pose() {
@@ -95,7 +99,8 @@
       ['--depth-light-x','50%'],['--depth-light-y','50%']
     ]) el.style.setProperty(key,value);
     active=null;
-    cleanupTimer=setTimeout(()=>{reset(el);cleanupTimer=0;},a.motion.release+60);
+    returning=el;
+    cleanupTimer=setTimeout(()=>{reset(el);returning=null;cleanupTimer=0;},a.motion.release+60);
   }
   function finish(immediate=false) {
     const a=active;
@@ -115,10 +120,10 @@
     const el=e.target.closest?.(selector);
     if (!visible(el)) return;
     cancelTimers();
+    const m=profile(el);
     el.classList.remove('depth-return');
     el.classList.add('depth-engaged');
     el.style.willChange='transform';
-    const m=profile(el);
     el.style.setProperty('transition',
       'transform '+m.press+'ms cubic-bezier(.2,.9,.24,1.04)','important');
     active={el,pointerId:e.pointerId,rect:el.getBoundingClientRect(),
