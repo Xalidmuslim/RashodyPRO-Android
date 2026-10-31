@@ -15,9 +15,9 @@ assert.ok(html.indexOf('href="studio-v76.css"')<html.indexOf('href="studio-v77.c
 assert.match(html,/data-sculpted-detail="week"/);
 assert.match(html,/data-sculpted-detail="daily"/);
 assert.match(html,/data-sculpted-detail="max"/);
-for(const icon of ['kpi-wallet','kpi-receipt','kpi-bag']){
- assert.ok(html.includes('assets/icons/kpi/'+icon+'.png'),'Missing '+icon+' in overview');
-}
+assert.match(html,/\$\{svg\('wallet',32\)\}/,'The first KPI uses native wallet SVG');
+assert.match(html,/\$\{svg\('receipt',32\)\}/,'The second KPI uses native receipt SVG');
+assert.match(html,/\$\{svg\('shirt',32\)\}/,'The third KPI uses native purchase SVG');
 assert.match(html,/window\.RashodySculptedDetails=sculptedDetails/);
 assert.match(html,/function daySelectedOperations/);
 assert.match(html,/function updateDayChartSelection\(id\)/);
@@ -39,7 +39,7 @@ assert.match(css,/\.trend-cards button\.trend-card/);
 assert.match(css,/height:113px!important/);
 assert.match(css,/\.r77-detail-panel/);
 assert.match(css,/prefers-reduced-motion/);
-assert.match(motion,/duration:790/,'Expandable cards should have long FLIP transformation');
+assert.match(motion,/duration:560/,'Compact KPI sheets should slide up smoothly');
 assert.match(motion,/duration:760/,'Sector details transition should last ~760ms');
 assert.match(motion,/history\.pushState/,'Back navigation should close expanded stats');
 assert.match(motion,/window\.addEventListener\('popstate'/);
