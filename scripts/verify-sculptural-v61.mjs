@@ -10,7 +10,7 @@ assert.match(html,/const explicit=\{food:'#9db7ab'/,'All category card colors mu
 assert.match(css,/--r61-radius-panel:32px/);
 assert.match(css,/--r61-radius-card:26px/);
 assert.match(css,/--r61-radius-control:19px/);
-assert.match(css,/\.color-category-grid \.color-category-card\s*\{[\s\S]*?background:var\(--category-matte/,'Top-category card must not force first-three bright fills');
+assert.match(css,/\.color-category-card:nth-child\(n\)\s*\{[\s\S]*?background:var\(--category-matte/,'Top-category tiles must outrank all old nth-child bright fills');
 assert.match(css,/\.chart-detail-sub[^{]*\{[\s\S]*?background:transparent!important/,'Informational text must not become a full-width grey stripe');
 assert.match(css,/button\.mini-action\.danger-btn\[data-action="clear-data"\]\s*\{[\s\S]*?border-radius:21px!important/,'Destructive button must be rounded and elevated');
 assert.match(css,/\.mobile-nav \.fab\s*\{[\s\S]*?box-shadow:var\(--p59-selected\)!important/,'Central add button must have dimensional depth');
