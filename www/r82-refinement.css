@@ -145,3 +145,56 @@ html body.matte-editorial .mobile-nav button.active:not(.fab) .r75-icon{
   width:23px!important;height:23px!important;
  }
 }
+
+/* v8.3 SCREENSHOT-QA — make an empty day intentional, not a giant unused chart.
+   No transaction values or animation logic are changed. */
+html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend) .day-donut-legend{
+ display:none!important;
+}
+html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend) .day-donut{
+ max-width:158px!important;opacity:.76!important;
+}
+html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend){
+ row-gap:0!important;padding-bottom:15px!important;
+}
+html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend) .day-donut-base{
+ stroke:#d7cabc!important;stroke-width:30!important;
+}
+html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend) .day-donut-center{
+ box-shadow:inset 0 3px 6px rgba(75,55,39,.07)!important;
+}
+html body.matte-editorial #page .r78-brand h1{
+ font-weight:900!important;-webkit-text-stroke:.22px currentColor!important;
+}
+html body.matte-editorial #page .trend-cards button.trend-card strong{
+ font-weight:900!important;-webkit-text-stroke:.12px currentColor!important;
+}
+html body.matte-editorial #page .trend-cards button.trend-card .trend-icon img{
+ transform:scale(1.24)!important;transform-origin:center center!important;
+}
+html body.matte-editorial #page .day-ledger .ledger-heading h2,
+html body.matte-editorial #page .feature-copy h2{
+ font-weight:850!important;-webkit-text-stroke:.13px currentColor!important;
+}
+html body.matte-editorial #page .fancy-empty .empty-add{
+ width:min(100%,280px)!important;max-width:280px!important;
+ margin-inline:auto!important;border-radius:19px!important;
+ box-shadow:0 4px 7px rgba(128,73,42,.16),0 12px 16px -10px rgba(109,65,41,.28)!important;
+}
+html body.matte-editorial #page .calendar-title-row{
+ margin-bottom:9px!important;
+}
+html body.matte-editorial #page .calendar-shell{
+ margin-bottom:11px!important;
+}
+html body.matte-editorial #page .trend-cards{
+ margin-bottom:11px!important;
+}
+@media(max-width:370px){
+ html body.matte-editorial #page .trend-cards button.trend-card .trend-icon img{
+  transform:scale(1.12)!important;
+ }
+ html body.matte-editorial #page .feature-day:has(.day-donut-empty-legend) .day-donut{
+  max-width:135px!important;
+ }
+}
