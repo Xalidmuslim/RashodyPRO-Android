@@ -304,6 +304,14 @@ body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-t
  transform-style:preserve-3d!important;
  backface-visibility:hidden;
  isolation:isolate;
+ animation:depth-premium-return var(--depth-release,1160ms) linear both!important;
+}
+@keyframes depth-premium-return{
+ 0%{transform:var(--depth-from-transform,scale(.945))}
+ 35%{transform:perspective(920px) scale(1.027)}
+ 60%{transform:perspective(920px) scale(.987)}
+ 82%{transform:perspective(920px) scale(1.006)}
+ 100%{transform:perspective(920px) scale(1)}
 }
 body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged::before,
 body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return::before{
