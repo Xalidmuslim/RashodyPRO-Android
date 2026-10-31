@@ -49,3 +49,13 @@ Android package `ru.rashody.pro.preview61` устанавливается отд
 - [Проверки Android v7.0](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v70-studio.yml)
 
 Тестовый packageId `ru.rashody.pro.preview70` устанавливается отдельно, существующие расходы между версиями автоматически не переносятся. Проверено в Chromium на трёх ширинах, но не на физическом Android-устройстве.
+
+## STUDIO MATTE v7.1 — проверенная геометрия (TEST)
+
+v7.1 **заменяет v7.0**: в проверке Android CSS воспроизведено и исправлено перекрытие длинного окна «Новый расход» системной строкой состояния. Верхний запас 74 px проверен в эмуляции native-стилей на ширинах 320 / 393 / 430 px. Сохранены единая дизайн-система, функции операций, хранилище и разрешения.
+
+- [Прямое скачивание v7.1 APK](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-studio-v7.1-test/RashodyPRO-Studio-v7.1-TEST.apk)
+- [Страница тестового релиза v7.1](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-studio-v7.1-test)
+- [Проверки исходников и Android-сборка](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v71-studio.yml)
+
+Отдельный тестовый идентификатор `ru.rashody.pro.preview71`; данные других версий автоматически не переносятся. Физический Android-устройственный тест ещё требуется.
