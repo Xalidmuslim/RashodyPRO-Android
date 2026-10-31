@@ -26,7 +26,7 @@ assert.doesNotMatch(html,/body\.matte-editorial #overlay \.sheet\{animation:none
 assert.match(build,/r85-interactions\.css/,'CSS packaged last');
 assert.match(html,/function persist\(\)/);
 assert.match(read('native/FinanceStoragePlugin.java'),/class FinanceStoragePlugin/);
-assert.match(read('www/r78-runtime.js'),/rotateY\(-11deg\)/,'Page Transformer preserved');
+assert.match(read('www/r78-runtime.js'),/function pageTransformer\(direction/,'Page Transformer preserved');
 execFileSync('node',['--check','www/sculpted-motion-v77.js'],{stdio:'inherit'});
 execFileSync('node',['scripts/bundle-runtime-theme-v80.mjs'],{stdio:'inherit'});
 console.log('PASS v8.5 KPI source-card lift, nested backplate removal, compact keypad, animated close, regressions');
