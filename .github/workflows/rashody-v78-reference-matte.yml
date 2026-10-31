@@ -50,7 +50,7 @@ jobs:
           APK=android/app/build/outputs/apk/debug/app-debug.apk
           test -s "$APK"
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview78'"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='7.7-studio-matte-preview'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='7.8-studio-matte-preview'"
           unzip -t "$APK" >/dev/null
           unzip -l "$APK" | grep -q 'assets/public/assets/icons/categories/food.png'
           unzip -l "$APK" | grep -q 'assets/public/assets/icons/nav/dashboard.png'
@@ -85,7 +85,7 @@ jobs:
           else
             gh release create rashody-studio-v7.8-reference-matte-preview RashodyPRO-Studio-v7.8-Reference-Matte-TEST.apk \
               --target "$GITHUB_SHA" \
-              --title "Расходы PRO — v7.8 Grand Motion & Compact Calculator (тест)" \
+              --title "Расходы PRO — v7.8 Reference Sculpted Matte (тест)" \
               --notes "Reference matte layout and 30 generated transparent PNG icons. Page-only transformer; existing financial logic and other animations preserved. Isolated ru.rashody.pro.preview78. Device QA remains required." \
               --prerelease --latest=false
           fi
