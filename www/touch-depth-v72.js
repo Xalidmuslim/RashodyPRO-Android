@@ -28,6 +28,7 @@
     element.classList.remove('depth-engaged', 'depth-return');
     for (const key of [
       'transform','transition','--depth-parallax-x','--depth-parallax-y',
+      '--depth-text-x','--depth-text-y',
       '--depth-light-x','--depth-light-y','--depth-shadow-x','--depth-shadow-y'
     ]) element.style.removeProperty(key);
   }
@@ -47,6 +48,8 @@
       'perspective(850px) rotateX(0deg) rotateY(0deg) translateZ(0) scale(1)','important');
     element.style.setProperty('--depth-parallax-x','0px');
     element.style.setProperty('--depth-parallax-y','0px');
+    element.style.setProperty('--depth-text-x','0px');
+    element.style.setProperty('--depth-text-y','0px');
     element.style.setProperty('--depth-shadow-x','0px');
     element.style.setProperty('--depth-shadow-y','0px');
     element.style.setProperty('--depth-light-x','50%');
@@ -75,6 +78,8 @@
       'deg) translateZ(0) scale(' + scale + ')','important');
     el.style.setProperty('--depth-parallax-x',(nx * 2.6).toFixed(2)+'px');
     el.style.setProperty('--depth-parallax-y',(ny * 2.6).toFixed(2)+'px');
+    el.style.setProperty('--depth-text-x',(nx * 1.1).toFixed(2)+'px');
+    el.style.setProperty('--depth-text-y',(ny * 1.1).toFixed(2)+'px');
     el.style.setProperty('--depth-shadow-x',(-nx * 3.5).toFixed(2)+'px');
     el.style.setProperty('--depth-shadow-y',(3 - ny * 2).toFixed(2)+'px');
     el.style.setProperty('--depth-light-x',(50 + nx * RADIUS).toFixed(1)+'%');
