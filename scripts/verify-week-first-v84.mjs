@@ -32,7 +32,7 @@ assert.match(bundler,/r84-clean-motion\.css/);
 assert.match(read('native/FinanceStoragePlugin.java'),/class FinanceStoragePlugin/);
 assert.match(html,/function persist\(\)/);
 assert.match(html,/function daySummaryRing\(/);
-assert.match(runtime,/rotateY\(-11deg\)/,'Navigation transformer preserved');
+assert.match(runtime,/function pageTransformer\(direction/,'Navigation transformer preserved');
 execFileSync('node',['--check','www/sculpted-motion-v77.js'],{stdio:'inherit'});
 execFileSync('node',['--check','www/r78-runtime.js'],{stdio:'inherit'});
 execFileSync('node',['scripts/bundle-runtime-theme-v80.mjs'],{stdio:'inherit'});
