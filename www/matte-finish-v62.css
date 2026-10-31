@@ -202,3 +202,106 @@ body.matte-editorial :is(button,input,select,textarea):focus-visible{
   transition:none!important;
  }
 }
+
+
+/* v6.3 direct source correction: no additional CSS layer. Verified against
+   rendered Chromium styles at 393dp; keep transaction and SQLite logic. */
+body.matte-editorial{
+ --p59-ground:#d3cec7;
+ --p59-panel:#e9e5de;
+ --p59-hero:#eae6df;
+ --p59-control:#dfdbd4;
+ --p59-recess:#d8d2cb;
+ --p59-coral:#c2afa8;
+ --p59-teal:#b4c2b8;
+ --p59-ochre:#c9beac;
+ --p59-sage:#b9c9bd;
+ --p59-large:0 4px 7px -3px rgba(37,41,40,.22),
+             0 18px 27px -14px rgba(37,41,40,.24),
+             0 35px 44px -27px rgba(37,41,40,.18);
+ --p59-medium:0 3px 5px -2px rgba(37,41,40,.16),
+              0 11px 19px -9px rgba(37,41,40,.19),
+              0 25px 31px -22px rgba(37,41,40,.13);
+ --p59-small:0 1px 2px -1px rgba(37,41,40,.15),
+             0 6px 12px -6px rgba(37,41,40,.16),
+             0 15px 20px -16px rgba(37,41,40,.10);
+}
+html,body.matte-editorial{background-color:var(--p59-ground)!important}
+html.rashody-native-android body.matte-editorial::before{background:var(--p59-ground)!important}
+body.matte-editorial #page .studio-stats .compare-metric.main,
+body.matte-editorial #page .trend-cards .trend-card.coral{background:var(--p59-coral)!important}
+body.matte-editorial #page .studio-stats .compare-metric:nth-child(2),
+body.matte-editorial #page .trend-cards .trend-card.teal{background:var(--p59-teal)!important}
+body.matte-editorial #page .studio-stats .compare-metric:nth-child(3),
+body.matte-editorial #page .trend-cards .trend-card.amber{background:var(--p59-ochre)!important}
+body.matte-editorial #page .history-tally.qty{background:#d4d9d3!important}
+body.matte-editorial #page .history-tally.spent{background:#c5b3ad!important}
+body.matte-editorial #page .history-tally.earned{background:#bbcbbf!important}
+body.matte-editorial #page :is(.studio-stats .compare-metric,.history-tally,.trend-card,.color-category-card){
+ color:#20343a!important;background-image:none!important;
+ box-shadow:var(--p59-medium)!important;
+ border-radius:27px!important;
+}
+body.matte-editorial #page :is(.studio-stats .compare-metric,.history-tally,.trend-card,.color-category-card) :is(strong,span,small,b,svg){
+ color:#20343a!important;text-shadow:none!important;
+}
+body.matte-editorial #page .color-category-grid .color-category-card:nth-child(n){
+ background:var(--category-matte,#bbc8bf)!important;
+ border-radius:27px!important;
+ box-shadow:var(--p59-medium)!important;
+}
+/* Geometry correction: analytics segmented control was touching its outer
+   32px perimeter, unlike history. Maintain inset even on narrow phones. */
+body.matte-editorial #page .analytics-controls.period-controls{
+ padding:12px 14px!important;
+ border-radius:31px!important;
+ box-shadow:var(--p59-large)!important;
+}
+body.matte-editorial #page .period-controls .period-toggle,
+body.matte-editorial #page .analytics-controls .period-toggle{
+ width:100%!important;min-width:0!important;
+ padding:5px!important;gap:6px!important;
+ margin:0 0 12px!important;border-radius:23px!important;
+ box-shadow:inset 0 2px 5px rgba(50,52,50,.11)!important;
+}
+body.matte-editorial #page .period-controls .period-toggle button,
+body.matte-editorial #page .analytics-controls .period-toggle button{
+ min-width:0!important;border-radius:18px!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #page :is(.period-controls,.r49-history-toolbar,.analytics-ring-panel,.trend-card,.color-category-card){
+ border-color:transparent!important;
+}
+body.matte-editorial #page .analytics-ring-panel .ring-inner{
+ background:var(--p59-hero)!important;border:0!important;
+ box-shadow:inset 0 3px 7px rgba(43,48,47,.11),
+            inset 0 9px 12px rgba(43,48,47,.06)!important;
+}
+body.matte-editorial #page .analytics-ring-panel .ring-svg,
+body.matte-editorial #page .day-donut-svg{
+ filter:drop-shadow(0 3px 3px rgba(46,51,50,.10))
+        drop-shadow(0 8px 9px rgba(46,51,50,.13))!important;
+}
+body.matte-editorial #page .studio-trend-bars .compare-stick{background:#9d8981!important}
+body.matte-editorial #page .studio-trend-bars .compare-col.selected .compare-stick{background:#536e6a!important}
+body.matte-editorial #page .analytics-ring-panel .legend-line.selected{background:#c2d0c4!important}
+body.matte-editorial .mobile-nav .fab{background:#9b837d!important;box-shadow:var(--p59-selected)!important}
+body.matte-editorial .mobile-nav button.active:not(.fab){background:#bbcabe!important;box-shadow:var(--p59-small)!important}
+body.matte-editorial #page .week-day.focus-day{background:#365a5c!important}
+body.matte-editorial #modal.tx-sheet .tx-amount-block{
+ background:#d6d2cb!important;border-radius:27px!important;
+ box-shadow:inset 0 3px 6px rgba(42,46,46,.13),
+             inset 0 9px 15px rgba(42,46,46,.07)!important;
+}
+body.matte-editorial #modal.tx-sheet :is(.r105-key,.cat-choice){
+ background:#e4e0d9!important;
+ box-shadow:var(--p59-small)!important;
+ border-radius:19px!important;
+}
+body.matte-editorial #modal.tx-sheet .cat-choice.active{background:#b3c8bc!important}
+@media(max-width:600px){
+ html.rashody-native-android body.matte-editorial #overlay:not([hidden]) #modal.tx-sheet{
+  max-height:calc(100dvh - max(66px,env(safe-area-inset-top,0px) + 22px))!important;
+  border-radius:30px 30px 0 0!important;
+ }
+}
