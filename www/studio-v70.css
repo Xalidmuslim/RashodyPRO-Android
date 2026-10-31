@@ -289,66 +289,85 @@ html body.matte-editorial #page .feature-day.feature-day{background-color:#f7f4e
 }
 
 
-/* Studio Touch Depth v7.2 — limited to the touched button, never all cards.
-   Composited 3D transforms; dynamic shadow uses a translated pseudo-layer
-   instead of repainting every box-shadow blur radius on pointermove.
-   Diffuse matte illumination, deliberately no glossy specular stripe. */
-body.matte-editorial :is(button,.week-day).depth-engaged{
+/* Premium Motion v7.3 — art direction / matte tactile depth.
+   No transition of box-shadow, filter, or layout. Depth is achieved with
+   compositor transforms, restrained diffuse light and parallax only while
+   touching a control. Idle elements keep the Studio materials untouched. */
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged{
  position:relative;
+ z-index:2;
  transform-style:preserve-3d!important;
  backface-visibility:hidden;
- will-change:transform;
  isolation:isolate;
 }
-body.matte-editorial :is(button,.week-day).depth-engaged::before{
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return{
+ transform-style:preserve-3d!important;
+ backface-visibility:hidden;
+ isolation:isolate;
+}
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged::before,
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return::before{
  content:"";
  position:absolute;
- inset:5px 6px;
+ inset:7px;
  border-radius:inherit;
  pointer-events:none;
  z-index:-1;
- box-shadow:0 11px 18px rgba(28,38,40,.18);
+ opacity:.65;
+ box-shadow:0 14px 22px rgba(34,42,43,.21);
  transform:translate3d(var(--depth-shadow-x,0px),var(--depth-shadow-y,0px),0);
- will-change:transform;
+ transition:transform 235ms cubic-bezier(.17,.87,.23,1),opacity 260ms ease;
 }
-body.matte-editorial button.depth-engaged::after{
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return::before{
+ opacity:0;
+ transition:transform 1100ms cubic-bezier(.17,1.28,.25,1),opacity 950ms ease;
+}
+body.matte-editorial button.depth-engaged::after,
+body.matte-editorial button.depth-return::after{
  content:"";
  position:absolute;
  inset:0;
  border-radius:inherit;
  pointer-events:none;
  z-index:0;
- opacity:.9;
  background:radial-gradient(ellipse at var(--depth-light-x,50%) var(--depth-light-y,50%),
-   rgba(255,255,255,.13),rgba(255,255,255,.025) 43%,transparent 75%);
+  rgba(255,251,241,.15),rgba(255,250,240,.045) 43%,transparent 76%);
+ opacity:.8;
+ transition:opacity 280ms ease;
 }
-/* Distinct material layers: icon sits above the button pigment; text at
-   half the optical depth, both stay readable without text-shadow. */
-body.matte-editorial button.depth-engaged :is(svg,.category-icon,.nav-icon),
-body.matte-editorial button.depth-return :is(svg,.category-icon,.nav-icon){
- transform:translate3d(var(--depth-parallax-x,0px),var(--depth-parallax-y,0px),12px);
- transition:transform 450ms cubic-bezier(.2,1.35,.36,1);
+body.matte-editorial button.depth-return::after{opacity:0;transition:opacity 600ms ease}
+/* Icons float 12px above the matte body; text moves at about one-third
+   the amount. No perpetual animation or moving highlights at rest. */
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged :is(svg,.trend-icon,.soft-stat-symbol,.tally-symbol,.color-category-icon,.category-icon),
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return :is(svg,.trend-icon,.soft-stat-symbol,.tally-symbol,.color-category-icon,.category-icon){
+ transform:translate3d(var(--depth-icon-x,0px),var(--depth-icon-y,0px),12px);
+ transition:transform 250ms cubic-bezier(.17,.84,.27,1);
+ pointer-events:none;
 }
-body.matte-editorial button.depth-engaged > span:not(.category-icon),
-body.matte-editorial button.depth-return > span:not(.category-icon){
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return :is(svg,.trend-icon,.soft-stat-symbol,.tally-symbol,.color-category-icon,.category-icon){
+ transition:transform 1060ms cubic-bezier(.17,1.28,.25,1);
+}
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged > :is(span,strong,small),
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return > :is(span,strong,small){
  transform:translate3d(var(--depth-text-x,0px),var(--depth-text-y,0px),5px);
- transition:transform 450ms cubic-bezier(.2,1.35,.36,1);
+ transition:transform 245ms cubic-bezier(.17,.84,.27,1);
 }
-body.matte-editorial button.depth-engaged :is(svg,.category-icon,.nav-icon),
-body.matte-editorial button.depth-engaged > span:not(.category-icon){
- transition:none!important;
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return > :is(span,strong,small){
+ transition:transform 1050ms cubic-bezier(.17,1.28,.25,1);
 }
-body.matte-editorial :is(button,.week-day).depth-return{
- will-change:transform;
+/* Large statistics cards press deeper, without warping any underlying
+   chart or breaking click/scroll processing. */
+body.matte-editorial #page :is(.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged{
+ box-shadow:var(--ui-shadow-md)!important;
+}
+body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged:focus-visible{
+ outline:2px solid #234e54!important;outline-offset:3px;
 }
 @media(prefers-reduced-motion:reduce){
- body.matte-editorial :is(button,.week-day).depth-engaged,
- body.matte-editorial :is(button,.week-day).depth-return{
+ body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged,
+ body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-return{
   transform:none!important;transition:none!important;will-change:auto!important;
  }
- body.matte-editorial :is(button,.week-day).depth-engaged::before,
+ body.matte-editorial :is(button,.week-day,.trend-card,.compare-metric,.history-tally,.color-category-card).depth-engaged::before,
  body.matte-editorial button.depth-engaged::after{content:none!important}
- body.matte-editorial button :is(svg,.category-icon,.nav-icon,span){
-  transition:none!important;
- }
 }
