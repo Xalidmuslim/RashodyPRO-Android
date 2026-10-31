@@ -64,9 +64,9 @@ jobs:
           retention-days: 14
           if-no-files-found: error
       - name: Publish direct APK download
-        if: \${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-v75]') }}
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-v75]') }}
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-Studio-v7.5-3D-PNG-TEST.apk
