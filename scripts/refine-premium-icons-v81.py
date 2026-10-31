@@ -195,6 +195,9 @@ def build():
  nav=set("dashboard transactions analytics settings".split())
  kinds="food cafe transport home health fun shop other dashboard transactions analytics settings plus close check back forward up down search filter calendar backspace delete edit export kpi-wallet kpi-receipt kpi-bag kpi-coins".split()
  for kind in kinds:
+  if kind in nav:
+   # Approved v8.0 sculpted nav icons are already produced by the base icon generator.
+   continue
   group="kpi" if kind.startswith("kpi-") else "categories" if kind in categories else "nav" if kind in nav else "actions"
   p=ROOT/group/(kind+".png");p.parent.mkdir(parents=True,exist_ok=True)
   make(kind).save(p,optimize=True)
