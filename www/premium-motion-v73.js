@@ -24,13 +24,13 @@
   const clamp = (x, min, max) => Math.min(max, Math.max(min, x));
   const isCard = el => el.matches('.trend-card,.compare-metric,.history-tally,.color-category-card');
   const profile = el => {
-    if (el.matches('.r105-key,.tx-quick-amount>button')) return {press:175,release:690,min:70,tilt:3.5,scale:.954};
-    if (el.closest('.mobile-nav')) return {press:250,release:1020,min:145,tilt:5.3,scale:.928};
-    if (el.matches('.week-day')) return {press:390,release:1430,min:175,tilt:7.5,scale:.955};
-    if (isCard(el)) return {press:410,release:1570,min:205,tilt:8.0,scale:.957};
+    if (el.matches('.r105-key,.tx-quick-amount>button')) return {press:135,release:720,min:70,tilt:3,scale:.973};
+    if (el.closest('.mobile-nav')) return {press:155,release:850,min:110,tilt:4,scale:.969};
+    if (el.matches('.week-day')) return {press:145,release:850,min:95,tilt:5.3,scale:.970};
+    if (isCard(el)) return {press:160,release:920,min:110,tilt:5.8,scale:.968};
     if (el.matches('.icon-btn') || el.getBoundingClientRect().width < 54)
-      return {press:205,release:860,min:110,tilt:4.5,scale:.927};
-    return {press:290,release:1160,min:170,tilt:7,scale:.945};
+      return {press:135,release:780,min:95,tilt:3.5,scale:.969};
+    return {press:160,release:890,min:105,tilt:5,scale:.974};
   };
   function visible(el) {
     if (!el || !el.isConnected || el.disabled) return false;
