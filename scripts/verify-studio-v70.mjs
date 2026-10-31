@@ -41,7 +41,7 @@ for(const name of ['--ui-shadow-lg','--ui-shadow-md','--ui-shadow-sm']){
 }
 assert.ok(p.scripts.verify.includes('verify-studio-v70.mjs'),'Studio QA must run in CI');
 for(const x of ['function renderTxModal(){','function circleChart(map,total){','function daySummaryRing(items){','function analytics(){',
- 'function settings(){','function dashboard(){','async function bootstrap(){','async function persist(){',
+ 'function settings(){','function dashboard(){','async function bootstrap(){','function persist(){',
  'async function settleModalKeyboard(){','async function switchCategorySheet']){
  assert.ok(h.includes(x),'Financial behavior accidentally changed: '+x);
 }
