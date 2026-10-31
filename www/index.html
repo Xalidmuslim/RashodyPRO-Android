@@ -2567,6 +2567,8 @@ function updateDayChartSelection(id){
  if(id!==null&&!entries.some(([key])=>key===id))return;
  const previous=dayChartSelection, next=id===previous?null:id;
  dayChartSelection=next;
+ // The pure calculation path also runs in the repository's isolated Node VM tests.
+ if(typeof document==='undefined')return;
  const chosen=entries.find(([key])=>key===next);
  const sum=chosen?chosen[1]:all;
  document.querySelectorAll('#page [data-day-chart-category]').forEach(el=>{
