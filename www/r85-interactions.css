@@ -1,0 +1,150 @@
+/* v8.5 — Single-icon surfaces, compact expense keypad, tactile transformer controls.
+   Avoid permanent will-change, backdrop blur and animated box shadows. */
+:root{
+ --r85-contact:0 2px 3px rgba(67,48,34,.13),0 7px 13px -7px rgba(70,48,32,.27);
+ --r85-action:0 3px 5px rgba(69,52,36,.16),0 10px 17px -8px rgba(73,51,34,.30);
+}
+/* Each category tile is ONE background. The inner icon and wrappers are transparent. */
+html body.matte-editorial #modal.tx-sheet .cat-choice{
+ min-height:58px!important;padding:6px 3px!important;
+ border:0!important;border-radius:16px!important;
+ box-shadow:var(--r85-contact)!important;
+ background:#f8eee2!important;
+}
+html body.matte-editorial #modal.tx-sheet .cat-choice.active{
+ background:#b7cbbd!important;color:#29483c!important;
+ box-shadow:var(--r85-action)!important;
+}
+html body.matte-editorial #modal.tx-sheet .cat-choice .category-icon,
+html body.matte-editorial #modal.tx-sheet .cat-choice .category-icon .r84-native-icon{
+ display:grid!important;place-items:center!important;
+ width:29px!important;min-width:29px!important;height:29px!important;
+ padding:0!important;background:transparent!important;background-image:none!important;
+ border:0!important;outline:0!important;border-radius:0!important;
+ box-shadow:none!important;filter:none!important;
+}
+html body.matte-editorial #modal.tx-sheet .cat-choice .category-icon::before,
+html body.matte-editorial #modal.tx-sheet .cat-choice .category-icon::after,
+html body.matte-editorial #modal.tx-sheet .cat-choice .r84-native-icon::before,
+html body.matte-editorial #modal.tx-sheet .cat-choice .r84-native-icon::after{
+ content:none!important;display:none!important;
+}
+html body.matte-editorial #modal.tx-sheet .cat-choice .category-icon svg{
+ display:block!important;width:26px!important;height:26px!important;
+ color:#315b55!important;stroke-width:1.85!important;
+ filter:none!important;
+}
+html body.matte-editorial #modal.tx-sheet .cat-choice>.truncate{
+ font-size:calc(10px * var(--font-scale,1))!important;
+ line-height:1.12!important;font-weight:620!important;
+}
+/* Record: remove the legacy tinted square nested beneath the factory vector. */
+html body.matte-editorial #page .record-row>span:first-child,
+html body.matte-editorial #page .record-row .category-icon,
+html body.matte-editorial #page .record-row .category-icon .r84-native-icon{
+ background:transparent!important;background-image:none!important;
+ border:0!important;box-shadow:none!important;filter:none!important;
+ padding:0!important;overflow:visible!important;
+ border-radius:0!important;
+}
+html body.matte-editorial #page .record-row>span:first-child::before,
+html body.matte-editorial #page .record-row>span:first-child::after,
+html body.matte-editorial #page .record-row .category-icon::before,
+html body.matte-editorial #page .record-row .category-icon::after{
+ display:none!important;content:none!important;
+}
+html body.matte-editorial #page .record-row .category-icon,
+html body.matte-editorial #page .record-row .category-icon .r84-native-icon{
+ width:36px!important;min-width:36px!important;height:36px!important;
+}
+html body.matte-editorial #page .record-row .category-icon svg{
+ width:25px!important;height:25px!important;
+ color:#405e52!important;stroke-width:1.9!important;
+}
+/* Keep the colored legend as a single compact tile, never a tile inside a tile. */
+html body.matte-editorial #page .day-donut-legend-item .r78-category-icon{
+ width:31px!important;height:31px!important;box-shadow:var(--r85-contact)!important;
+ border-radius:10px!important;
+}
+html body.matte-editorial #page .day-donut-legend-item .r78-category-icon svg{
+ width:22px!important;height:22px!important;
+}
+html body.matte-editorial #page .trend-cards button.trend-card .trend-icon>svg{
+ width:24px!important;height:24px!important;filter:none!important;
+}
+html body.matte-editorial #page .r78-day-icon svg,
+html body.matte-editorial #page .r78-ledger-icon svg{
+ width:23px!important;height:23px!important;
+}
+/* Compact amount input and numeric pad: no WebView keyboard/viewport resize. */
+html body.matte-editorial #modal.tx-sheet .tx-amount-block{
+ padding:9px 10px 10px!important;margin-bottom:8px!important;
+ border-radius:20px!important;
+}
+html body.matte-editorial #modal.tx-sheet .amount-entry{min-height:48px!important}
+html body.matte-editorial #modal.tx-sheet .tx-quick-amount{
+ gap:5px!important;padding-top:5px!important;margin-bottom:0!important;
+}
+html body.matte-editorial #modal.tx-sheet .tx-quick-amount>button{
+ min-height:34px!important;height:34px!important;
+ padding:4px 7px!important;border-radius:12px!important;
+ box-shadow:var(--r85-contact)!important;font-size:13px!important;
+}
+html body.matte-editorial #modal.tx-sheet .r105-keypad{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:5px!important;margin:6px 0 0!important;
+}
+html body.matte-editorial #modal.tx-sheet .r105-key{
+ height:37px!important;min-height:37px!important;max-height:37px!important;
+ padding:0!important;border-radius:12px!important;
+ font-size:20px!important;font-weight:620!important;
+ color:#28433e!important;background:#fbf5eb!important;
+ box-shadow:var(--r85-contact)!important;
+ transition:transform 145ms cubic-bezier(.2,.85,.22,1),background-color 145ms ease!important;
+ touch-action:manipulation!important;
+}
+html body.matte-editorial #modal.tx-sheet .r105-key:active{
+ transform:perspective(600px) translateY(1px) rotateX(4deg) scale(.977)!important;
+ background:#e1e9df!important;
+}
+/* Let buttons feel like moving matte objects, without repainting shadows on each frame.
+   These selectors avoid elements already transformed by the existing screen motion. */
+html body.matte-editorial #modal.tx-sheet .cat-choice,
+html body.matte-editorial #page .record-row,
+html body.matte-editorial #page .ghost-btn,
+html body.matte-editorial #page .feature-link,
+html body.matte-editorial #page .repeat-inline,
+html body.matte-editorial #page .subtle-add,
+html body.matte-editorial #page .primary-btn,
+html body.matte-editorial #page .secondary-btn,
+html body.matte-editorial #page .period-toggle button,
+html body.matte-editorial #page .filter-group button{
+ transition:transform 175ms cubic-bezier(.18,.84,.24,1)!important;
+}
+html body.matte-editorial #modal.tx-sheet .cat-choice:active,
+html body.matte-editorial #page .record-row:active,
+html body.matte-editorial #page .ghost-btn:active,
+html body.matte-editorial #page .feature-link:active,
+html body.matte-editorial #page .repeat-inline:active,
+html body.matte-editorial #page .primary-btn:active,
+html body.matte-editorial #page .secondary-btn:active,
+html body.matte-editorial #page .period-toggle button:active{
+ transform:perspective(700px) translateY(2px) rotateX(3deg) scale(.984)!important;
+}
+html body.matte-editorial #modal.tx-sheet .r105-key,
+html body.matte-editorial #modal.tx-sheet .cat-choice,
+html body.matte-editorial #page .record-row{ -webkit-tap-highlight-color:transparent!important; }
+/* Stable exit canvas: opening/closing uses Web Animations transform+opacity only. */
+html body.matte-editorial #overlay .sheet{
+ backface-visibility:hidden!important;transform-origin:center bottom!important;
+}
+@media(max-width:360px){
+ html body.matte-editorial #modal.tx-sheet .r105-key{
+  height:35px!important;min-height:35px!important;max-height:35px!important;
+ }
+ html body.matte-editorial #modal.tx-sheet .cat-choice{min-height:56px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html body.matte-editorial #page button,
+ html body.matte-editorial #modal.tx-sheet button{transition:none!important}
+}
