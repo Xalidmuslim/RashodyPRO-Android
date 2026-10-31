@@ -98,6 +98,22 @@ public class FinanceStoragePlugin extends Plugin {
     });
   }
 
+  // Respect Android system haptic settings; no VIBRATE permission and no blocking IO.
+  @PluginMethod public void hapticTap(PluginCall call) {
+    Activity activity = getActivity();
+    if (activity == null || getBridge() == null || getBridge().getWebView() == null) {
+      call.resolve(); return;
+    }
+    activity.runOnUiThread(() -> {
+      try {
+        getBridge().getWebView().performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
+        call.resolve();
+      } catch (Exception error) {
+        call.resolve(); // Feedback is optional; never block the expense interaction.
+      }
+    });
+  }
+
   // SAF dialog stores an exported JSON/CSV where the user chooses, with no storage permission.
   @PluginMethod public void exportFile(PluginCall call) {
     String content = call.getString("content");
