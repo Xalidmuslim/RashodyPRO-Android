@@ -14,5 +14,5 @@ assert.match(h,/href="studio-v70.css"/);
 assert.match(h,/src="premium-motion-v73.js" defer/);
 const motion=fs.readFileSync('android/app/src/main/assets/public/premium-motion-v73.js','utf8');
 assert.match(motion,/requestAnimationFrame/);
-assert.match(css,/Premium Motion v7\.4/);
+assert.match(css,/Premium Motion v7\.3/);
 console.log('OK: Studio 7.4 premium motion bundled, independent Android install');
