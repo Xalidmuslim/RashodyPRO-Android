@@ -41,8 +41,9 @@
    card.style.opacity='.12';
    card.style.pointerEvents='none';
    sourceAnimation=animate(card,[
-    {transform:'none',opacity:1},
-    {transform:sourceTravel,opacity:.12}
+    {transform:'none',opacity:1,borderRadius:'18px',offset:0},
+    {transform:'translate3d(0,-19px,0) scale(1.08,.86)',opacity:.88,borderRadius:'32px 12px 32px 12px',offset:.28},
+    {transform:sourceTravel,opacity:.12,borderRadius:'32px 12px 32px 12px',offset:1}
    ],{duration:540,easing:settling});
   }
   modal=document.createElement('div');
@@ -74,8 +75,9 @@
   sourceAnimation?.cancel();sourceAnimation=null;
   const source=origin;
   const back=source?.isConnected?animate(source,[
-   {transform:sourceTravel||'none',opacity:.12},
-   {transform:'none',opacity:1}
+   {transform:sourceTravel||'none',opacity:.12,borderRadius:'32px 12px 32px 12px'},
+   {transform:'translate3d(0,4px,0) scale(1.035,.97)',opacity:1,borderRadius:'14px 25px 14px 25px',offset:.78},
+   {transform:'none',opacity:1,borderRadius:'18px'}
   ],{duration:390,easing}):null;
   if(source){
    source.style.transform='none';source.style.opacity='1';
@@ -127,17 +129,7 @@
   window.RashodyReferenceV78?.afterRender({view:newView,changed:lastView!==null&&lastView!==newView});
   if(lastView!==newView){
    const current=document.querySelector('#mobile-nav button.active:not(.fab)');
-   if(previousNav&&current){
-    const next=current.getBoundingClientRect(),prev=previousNav;
-    animate(current,[
-     {transform:'translate3d('+(prev.left-next.left)+'px,0,0) scale(.94)',opacity:.75},
-     {transform:'translate3d(0,-4px,0) scale(1.03)',opacity:1,offset:.72},
-     {transform:'none',opacity:1}
-    ],{duration:470,easing:settling});
-    animate(current.querySelector('img'),[
-     {transform:'translateY(12px) scale(.84)'},{transform:'translateY(-5px) scale(1.10)',offset:.72},{transform:'none'}
-    ],{duration:590,easing:settling});
-   }
+   // Liquid navigation indicator and active icon are now animated by Expressive Motion.
    lastView=newView;
   }
   const pending=txChange;txChange=null;
@@ -152,13 +144,7 @@
    });
   }
   if(dayChange&&newView==='dashboard'){
-   // Selection motion is owned by the existing calendar/diagram choreography;
-   // keep only a keyed date transition, never restart the whole entrance.
-   const card=document.querySelector('#page .week-day.focus-day');
-   const rect=card?.getBoundingClientRect();
-   const dx=rect&&oldSelectedRect?oldSelectedRect.left-rect.left:0;
-   const dy=rect&&oldSelectedRect?oldSelectedRect.top-rect.top:0;
-   animate(card,[{transform:'translate3d('+dx+'px,'+dy+'px,0) perspective(900px) scale(.91) rotateY(7deg)',opacity:.85},{transform:'translate3d(0,-4px,0) scale(1.055)',opacity:1,offset:.68},{transform:'none',opacity:1}],{duration:760,easing:settling});
+   // The spring-pressed day is owned by Expressive Motion, not a second FLIP animator.
    dayChange=null;oldSelectedRect=null;
   }
  }
