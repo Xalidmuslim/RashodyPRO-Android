@@ -9,7 +9,7 @@
  const ok=()=>!reduced?.matches&&!document.hidden;
  const easing='cubic-bezier(.2,.78,.22,1)';
  const settling='cubic-bezier(.16,1.03,.26,1)';
- let modal=null,origin=null,overlayHistory=false,inFlight=null,lastView=null,previousNav=null;
+ let modal=null,origin=null,overlayHistory=false,inFlight=null,lastView=null,previousNav=null,detailState='closed';
  let selectionAnimation=null,txChange=null,dayChange=null,oldSelectedRect=null,openSourceRect=null;
  const animate=(node,frames,options)=>{
   if(!ok()||!node?.animate)return null;
@@ -19,16 +19,17 @@
  const escapeHtml=x=>String(x??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
  function detailsHtml(data) {
   const rows=(data.rows||[]).map((r,i)=>'<div class="r77-detail-row" style="--r77-i:'+i+'"><span class="r77-detail-name">'+escapeHtml(r.name)+(r.note?'<small>'+escapeHtml(r.note)+'</small>':'')+'</span><strong>'+escapeHtml(r.value)+'</strong></div>').join('');
-  return '<header class="r77-detail-head"><span class="r77-detail-icon"><img alt="" width="68" height="68" src="assets/icons/kpi/'+escapeHtml(data.icon)+'.png"></span><button type="button" class="r77-detail-close" aria-label="Закрыть подробности">✕</button></header>'+
+  return '<header class="r77-detail-head"><span class="r77-detail-icon">'+(window.RashodyFactorySvg?.(data.icon==='kpi-receipt'?'receipt':data.icon==='kpi-bag'?'shirt':'wallet',42)||'')+'</span><button type="button" class="r77-detail-close" aria-label="Закрыть подробности">✕</button></header>'+
   '<div class="r77-detail-body"><span class="r77-detail-eyebrow">ФИНАНСОВЫЙ ДНЕВНИК</span><h2 id="r77-detail-title">'+escapeHtml(data.title)+'</h2>'+
   '<strong class="r77-detail-number">'+escapeHtml(data.number)+'</strong><p class="r77-detail-sub">'+escapeHtml(data.sub)+'</p>'+
   '<div class="r77-detail-list">'+(rows||'<div class="r77-detail-row">Нет операций за выбранный период</div>')+'</div></div>';
  }
  const main=()=>document.getElementById('page');
  function openDetail(card) {
-  if(modal||document.getElementById('overlay')?.hidden===false)return;
+  if(detailState!=='closed'||modal||document.getElementById('overlay')?.hidden===false)return;
   const data=window.RashodySculptedDetails?.(card.dataset.sculptedDetail);
   if(!data)return;
+  detailState='opening';
   origin=card;
   const rect=card.getBoundingClientRect();
   modal=document.createElement('div');
@@ -37,50 +38,41 @@
   document.body.appendChild(modal);
   const panel=modal.querySelector('.r77-detail-panel');
   document.body.classList.add('r77-detail-open');
-  const p=panel.getBoundingClientRect();
-  const dx=rect.left+rect.width/2-(p.left+p.width/2);
-  const dy=rect.top+rect.height/2-(p.top+p.height/2);
-  const sx=Math.max(.14,Math.min(1,rect.width/p.width));
-  const sy=Math.max(.14,Math.min(1,rect.height/p.height));
-  animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.30)'}],{duration:530,easing});
+  // One compositor translate for the bottom sheet; avoid old 3D FLIP layers.
+  animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.26)'}],{duration:460,easing});
   inFlight=animate(panel,[
-   {transform:'translate3d('+dx+'px,'+dy+'px,0) scale('+sx+','+sy+') rotateX(9deg)',borderRadius:'26px',opacity:.90,offset:0},
-   {transform:'translate3d(0,-10px,0) scale(1.018) rotateX(-2deg)',borderRadius:'32px',opacity:1,offset:.78},
-   {transform:'translate3d(0,0,0) scale(1) rotateX(0deg)',borderRadius:'32px',opacity:1,offset:1}
-  ],{duration:790,easing:settling});
-  modal.querySelectorAll('.r77-detail-icon img').forEach(img=>animate(img,[
-   {transform:'translateY(20px) rotateX(24deg) scale(.65)',opacity:.2},
-   {transform:'translateY(-4px) rotateX(-5deg) scale(1.07)',opacity:1,offset:.72},
-   {transform:'none',opacity:1}
-  ],{duration:790,delay:120,easing:settling}));
-  modal.querySelectorAll('.r77-detail-row').forEach((row,i)=>animate(row,[
-    {opacity:0,transform:'translate3d(0,15px,0) rotateX(8deg)'},
-    {opacity:1,transform:'none'}
-  ],{duration:460,delay:290+i*58,easing}));
+   {transform:'translate3d(0,100%,0)',opacity:.98,offset:0},
+   {transform:'translate3d(0,-5px,0)',opacity:1,offset:.84},
+   {transform:'translate3d(0,0,0)',opacity:1,offset:1}
+  ],{duration:560,easing:settling});
+  if(inFlight)inFlight.finished.then(()=>{if(detailState==='opening')detailState='open'},()=>{});
+  else detailState='open';
   modal.querySelector('.r77-detail-close').addEventListener('click',()=>closeDetail());
   modal.addEventListener('click',e=>{if(e.target===modal)closeDetail()});
   try{history.pushState({__r77Detail:true},'');overlayHistory=true}catch(_){overlayHistory=false}
   requestAnimationFrame(()=>panel.focus({preventScroll:true}));
  }
  function closeDetail(fromHistory=false){
-  if(!modal)return;
-  const pane=modal.querySelector('.r77-detail-panel');
-  const p=pane.getBoundingClientRect();
-  const r=origin?.isConnected?origin.getBoundingClientRect():null;
-  const dx=r?r.left+r.width/2-(p.left+p.width/2):0;
-  const dy=r?r.top+r.height/2-(p.top+p.height/2):38;
-  const sx=r?Math.max(.15,Math.min(1,r.width/p.width)):.85;
-  const sy=r?Math.max(.15,Math.min(1,r.height/p.height)):.85;
+  if(!modal||detailState==='closing')return;
+  detailState='closing';
   const closing=modal;
-  modal=null;document.body.classList.remove('r77-detail-open');
+  const pane=closing.querySelector('.r77-detail-panel');
   inFlight?.cancel();inFlight=null;
-  const a=animate(pane,[{transform:'none',opacity:1},{transform:'translate3d('+dx+'px,'+dy+'px,0) scale('+sx+','+sy+') rotateX(8deg)',opacity:.55}],{duration:570,easing});
-  animate(closing,[{backgroundColor:'rgba(19,36,34,.30)'},{backgroundColor:'rgba(19,36,34,0)'}],{duration:570,easing});
-  if(a)a.finished.then(()=>closing.remove(),()=>closing.remove());
-  else closing.remove();
+  const finish=()=>{
+   closing.remove();
+   if(modal===closing)modal=null;
+   detailState='closed';
+   document.body.classList.remove('r77-detail-open');
+   if(origin?.isConnected)origin.focus({preventScroll:true});
+  };
+  const a=animate(pane,[
+   {transform:'translate3d(0,0,0)',opacity:1},
+   {transform:'translate3d(0,105%,0)',opacity:.96}
+  ],{duration:400,easing});
+  animate(closing,[{backgroundColor:'rgba(19,36,34,.26)'},{backgroundColor:'rgba(19,36,34,0)'}],{duration:400,easing});
+  if(a)a.finished.then(finish,finish);else finish();
   if(overlayHistory&&!fromHistory){overlayHistory=false;try{history.back()}catch(_){}}
   else overlayHistory=false;
-  if(origin?.isConnected)origin.focus({preventScroll:true});
  }
  function transitionSector(previous,next,details,update){
   selectionAnimation?.cancel();selectionAnimation=null;
