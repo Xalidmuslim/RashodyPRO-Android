@@ -155,3 +155,31 @@ html body.matte-editorial .overlay .sheet[aria-busy="true"]{
 @media(prefers-reduced-motion:reduce){
  html body.matte-editorial #modal.tx-sheet .r105-key{transition:none!important}
 }
+
+/* v7.5 QA correction: legacy !important button styles outrank simple selectors.
+   Increase specificity on *only* the redesigned expense controls. */
+html body.matte-editorial #modal.tx-sheet button.r105-key.r105-key{
+ background:#fff7ea!important;background-image:none!important;color:#253f44!important;
+ border:1px solid #fffdfa!important;border-radius:17px!important;
+ box-shadow:0 2px 2px rgba(57,51,42,.10),0 7px 12px -6px rgba(57,51,42,.22),0 14px 18px -11px rgba(57,51,42,.16),inset 0 1px 0 #fff!important;
+}
+html body.matte-editorial #modal.tx-sheet .tx-quick-amount.tx-quick-amount>button{
+ background:#fff7ea!important;background-image:none!important;color:#24464a!important;
+ border-radius:15px!important;box-shadow:0 2px 3px rgba(57,51,42,.11),0 8px 12px -8px rgba(57,51,42,.19),inset 0 1px 0 #fff!important;
+}
+html body.matte-editorial #modal.tx-sheet .type-switch.type-switch>button:not(.active){
+ background:#fff7eb!important;background-image:none!important;color:#28434a!important;
+ border-radius:19px!important;box-shadow:0 3px 3px rgba(58,52,42,.12),0 9px 13px -8px rgba(58,52,42,.20),inset 0 1px 0 #fff!important;
+}
+html body.matte-editorial #modal.tx-sheet button.cat-choice.cat-choice:not(.active){
+ background:#fff8ed!important;background-image:none!important;
+ border-radius:20px!important;box-shadow:0 2px 2px rgba(55,53,46,.13),0 9px 13px -7px rgba(55,53,46,.20),inset 0 1px 0 rgba(255,255,255,.94)!important;
+}
+html body.matte-editorial #modal.tx-sheet button.cat-choice.cat-choice.active{
+ background:#bedaca!important;background-image:none!important;
+ box-shadow:0 2px 3px rgba(44,68,52,.13),0 10px 14px -7px rgba(44,68,52,.22),inset 0 1px 0 rgba(255,255,255,.85)!important;
+}
+html body.matte-editorial #modal.tx-sheet .cat-choice.cat-choice>.truncate{
+ font-weight:600!important;font-size:calc(11px * var(--font-scale,1))!important;line-height:1.2!important;
+}
+html body.matte-editorial #modal.tx-sheet .tx-amount-block.tx-amount-block{background:#efdfca!important}
