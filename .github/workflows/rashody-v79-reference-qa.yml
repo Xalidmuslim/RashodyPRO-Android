@@ -1,0 +1,92 @@
+name: Rashody PRO v7.9 Reference QA APK
+on:
+  push:
+    branches: [fix/rashody-v79-reference-qa-2026-10-31]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  android-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Generate PNG assets and immersive motion tests
+        run: |
+          set -euo pipefail
+          python3 -m pip install --break-system-packages Pillow
+          npm install
+          npm run verify
+          node scripts/verify-reference-v79.mjs
+      - name: Install Android SDK 36
+        run: |
+          set -euo pipefail
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
+      - name: Prepare isolated Android app and PNG assets
+        run: |
+          set -euo pipefail
+          npx cap add android
+          node scripts/prepare-android.mjs
+          npx cap sync android
+          node scripts/build-studio-v79.mjs
+      - name: Compile Android debug APK
+        working-directory: android
+        run: |
+          set -euo pipefail
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Check built APK and packaged icon PNGs
+        run: |
+          set -euo pipefail
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview79'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='7.9-studio-matte-preview'"
+          unzip -t "$APK" >/dev/null
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/categories/food.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/nav/dashboard.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/actions/backspace.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/kpi/kpi-wallet.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/kpi/kpi-receipt.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/kpi/kpi-bag.png'
+          unzip -l "$APK" | grep -q 'assets/public/assets/icons/kpi/kpi-coins.png'
+          unzip -l "$APK" | grep -q 'assets/public/r78-header.css'
+          unzip -l "$APK" | grep -q 'assets/public/r78-hero.css'
+          unzip -l "$APK" | grep -q 'assets/public/r78-details.css'
+          unzip -l "$APK" | grep -q 'assets/public/r78-runtime.js'
+          unzip -l "$APK" | grep -q 'assets/public/r79-visual-qa.css'
+          unzip -p "$APK" assets/public/index.html | grep -q 'studio-v77.css'
+          unzip -p "$APK" assets/public/index.html | grep -q 'sculpted-motion-v77.js'
+          sha256sum "$APK"
+          git diff --exit-code -- www native package.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RashodyPRO-v79-Reference-QA-TEST-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+          if-no-files-found: error
+      - name: Publish direct APK download
+        if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-v79]') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-v7.9-Reference-QA-TEST.apk
+          if gh release view rashody-studio-v7.9-reference-qa-preview >/dev/null 2>&1; then
+            gh release upload rashody-studio-v7.9-reference-qa-preview RashodyPRO-v7.9-Reference-QA-TEST.apk --clobber
+          else
+            gh release create rashody-studio-v7.9-reference-qa-preview RashodyPRO-v7.9-Reference-QA-TEST.apk \
+              --target "$GITHUB_SHA" \
+              --title "Расходы PRO — v7.9 Reference QA (тест)" \
+              --notes "Screenshot QA: compact calendar and KPI, single-line date, compact empty-state CTA and safe bottom navigation. Finance data and transformer preserved. Isolated ru.rashody.pro.preview79. Device QA remains required." \
+              --prerelease --latest=false
+          fi
