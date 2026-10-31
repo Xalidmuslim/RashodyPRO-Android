@@ -1,0 +1,316 @@
+/* v6.1 Sculptural Matte — screenshot-guided restoration.
+   ONLY visual material/geometry. No transaction, SQLite, IME or gesture changes.
+   Three cast-shadow depths; no gradients, white gloss, animated shadows. */
+body.matte-editorial{
+ --p59-ground:#d2cec8;
+ --p59-panel:#e8e3dd;
+ --p59-hero:#ebe5df;
+ --p59-control:#dcd7cf;
+ --p59-recess:#d1cbc4;
+ --p59-ink:#20333a;
+ --p59-muted:#45535a;
+ --p59-coral:#b99c95;
+ --p59-teal:#9cb6ac;
+ --p59-ochre:#c4ae8f;
+ --p59-sage:#b1c6ba;
+ --p59-large:
+   0 4px 7px -3px rgba(32,40,40,.23),
+   0 17px 27px -13px rgba(32,40,40,.26),
+   0 35px 46px -25px rgba(32,40,40,.22);
+ --p59-medium:
+   0 3px 5px -2px rgba(31,42,42,.19),
+   0 12px 21px -10px rgba(31,42,42,.24),
+   0 27px 35px -21px rgba(31,42,42,.18);
+ --p59-small:
+   0 2px 3px -1px rgba(31,42,42,.18),
+   0 7px 13px -6px rgba(31,42,42,.19),
+   0 17px 23px -16px rgba(31,42,42,.12);
+ --p59-selected:
+   0 3px 5px -2px rgba(35,55,55,.25),
+   0 12px 19px -9px rgba(35,55,55,.26),
+   0 27px 34px -20px rgba(35,55,55,.18);
+ --p59-well:inset 0 3px 6px rgba(40,49,49,.11),
+              inset 0 8px 14px rgba(40,49,49,.08);
+ --r61-radius-panel:32px;
+ --r61-radius-card:26px;
+ --r61-radius-control:19px;
+}
+html,body.matte-editorial{background:var(--p59-ground)!important;background-image:none!important}
+html.rashody-native-android body.matte-editorial::before{background:var(--p59-ground)!important}
+
+/* 1. Deep outer islands: same warm pigment, strong but diffuse physical depth.
+   No bright drawn rim. Keep existing padding and scroll positions. */
+body.matte-editorial #page :is(
+ .feature-day,.day-ledger,.record-list,.panel,.history-summary-card,
+ .analytics-ring-panel,.analytics-trend-panel,.analytics-category-grid,
+ .settings-grid .panel,.period-controls,.toolbar
+),body.matte-editorial .overlay .sheet,
+body.matte-editorial #modal.tx-sheet,
+body.matte-editorial #modal.cat-sheet{
+ background-color:var(--p59-panel)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ border-radius:var(--r61-radius-panel)!important;
+ box-shadow:var(--p59-large)!important;
+}
+body.matte-editorial #page :is(.feature-day,.analytics-ring-panel){
+ background:var(--p59-hero)!important;
+}
+/* Avoid an artificial second slab around an already raised chart/table. */
+body.matte-editorial #page .calendar-shell,
+body.matte-editorial #page .summary-strip{
+ box-shadow:none!important;background:transparent!important;
+}
+
+/* 2. Restore rounded pigmented tiles: the old 13px/none rules were the
+   source of the rectangular, flat screenshot cards. */
+body.matte-editorial #page :is(
+ .trend-cards .trend-card,.studio-stats .compare-metric,
+ .analytics-category-grid .color-category-card,.color-category-grid .color-category-card,
+ .history-tally,.insight-tile,.premium-day-chart,
+ .category-row,.category-manage .category-manage-row
+){
+ border:1px solid transparent!important;
+ border-radius:var(--r61-radius-card)!important;
+ background-image:none!important;
+ box-shadow:var(--p59-medium)!important;
+}
+body.matte-editorial #page .trend-cards .trend-card.coral,
+body.matte-editorial #page .studio-stats .compare-metric.main{
+ background:var(--p59-coral)!important;
+}
+body.matte-editorial #page .trend-cards .trend-card.teal,
+body.matte-editorial #page .studio-stats .compare-metric:nth-child(2){
+ background:var(--p59-teal)!important;
+}
+body.matte-editorial #page .trend-cards .trend-card.amber,
+body.matte-editorial #page .studio-stats .compare-metric:nth-child(3){
+ background:var(--p59-ochre)!important;
+}
+body.matte-editorial #page .color-category-grid .color-category-card{
+ /* The category mapping comes from the existing data via a CSS variable,
+    not an inline !important fill that ignores the theme. */
+ background:var(--category-matte,var(--p59-sage))!important;
+ background-image:none!important;
+ min-width:0!important;
+}
+body.matte-editorial #page :is(.trend-card,.color-category-card)::after{
+ content:none!important;display:none!important;
+}
+body.matte-editorial #page .history-tally.qty{background:#cad5d0!important}
+body.matte-editorial #page .history-tally.spent{background:#c6a79e!important}
+body.matte-editorial #page .history-tally.earned{background:#aec7bb!important}
+
+/* Matte-on-matte icon caps: small tactile element, not a shiny glass circle. */
+body.matte-editorial #page :is(
+ .trend-icon,.soft-stat-symbol,.color-category-icon,.tally-symbol,
+ .category-icon,.studio-settings-icon,.insight-icon,.metric-icon,.empty-icon
+){
+ background-color:#c9d1c9!important;
+ background-image:none!important;
+ border:0!important;
+ border-radius:15px!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+ filter:none!important;
+}
+body.matte-editorial #page .color-category-card .color-category-icon{
+ border-radius:16px!important;
+ width:39px!important;height:39px!important;
+}
+body.matte-editorial #page :is(
+ .trend-card,.compare-metric,.color-category-card,.history-tally
+),body.matte-editorial #page :is(
+ .trend-card,.compare-metric,.color-category-card,.history-tally
+) :is(span,strong,small,b,svg){
+ color:var(--p59-ink)!important;
+ text-shadow:none!important;
+}
+
+/* 3. Screenshot defect: chart-detail-sub was accidentally classified as a
+   raised pill, creating a full-width grey rectangle behind ordinary text. */
+body.matte-editorial #page .analytics-ring-panel .chart-detail{
+ background:#e4ded7!important;
+ border:1px solid transparent!important;
+ border-radius:25px!important;
+ box-shadow:var(--p59-medium)!important;
+ padding:15px 17px!important;
+}
+body.matte-editorial #page .analytics-ring-panel :is(
+ .chart-detail-sub,.chart-detail-sum,.chart-detail-top,
+ .day-donut-description,.day-donut-data,.day-donut-name
+){
+ background:transparent!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ box-shadow:none!important;
+}
+body.matte-editorial #page .analytics-ring-panel .chart-detail-sub{
+ display:block!important;
+ width:auto!important;
+ padding:0!important;
+ color:var(--p59-muted)!important;
+ line-height:1.45!important;
+}
+body.matte-editorial #page .analytics-ring-panel .chart-detail .ghost-btn{
+ display:inline-flex!important;
+ max-width:100%!important;
+ margin-top:6px!important;
+ padding:10px 14px!important;
+ border-radius:18px!important;
+ background:var(--p59-control)!important;
+ color:#285753!important;
+ box-shadow:var(--p59-small)!important;
+ white-space:normal!important;
+}
+
+/* 4. Restored tactile control hierarchy: raised keys, sunken group track.
+   Keep selected buttons noticeably selected without luminous bevels. */
+body.matte-editorial #page :is(
+ .period-toggle,.trend-mode-toggle,.font-toggle,.filter-group
+),body.matte-editorial #modal.tx-sheet .type-switch.type-switch{
+ background:var(--p59-recess)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ border-radius:23px!important;
+ box-shadow:var(--p59-well)!important;
+}
+body.matte-editorial #page :is(
+ .period-toggle button,.trend-mode-toggle button,.font-toggle button,
+ .week-day,.icon-btn,.today-btn,.ghost-btn,.secondary-btn,
+ .r49-filter-btn,.header-csv,.feature-link,.settings-actions button,
+ .category-manage button,.filter-group button
+),body.matte-editorial #modal.tx-sheet :is(
+ .r105-key,.cat-choice,.type-switch button,.tx-quick-amount>button,
+ .tx-date-control button,.mini-action
+){
+ background-color:var(--p59-control)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ border-radius:var(--r61-radius-control)!important;
+ box-shadow:var(--p59-small)!important;
+ color:var(--p59-ink)!important;
+ text-shadow:none!important;
+}
+body.matte-editorial #page :is(
+ .period-toggle button.active,.trend-mode-toggle button.active,
+ .font-toggle button.active,.filter-group button.active,
+ .week-day.focus-day
+),body.matte-editorial #modal.tx-sheet :is(
+ .type-switch button.active,.tx-check:not(:disabled)
+){
+ background:#32585b!important;
+ background-image:none!important;
+ color:#fffaf1!important;
+ border-color:transparent!important;
+ box-shadow:var(--p59-selected)!important;
+}
+body.matte-editorial #page :is(
+ .period-toggle button.active,.trend-mode-toggle button.active,
+ .font-toggle button.active,.filter-group button.active,.week-day.focus-day
+) :is(span,strong,small){color:#fffaf1!important}
+body.matte-editorial #page :is(
+ .search,.filter-select,.setting-select,.history-search-input
+),body.matte-editorial #modal :is(.field input,.field select,.field textarea){
+ background:var(--p59-recess)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ border-radius:18px!important;
+ box-shadow:var(--p59-well)!important;
+ color:var(--p59-ink)!important;
+}
+
+/* 5. Settings danger action had no rounded geometry and was a sharp red box.
+   Single wide matte button, still a destructive action with its old handler. */
+body.matte-editorial #page .settings-grid button.mini-action.danger-btn[data-action="clear-data"]{
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ gap:12px!important;
+ width:100%!important;max-width:100%!important;
+ min-height:56px!important;padding:13px 17px!important;
+ margin-top:11px!important;
+ border:1px solid transparent!important;
+ border-radius:21px!important;
+ background:#b79a94!important;
+ background-image:none!important;
+ box-shadow:var(--p59-medium)!important;
+ color:#452c2c!important;
+ text-align:left!important;
+ white-space:normal!important;
+}
+body.matte-editorial #page .settings-grid button.mini-action.danger-btn[data-action="clear-data"] svg{
+ flex:none!important;
+}
+body.matte-editorial #page .settings-grid :is(
+ .settings-actions button,.category-manage button
+){
+ background:#b9c9be!important;
+ border-radius:20px!important;
+ min-width:0!important;
+ white-space:normal!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #page .settings-grid .note-box{
+ background:#b9c8bd!important;
+ border-color:transparent!important;
+ border-radius:24px!important;
+ box-shadow:var(--p59-medium)!important;
+ color:#2b4b48!important;
+}
+
+/* 6. Premium dock: floating material slab and deep separate add action.
+   Preserve the FAB location, touch targets and bottom insets. */
+body.matte-editorial .mobile-nav{
+ background:var(--p59-panel)!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ border-radius:30px!important;
+ box-shadow:var(--p59-large)!important;
+}
+body.matte-editorial .mobile-nav button.active:not(.fab){
+ background:#b4c9bd!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ border-radius:20px!important;
+ box-shadow:var(--p59-small)!important;
+ color:#25454b!important;
+}
+body.matte-editorial .mobile-nav .fab{
+ background:#a87971!important;
+ background-image:none!important;
+ border-color:transparent!important;
+ border-radius:50%!important;
+ box-shadow:var(--p59-selected)!important;
+ color:#fffaf1!important;
+}
+
+/* 7. Text/readability: keep clear ink on desaturated pigments and honor
+   large user font scales without exposing clipped summary numbers. */
+body.matte-editorial #page :is(
+ .trend-card,.color-category-card,.history-tally,
+ .compare-metric,.chart-detail,.legend-line,
+ .record-title,.record-subtitle,.setting-row
+){min-width:0;overflow-wrap:anywhere;}
+body.matte-editorial #page :is(
+ .trend-card,.color-category-card,.history-tally,.compare-metric
+) :is(strong,small,span){overflow-wrap:anywhere;}
+body.matte-editorial #page :is(
+ .record-subtitle,.record-meta,.period-caption,.setting-expl,.section-caption,
+ .chart-detail-sub,.day-donut-data
+){color:var(--p59-muted)!important;text-shadow:none!important;}
+body.matte-editorial :is(button,input,select,textarea):focus-visible{
+ outline:2px solid #2d6263!important;outline-offset:3px!important;
+}
+@media(max-width:380px){
+ body.matte-editorial #page .color-category-grid .color-category-card{
+  border-radius:23px!important;
+  padding:12px 11px!important;
+ }
+ body.matte-editorial #page .analytics-ring-panel .chart-detail{
+  padding:12px 14px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.matte-editorial :is(button,.color-category-card,.trend-card){
+  transition:none!important;
+ }
+}
