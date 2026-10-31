@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const h=fs.readFileSync('www/index.html','utf8');
 const css=fs.readFileSync('www/studio-v70.css','utf8');
 const p=JSON.parse(fs.readFileSync('package.json','utf8'));
-const wanted=['premium-depth.css','satin-finish.css','deep-matte.css','studio-v70.css','studio-v75.css'];
+const wanted=['premium-depth.css','satin-finish.css','deep-matte.css','studio-v70.css','studio-v75.css','studio-v76.css'];
 const linked=[...h.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
 assert.deepEqual(linked,wanted,'Only approved studio layers may load after legacy reset');
 for(const old of ['matte-premium-v57.css','matte-director-v58.css','matte-polish-v59.css','sculptural-restore-v61.css','matte-finish-v62.css'])
