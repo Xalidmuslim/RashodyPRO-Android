@@ -49,7 +49,7 @@ jobs:
           APK=android/app/build/outputs/apk/debug/app-debug.apk
           test -s "$APK"
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview76'"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='7.5-studio-matte-preview'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='7.6-studio-matte-preview'"
           unzip -t "$APK" >/dev/null
           unzip -l "$APK" | grep -q 'assets/public/assets/icons/categories/food.png'
           unzip -l "$APK" | grep -q 'assets/public/assets/icons/nav/dashboard.png'
