@@ -15,7 +15,7 @@
  const remember=a=>{
   if(!a)return;
   active.add(a);
-  a.finished?.catch(()=>{}).then(()=>active.delete(a));
+  a.finished?.then(()=>{active.delete(a);a.cancel()},()=>{active.delete(a)});
  };
  function stop(){
   for(const a of active)try{a.cancel()}catch(_){}
@@ -138,8 +138,7 @@
   const period=root.querySelector('.analytics-controls .period-caption')?.textContent?.trim()||'';
   const weekChanged=weekKey!==state.week,dayChanged=day!==state.day;
   const periodChanged=period!==state.period,selectionChanged=chartSel!==state.selection;
-  const firstTime=state.view==='';
-  stop();
+   stop();
   Object.assign(state,{view,week:weekKey,day,period,selection:chartSel});
   if(!safe())return;
   // Avoid delaying first paint or input: start on next compositor frame.
@@ -149,8 +148,8 @@
    else if(view==='analytics')analytics(root,full,periodChanged,selectionChanged);
   });
  }
- // Direct taps must interrupt decorative entry transitions immediately.
- document.addEventListener('pointerdown',e=>{
+ // Window capture interrupts decorative entry BEFORE the existing document-level tilt handler.
+ window.addEventListener('pointerdown',e=>{
   if(e.target.closest?.('#page .week-day,#page .trend-card,#page .feature-day,#page .ring,#page .day-donut'))stop();
  },{capture:true,passive:true});
  document.addEventListener('scroll',stop,{capture:true,passive:true});
