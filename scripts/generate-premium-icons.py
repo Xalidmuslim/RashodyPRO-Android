@@ -40,7 +40,37 @@ def render(name,kind):
     def highlights(box):
         x,y,x2,y2=box
         d.arc((x+8,y+5,x2-8,y2-8),195,303,fill=(255,250,239,204),width=6)
-    if kind=="food":
+    if kind in ("kpi-wallet","kpi-receipt","kpi-bag"):
+        # Matte sculpted KPI miniatures — transparent PNGs with a restrained
+        # sculpted body. Source geometry is 3x supersampled for Android.
+        from PIL import ImageFont
+        tone={"kpi-wallet":"#e7bdb1","kpi-receipt":"#b6d7c7","kpi-bag":"#ecd2a1"}[kind]
+        # Short, dark contact shadow. No bloom, reflection or glass.
+        tile=Image.new("RGBA",(N,N))
+        td=ImageDraw.Draw(tile)
+        td.rounded_rectangle((32,34,256,253),radius=67,fill=C(tone))
+        td.arc((37,36,250,242),190,314,fill=(255,250,237,130),width=5)
+        td.arc((45,43,248,247),18,119,fill=(46,48,45,40),width=6)
+        im.alpha_composite(tile)
+        d=ImageDraw.Draw(im)
+        if kind=="kpi-wallet":
+            rr((79,109,213,202),24,"#2a4b4e","#193a40",7)
+            rr((79,90,199,143),20,"#40636a","#1f3d42",5)
+            rr((160,138,229,184),13,"#2e5156","#1d3940",6)
+            el((183,153,201,171),"#c0c5b5")
+            line([(93,113),(188,113)],"#8caca0",5)
+        elif kind=="kpi-receipt":
+            poly([(83,75),(212,75),(212,209),(188,193),(167,210),(149,193),(127,210),(106,194),(83,211)],"#e4efdf","#315b57",9)
+            for y,w in [(116,86),(145,65),(174,76)]:
+                rr((102,y,102+w,y+11),5,"#638d84")
+            line([(90,88),(200,88)],"#fff9e6",4)
+        else:
+            rr((81,111,218,216),22,"#dbb074","#8c6843",7)
+            d.arc((112,72,189,157),182,358,fill=C("#465d55"),width=13)
+            d.arc((121,80,181,151),185,354,fill=C("#e4c99d"),width=5)
+            poly([(94,122),(207,122),(199,198),(103,198)],"#e6bd83")
+            line([(103,132),(202,132)],"#fff0d0",6)
+    elif kind=="food":
         for x,y,col in [(100,91,sage),(138,86,coral),(174,92,gold),(118,120,gold),(163,122,sage)]:
             el((x-27,y-25,x+27,y+30),col,ink,3)
             line([(x,y-23),(x+6,y-38)],ink,3)
@@ -171,7 +201,7 @@ def render(name,kind):
             rr((65,73,225,226),30,sage,ink,5)
     # Soft top-left rim, subtle satin material, no specular gloss
     im=im.resize((S,S),Image.Resampling.LANCZOS)
-    file=OUT/("categories" if kind in ("food","cafe","transport","home","health","fun","shop","other") else "nav" if kind in ("dashboard","transactions","analytics","settings") else "actions")/(name+".png")
+    file=OUT/("kpi" if kind.startswith("kpi-") else "categories" if kind in ("food","cafe","transport","home","health","fun","shop","other") else "nav" if kind in ("dashboard","transactions","analytics","settings") else "actions")/(name+".png")
     file.parent.mkdir(parents=True,exist_ok=True)
     im.save(file,optimize=True)
     return file
@@ -179,5 +209,6 @@ def render(name,kind):
 if __name__=="__main__":
     ids=["food","cafe","transport","home","health","fun","shop","other","dashboard","transactions","analytics","settings",
     "plus","close","check","back","forward","up","down","search","filter","calendar","backspace","delete","edit","export"]
+    ids += ["kpi-wallet","kpi-receipt","kpi-bag"]
     files=[render(i,i) for i in ids]
     print("Generated",len(files),"matte PNG icons in",OUT)
