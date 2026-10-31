@@ -84,14 +84,12 @@
     if (!a.el.isConnected || reduced?.matches) {finish(true);return;}
     a.ending=true;
     const el=a.el;
+    // Capture the actual tilted pose BEFORE enabling return keyframes.
+    // Otherwise CSS animation would immediately replace the press pose
+    // and produce a subtle but visible snap on angled touches.
+    const from=window.getComputedStyle(el).transform;
     el.classList.remove('depth-engaged');
     el.classList.add('depth-return');
-    // Deliberately long deceleration with a restrained overshoot. Using
-    // transforms only avoids animated blur, repaint and jank.
-    // Capture the actual in-flight pressed transform so the return never
-    // snaps. Keyframes include a perceptible 3-stage spring, not a cubic
-    // bezier whose overshoot finishes almost immediately.
-    const from=window.getComputedStyle(el).transform;
     el.style.setProperty('--depth-from-transform',
       from && from!=='none' ? from : 'scale('+a.motion.scale+')');
     el.style.setProperty('--depth-release',a.motion.release+'ms');
