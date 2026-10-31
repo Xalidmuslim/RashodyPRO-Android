@@ -9,3 +9,13 @@
 - **Проверка:** GitHub Actions выполняет регрессионные тесты и сборку Android. Визуальное поведение на реальном устройстве нужно проверить отдельно.
 
 Если GitHub Release ещё не опубликован, сборка запускается автоматически при выпуске нового тестового APK.
+
+## 6.1 — Sculptural Matte (тестовая сборка)
+
+Скриншотный редизайн после v6.0: округление карточек, глубокие матовые тени, приглушённая палитра, устранение серой плашки за обычным текстом, исправление кнопки удаления. Основные финансовые функции и данные не изменены.
+
+- [Скачать тестовый APK v6.1](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/download/rashody-sculptural-v6.1-test/RashodyPRO-Sculptural-Matte-v6.1-TEST.apk)
+- [Релиз v6.1](https://github.com/Xalidmuslim/RashodyPRO-Android/releases/tag/rashody-sculptural-v6.1-test)
+- [Сборка/проверки](https://github.com/Xalidmuslim/RashodyPRO-Android/actions/workflows/rashody-v61-sculptural-qa.yml)
+
+Android package `ru.rashody.pro.preview61` устанавливается отдельно от основного приложения; его данные не переносятся автоматически. Визуальный тест на реальном устройстве обязателен перед слиянием в основную ветку.
