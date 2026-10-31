@@ -1,0 +1,204 @@
+/* v6.2 screenshot-based correction for v6.1. Keep the working financial
+   data, navigation and keyboard logic. Flat pigments, sculptural cards, no
+   glow gradients or repaint-heavy box-shadow transitions. */
+body.matte-editorial{
+ --p59-coral:#b69d96;
+ --p59-teal:#9fb6ae;
+ --p59-ochre:#c4b198;
+ --p59-sage:#b4c7bb;
+ --p59-ground:#d3cfc9;
+ --p59-panel:#e7e2dc;
+ --p59-recess:#d9d3cc;
+ --p59-large:
+  0 3px 5px -2px rgba(33,42,41,.19),
+  0 14px 25px -11px rgba(33,42,41,.22),
+  0 32px 44px -26px rgba(33,42,41,.15);
+ --p59-medium:
+  0 2px 4px -2px rgba(33,42,41,.16),
+  0 9px 17px -8px rgba(33,42,41,.18),
+  0 23px 32px -21px rgba(33,42,41,.12);
+ --p59-small:
+  0 1px 2px -1px rgba(33,42,41,.16),
+  0 6px 11px -6px rgba(33,42,41,.14),
+  0 15px 22px -16px rgba(33,42,41,.10);
+}
+
+/* No bright charts escaping the card palette. SVG strokes come from the
+   shared JavaScript categoryColor() map, updated alongside this stylesheet. */
+body.matte-editorial #page .analytics-ring-panel .ring-svg,
+body.matte-editorial #page .day-donut-svg{
+ filter:drop-shadow(0 3px 3px rgba(39,49,48,.10))
+        drop-shadow(0 9px 7px rgba(39,49,48,.13))!important;
+}
+body.matte-editorial #page .analytics-ring-panel .ring-slice,
+body.matte-editorial #page .day-donut-sector{
+ filter:none!important;
+}
+body.matte-editorial #page .studio-trend-bars .compare-stick{
+ background:#a58a81!important;
+ background-image:none!important;
+ border:0!important;
+ box-shadow:none!important;
+}
+body.matte-editorial #page .studio-trend-bars .compare-col.selected .compare-stick{
+ background:#476a6b!important;
+}
+body.matte-editorial #page .week-day-meter-fill{background:#79998d!important}
+body.matte-editorial #page .week-day.focus-day .week-day-meter-fill{background:#c4a295!important}
+body.matte-editorial #page .day-donut-base{stroke:#cbc7c0!important}
+
+/* Prevent nested controls from intersecting or casting heavy shadow rims
+   onto the parent rounded panel. Large 3D survives on each outer card. */
+body.matte-editorial #page :is(.period-toggle,.trend-mode-toggle,.font-toggle){
+ border:0!important;
+ border-radius:24px!important;
+ padding:6px!important;
+ gap:6px!important;
+ background:var(--p59-recess)!important;
+ box-shadow:inset 0 2px 5px rgba(45,51,50,.13)!important;
+}
+body.matte-editorial #page :is(.period-toggle,.trend-mode-toggle,.font-toggle)>button{
+ border:0!important;
+ min-width:0!important;
+ border-radius:19px!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #page :is(.period-toggle,.trend-mode-toggle,.font-toggle)>button.active{
+ background:#365b5d!important;
+ color:#fcf8ef!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #page :is(.period-controls,.analytics-controls,.r49-history-toolbar){
+ border-radius:30px!important;
+ background:var(--p59-panel)!important;
+ box-shadow:var(--p59-large)!important;
+}
+body.matte-editorial #page .period-controls :is(.period-navigation,.period-caption){
+ min-width:0!important;
+}
+body.matte-editorial #page :is(.history-tally,.studio-stats .compare-metric,.trend-card,.color-category-card){
+ box-shadow:var(--p59-medium)!important;
+ border-color:transparent!important;
+}
+body.matte-editorial #page :is(.r49-history-toolbar,.analytics-ring-panel) :is(.search,.filter-select){
+ box-shadow:inset 0 3px 7px rgba(45,51,50,.11)!important;
+}
+body.matte-editorial #page .analytics-ring-panel .chart-detail{
+ position:relative;
+ border-radius:24px!important;
+ margin-top:16px!important;
+ margin-bottom:14px!important;
+ padding:14px 16px!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #page .analytics-ring-panel :is(.chart-detail-sub,.day-donut-data){
+ box-shadow:none!important;
+ background:transparent!important;
+}
+
+/* Selected and informational category chips stay recognisable without
+   electric pigment. Preserve dark text contrast everywhere except selected. */
+body.matte-editorial #page :is(.legend-line.selected,.day-donut-legend-item.is-selected){
+ background:#bfcfc4!important;
+ background-image:none!important;
+ color:#20343a!important;
+ border:0!important;
+ border-radius:19px!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #page .color-category-grid .color-category-card,
+body.matte-editorial #page .color-category-grid .color-category-card:nth-child(n){
+ background:var(--category-matte,var(--p59-sage))!important;
+ background-image:none!important;
+ border-radius:26px!important;
+ color:#20333a!important;
+ box-shadow:var(--p59-medium)!important;
+}
+
+/* Android: editor was reaching behind the system status bar because an
+   earlier 95dvh max-height rule overrode the safe top margin. Bottom-align
+   as before, but enforce a safe maximum sheet height and scrollable body. */
+@media(max-width:600px){
+ html.rashody-native-android body.matte-editorial #overlay:not([hidden]) #modal.tx-sheet,
+ html.rashody-native-android body.matte-editorial #overlay:not([hidden]) #modal.cat-sheet{
+   box-sizing:border-box!important;
+   max-height:calc(100dvh - 62px)!important;
+   overflow-y:auto!important;
+   scroll-padding-top:14px!important;
+   scroll-padding-bottom:calc(38px + env(safe-area-inset-bottom,0px))!important;
+   border-radius:29px 29px 0 0!important;
+   box-shadow:0 -3px 12px rgba(36,45,44,.11)!important;
+ }
+ html.rashody-native-android body.matte-editorial #modal.tx-sheet .sheet-header{
+   padding-top:3px!important;
+   gap:12px!important;
+ }
+ html.rashody-native-android body.matte-editorial #modal.tx-sheet .sheet-header>div{
+   min-width:0!important;
+ }
+}
+
+/* The number editor is an inset matte well, not a second thick floating
+   panel. Keys remain tactile without shadow edges colliding. */
+body.matte-editorial #modal.tx-sheet .tx-amount-block{
+ background:#d9d4ce!important;
+ background-image:none!important;
+ border:0!important;
+ border-radius:27px!important;
+ box-shadow:inset 0 3px 7px rgba(36,45,43,.12),
+            inset 0 8px 12px rgba(36,45,43,.06)!important;
+}
+body.matte-editorial #modal.tx-sheet .r105-key,
+body.matte-editorial #modal.tx-sheet .tx-quick-amount>button{
+ background:#e4dfd7!important;
+ background-image:none!important;
+ border:0!important;
+ border-radius:17px!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #modal.tx-sheet .r105-key:focus-visible{
+ outline:2px solid #365d60!important;outline-offset:2px!important;
+}
+body.matte-editorial #modal.tx-sheet .cat-choice{
+ border-radius:21px!important;
+ box-shadow:var(--p59-small)!important;
+}
+body.matte-editorial #modal.tx-sheet .cat-choice.active{
+ background:#acc4b8!important;
+ color:#213940!important;
+ box-shadow:var(--p59-medium)!important;
+}
+
+/* Fixed dock has an uncovered strip between its bottom edge and the Android
+   system navigation bar. The screenshot showed finance text leaking through
+   that strip. Cover it with the app's ground pigment without blocking touches.
+   Keep actual page content scrollable above the dock. */
+@media(max-width:880px){
+ html.rashody-native-android body.matte-editorial .mobile-nav::after{
+  content:"";
+  position:absolute;
+  top:calc(100% - 1px);
+  left:-22px;right:-22px;
+  height:calc(24px + env(safe-area-inset-bottom,0px));
+  background:var(--p59-ground);
+  pointer-events:none;
+  border:0;
+  box-shadow:none;
+ }
+ html.rashody-native-android body.matte-editorial #page{
+  padding-bottom:calc(168px + env(safe-area-inset-bottom,0px))!important;
+  scroll-padding-bottom:168px!important;
+ }
+ html.rashody-native-android body.matte-editorial #page :is(.chart-detail,.analytics-category-grid,.settings-grid,.record-list){
+  scroll-margin-bottom:168px!important;
+ }
+}
+body.matte-editorial :is(button,input,select,textarea):focus-visible{
+ outline:2px solid #365e61!important;
+ outline-offset:3px!important;
+}
+@media(prefers-reduced-motion:reduce){
+ body.matte-editorial :is(button,.ring-slice,.day-donut-sector){
+  transition:none!important;
+ }
+}
