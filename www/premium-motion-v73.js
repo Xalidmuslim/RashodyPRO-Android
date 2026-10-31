@@ -24,12 +24,13 @@
   const clamp = (x, min, max) => Math.min(max, Math.max(min, x));
   const isCard = el => el.matches('.trend-card,.compare-metric,.history-tally,.color-category-card');
   const profile = el => {
-    if (el.matches('.r105-key,.tx-quick-amount>button')) return {press:175,release:690,min:70,tilt:3.5,scale:.954};
-    if (el.closest('.mobile-nav')) return {press:250,release:1020,min:145,tilt:5.3,scale:.928};
-    if (isCard(el)) return {press:310,release:1220,min:190,tilt:6.5,scale:.961};
+    if (el.matches('.r105-key,.tx-quick-amount>button')) return {press:335,release:1110,min:75,tilt:3.3,scale:.958};
+    if (el.closest('.mobile-nav')) return {press:425,release:1540,min:165,tilt:5.1,scale:.936};
+    if (el.matches('.week-day')) return {press:455,release:1670,min:180,tilt:6.8,scale:.951};
+    if (isCard(el)) return {press:470,release:1740,min:185,tilt:6.3,scale:.963};
     if (el.matches('.icon-btn') || el.getBoundingClientRect().width < 54)
-      return {press:205,release:860,min:110,tilt:4.5,scale:.927};
-    return {press:290,release:1160,min:170,tilt:7,scale:.945};
+      return {press:375,release:1320,min:110,tilt:4.4,scale:.936};
+    return {press:430,release:1580,min:170,tilt:6.7,scale:.949};
   };
   function visible(el) {
     if (!el || !el.isConnected || el.disabled) return false;
@@ -169,7 +170,7 @@
         {transform:'translate3d('+dx+'px,0,0) scale(.91)',offset:0},
         {transform:'translate3d(0,0,0) scale(1.07)',offset:.60},
         {transform:'translate3d(0,0,0) scale(1)',offset:1}
-      ],{duration:930,easing:'cubic-bezier(.2,.8,.25,1)',fill:'none'});
+      ],{duration:1420,easing:'cubic-bezier(.17,.86,.2,1)',fill:'none'});
       anim.finished?.catch(()=>{});
     });
   }
