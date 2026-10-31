@@ -20,6 +20,7 @@ assert.match(css,/button\.cat-choice\.cat-choice/,'Rounded category buttons must
 assert.match(css, /background-color:#efe7db!important/,'Do not regress to grey calculator slab');
 assert.match(css, /html body\.matte-editorial \.mobile-nav/,'Safe mobile navigation required');
 assert.match(css, /prefers-reduced-motion/);
+assert.match(css, /button\.depth-return \.r75-icon/,'PNG icons should spring back along with their buttons');
 assert.match(motion,/pointermove/);
 execFileSync('python3',['scripts/generate-premium-icons.py'],{stdio:'inherit'});
 const assets={
