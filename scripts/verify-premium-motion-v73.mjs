@@ -21,6 +21,8 @@ assert.match(css,/--depth-text-x/);
 assert.match(css,/--depth-shadow-x/);
 assert.match(css,/radial-gradient/);
 assert.match(css,/prefers-reduced-motion/);
+assert.match(css,/@keyframes depth-premium-return/);
+assert.match(css,/60%\{transform:perspective\(920px\) scale\(\.987\)\}/);
 assert.doesNotMatch(css.slice(css.indexOf('/* Premium Motion v7.3')),/transition\s*:[^;]*(?:box-shadow|filter)/);
 assert.match(fs.readFileSync('native/FinanceStoragePlugin.java','utf8'),/class FinanceStoragePlugin/);
 // Simulated Android PointerEvents, without browser APIs or external packages.
@@ -45,7 +47,8 @@ const button={
 const media={matches:false,addEventListener(){}};
 const doc={hidden:false,addEventListener:(type,fn)=>listen('document',type,fn),querySelectorAll:()=>[]};
 const ctx={
- document:doc,window:{matchMedia:()=>media,addEventListener:(type,fn)=>listen('window',type,fn)},
+ document:doc,window:{matchMedia:()=>media,addEventListener:(type,fn)=>listen('window',type,fn),
+  getComputedStyle:(el)=>({transform:el.style.getPropertyValue?.('transform') ?? styles.get('transform') ?? 'none'})},
  performance:{now:()=>clock},
  requestAnimationFrame:fn=>{const k=++id;frames.set(k,fn);return k},
  cancelAnimationFrame:k=>frames.delete(k),
@@ -72,7 +75,7 @@ send('pointerup');
 assert.ok(!classes.has('depth-return'),'Keep perceptible minimum press for quick taps');
 assert.ok(nextTimer()>0,'Minimum hold duration must be scheduled');
 assert.ok(classes.has('depth-return'),'Release must begin a spring phase');
-assert.match(styles.get('transition'),/1160ms/,'Premium return must last over one second');
+assert.match(styles.get('--depth-release'),/1160ms/,'Premium return must last over one second');
 nextTimer();
 assert.ok(!classes.has('depth-return'));
 assert.ok(!styles.has('transform'),'No transform stays stuck after spring');
