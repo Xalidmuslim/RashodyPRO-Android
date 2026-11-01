@@ -34,7 +34,7 @@ jobs:
           node scripts/verify-interactions-v85.mjs
           node scripts/verify-expressive-v86.mjs
           node scripts/verify-polish-v87.mjs
-          node scripts/verify-shared-motion-v89.mjs
+          node scripts/verify-shared-motion-v88.mjs
       - name: Install Android SDK 36
         run: |
           set -euo pipefail
