@@ -32,6 +32,9 @@
   if(!data)return;
   const from=card.getBoundingClientRect();
   if(!from.width||!from.height)return;
+  // Capture matte colors before moving the real card outside #page.
+  const sourcePaint=getComputedStyle(card);
+  const fill=sourcePaint.backgroundColor,color=sourcePaint.color;
   window.RashodyGrandMotion?.stop();
   detailState='opening';origin=card;
   cardStyle=card.style.cssText;
@@ -50,18 +53,17 @@
   modal.appendChild(card);
   card.classList.add('r88-expand-card');
   card.setAttribute('aria-expanded','true');
-  const color=card.classList.contains('amber')?'#28251f':'#fff9f0';
-  const fill=card.classList.contains('coral')?'#CF7864':card.classList.contains('teal')?'#4D908A':'#D8A34F';
   const viewport=window.visualViewport;
   const vw=viewport?.width||window.innerWidth,vh=viewport?.height||window.innerHeight;
   const x=viewport?.offsetLeft||0,y=viewport?.offsetTop||0;
-  const width=Math.min(vw-24,520),height=Math.min(Math.max(290,vh*.54),Math.max(290,vh-48),540);
+  // Compact morph: details remain scrollable instead of filling half the screen.
+  const width=Math.min(vw-36,440),height=Math.min(Math.max(228,vh*.40),vh-42,360);
   const to={left:x+(vw-width)/2,top:y+(vh-height)/2,width,height};
   for(const [property,value] of Object.entries({
    position:'fixed',left:to.left+'px',top:to.top+'px',
    width:to.width+'px',height:to.height+'px',
    zIndex:'16002',background:fill,color,margin:'0',
-   transformOrigin:'top left',borderRadius:'29px',pointerEvents:'auto'
+   transformOrigin:'top left',borderRadius:'25px',pointerEvents:'auto'
   }))card.style.setProperty(property,value);
   const contents=document.createElement('div');
   contents.className='r88-expanded-contents';
@@ -80,15 +82,14 @@
   // top, width and height caused layout work and was masked by !important.
   const scaleX=from.width/to.width,scaleY=from.height/to.height;
   sourceAnimation=animate(card,[
-   {transform:'translate3d('+(from.left-to.left)+'px,'+(from.top-to.top)+'px,0) scale('+scaleX+','+scaleY+')',borderRadius:'18px',offset:0},
-   {transform:'translate3d(0,-3px,0) scale(1.008,1.008)',borderRadius:'30px',offset:.84},
-   {transform:'translate3d(0,0,0) scale(1)',borderRadius:'29px',offset:1}
-  ],{duration:480,easing:settling});
+   {transform:'translate3d('+(from.left-to.left)+'px,'+(from.top-to.top)+'px,0) scale('+scaleX+','+scaleY+')',borderRadius:'18px'},
+   {transform:'translate3d(0,0,0) scale(1)',borderRadius:'25px'}
+  ],{duration:430,easing:'cubic-bezier(.22,.8,.24,1)'});
   animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.28)'}],
    {duration:360,easing});
-  animate(contents,[{opacity:0,transform:'translate3d(0,15px,0)'},{opacity:1,transform:'none'}],
-   {duration:280,delay:185,easing});
-  animate(close,[{opacity:0},{opacity:1}],{duration:220,delay:250,easing});
+  animate(contents,[{opacity:0,transform:'translate3d(0,8px,0)'},{opacity:1,transform:'none'}],
+   {duration:260,delay:110,easing});
+  animate(close,[{opacity:0},{opacity:1}],{duration:200,delay:170,easing});
   if(sourceAnimation)sourceAnimation.finished.then(()=>{
    if(detailState==='opening')detailState='open';
   },()=>{});
@@ -136,7 +137,7 @@
   const back=(source&&target&&from&&ok())?animate(source,[
    {transform:'translate3d('+(from.left-baseLeft)+'px,'+(from.top-baseTop)+'px,0) scale('+(from.width/baseWidth)+','+(from.height/baseHeight)+')',borderRadius:'29px'},
    {transform:'translate3d('+(target.left-baseLeft)+'px,'+(target.top-baseTop)+'px,0) scale('+returnScaleX+','+returnScaleY+')',borderRadius:'18px'}
-  ],{duration:425,easing}):null;
+  ],{duration:410,easing:'cubic-bezier(.36,0,.24,1)'}):null;
   if(back)back.finished.then(finish,finish);else finish();
   if(overlayHistory&&!fromHistory){overlayHistory=false;try{history.back()}catch(_){}}
   else overlayHistory=false;
