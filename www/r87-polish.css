@@ -1,0 +1,45 @@
+/* v8.7 — selected custom category art has ONE rounded matte surface.
+   The original icon is retained; only wrapper geometry changes. */
+html body.matte-editorial #page .r77-day-selection .record-row > span:first-child,
+html body.matte-editorial #page .r77-day-selection .record-row .category-icon{
+ display:grid!important;place-items:center!important;
+ width:42px!important;min-width:42px!important;height:42px!important;
+ padding:0!important;overflow:hidden!important;
+ border:0!important;border-radius:12px!important;
+ background:#f0e1d2!important;background-image:none!important;
+ box-shadow:0 2px 3px rgba(71,50,35,.12),0 8px 11px -8px rgba(69,45,35,.24)!important;
+}
+html body.matte-editorial #page .r77-day-selection .record-row .category-icon,
+html body.matte-editorial #page .r77-day-selection .record-row .category-icon .r84-native-icon{
+ background:transparent!important;background-image:none!important;
+ border:0!important;box-shadow:none!important;
+}
+html body.matte-editorial #page .r77-day-selection .record-row .category-icon svg{
+ width:25px!important;height:25px!important;stroke-width:1.85!important;
+ color:#3c5a4d!important;
+}
+html body.matte-editorial #page .r77-day-selection .record-row > span:first-child::before,
+html body.matte-editorial #page .r77-day-selection .record-row > span:first-child::after{
+ display:none!important;content:none!important;
+}
+/* User-created category icons obey the same rounded proportions everywhere,
+   including the transaction editor and selected day breakdown. */
+html body.matte-editorial #modal.tx-sheet .cat-choice .category-icon{
+ border-radius:10px!important;overflow:hidden!important;
+}
+html body.matte-editorial #page .day-donut-legend-item .r78-category-icon{
+ border-radius:11px!important;overflow:hidden!important;
+}
+/* Keep navigation width stable during animation. An active item cannot grow
+   outside the fixed bottom bar or clip the word 'Настройки'. */
+html body.matte-editorial .mobile-nav > button[data-view]{
+ box-sizing:border-box!important;transform-origin:center center!important;
+}
+html body.matte-editorial .mobile-nav > button[data-view] > span{
+ text-overflow:ellipsis!important;white-space:nowrap!important;
+}
+@media(max-width:360px){
+ html body.matte-editorial .mobile-nav > button[data-view]{
+  font-size:10px!important;padding-inline:0!important;
+ }
+}
