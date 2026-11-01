@@ -111,25 +111,7 @@ html body.matte-editorial #page .day-donut-legend-item .r78-category-icon{
 html body.matte-editorial #page .day-donut-legend-item .r78-category-icon svg{
  width:23px!important;height:23px!important;
 }
-/* Bottom-attached KPI sheet: one transformed surface with an opacity scrim.
-   Existing document-level back and Escape handlers are retained. */
-.r77-detail-scrim{
- display:grid!important;place-items:end center!important;
- align-items:end!important;justify-items:center!important;
- padding:0 8px 0!important;
- background:rgba(19,36,34,.26)!important;
- overflow:hidden!important;perspective:none!important;
-}
-.r77-detail-panel{
- width:min(100%,520px)!important;max-height:min(82dvh,750px)!important;
- margin:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;
- border-radius:29px 29px 0 0!important;
- padding:23px 21px calc(23px + env(safe-area-inset-bottom,0px))!important;
- transform-origin:center bottom!important;
- background:#f6ebde!important;color:#28241f!important;
- box-shadow:0 -6px 20px rgba(49,40,33,.14),0 -18px 36px -18px rgba(40,32,27,.22)!important;
- border:0!important;outline:none!important;
-}
+/* Shared-element KPI is owned by the single card in sculpted-motion-v77.js. */
 .r77-detail-head{gap:12px!important}
 .r77-detail-icon{
  width:54px!important;height:54px!important;display:grid!important;
