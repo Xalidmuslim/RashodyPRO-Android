@@ -19,7 +19,7 @@ assert.match(fix,/\.mobile-nav[\s\S]*?max-width:min\(500px/,'Do not expand botto
 assert.match(fix,/\.r78-brand h1[\s\S]*?font-weight:800!important/,'Brand title must be visually grounded');
 assert.match(fix,/\.day-donut-sector:not\(\.is-selected\)/,'Restore chart visual contrast');
 assert.match(ref,/function pageTransformer\(direction/,'Existing transformer must remain');
-assert.match(motion,/duration:560/,'KPI detail now slides smoothly from the bottom');
+assert.match(motion,/duration:480/,'KPI detail now slides smoothly from the bottom');
 assert.match(html,/data-action="new-expense-day"/);
 assert.match(read('native/FinanceStoragePlugin.java'),/class FinanceStoragePlugin/);
 execFileSync('node',['--check','www/r78-runtime.js'],{stdio:'inherit'});
