@@ -2008,8 +2008,7 @@ body.matte-editorial #page .compare-col,body.matte-editorial #page .color-catego
 body.matte-editorial .mobile-nav button {scroll-behavior:auto!important;}
 body.matte-editorial #page .compare-col:active,
 body.matte-editorial #page .color-category-card:active,
-body.matte-editorial #page .week-day:active,
-body.matte-editorial .mobile-nav button:active {transform:none!important;}
+body.matte-editorial #page .week-day:active {transform:none!important;}
 body.matte-editorial .mobile-nav button,
 body.matte-editorial #page .trend-mode-toggle button,
 body.matte-editorial #page .period-toggle button,
@@ -2044,7 +2043,7 @@ body.matte-editorial .mobile-nav button span {font-size:max(11.5px,calc(10.5px *
 
 
 /* r104-motion: smooth, non-displacing native transitions. */
-html.rashody-native-android body.matte-editorial :is(button, .week-day, .navitem, .trend-card, .legend-line, .color-category-card, .feature-link, .mobile-nav .fab, .icon-btn):active,
+html.rashody-native-android body.matte-editorial :is(button:not([data-view]), .week-day, .navitem, .trend-card, .legend-line, .color-category-card, .feature-link, .mobile-nav .fab, .icon-btn):active,
 html.rashody-native-android body.matte-editorial #page .week-day.focus-day {transform:none!important;}
 html.rashody-native-android body.matte-editorial :is(button, .week-day, .navitem, .trend-card, .legend-line, .color-category-card, .panel, .day-ledger, .feature-day, .mobile-nav, .mobile-nav button) {
   transition-property:background-color,color,border-color,opacity,box-shadow!important;
@@ -2096,7 +2095,7 @@ html.rashody-native-android body.matte-editorial .overlay:not([hidden])>.sheet{
 html.rashody-native-android body.matte-editorial .overlay:not([hidden]) .sheet {
   overscroll-behavior:contain!important;touch-action:pan-y!important;
 }
-html.rashody-native-android body.matte-editorial :is(.fab,.week-day,.panel,.trend-card,.day-ledger,.feature-day,.mobile-nav button,.tx-check):active {
+html.rashody-native-android body.matte-editorial :is(.fab,.week-day,.panel,.trend-card,.day-ledger,.feature-day,.tx-check):active {
   transform:none!important;
 }
 @media (prefers-reduced-motion:reduce){
@@ -2491,7 +2490,15 @@ function currentSummary(){return F.summarizeMonth(data.transactions,monthKey(mon
 function navData(){return [['dashboard','Обзор','dashboard'],['transactions','Операции','transactions'],['analytics','Аналитика','analytics'],['settings','Настройки','settings']]}
 function renderNav(){document.getElementById('sidebar').innerHTML=`<div class="brand"><div class="brand-mark">${svg('wallet',24)}</div><div><div class="brand-label">расходы<span >.</span></div><div class="brand-tag">ЛИЧНЫЕ ФИНАНСЫ</div></div></div><div class="navlist">${navData().map(([id,label,ico])=>`<button class="navitem ${view===id?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${r75Icon(ico,'nav',28)}<span>${label}</span></button>`).join('')}</div><button type="button" class="sidebar-add" data-action="new-expense">${r75Icon('plus','actions',25)} Добавить расход</button><div class="sidebar-foot">${svg('shield',14)} Данные хранятся только<br>на вашем устройстве.</div>`;
  const tabs=['dashboard','transactions','new','analytics','settings'];const labels={dashboard:'Обзор',transactions:'История',analytics:'Аналитика',settings:'Настройки'};
- document.getElementById('mobile-nav').innerHTML=tabs.map(id=>id==='new'?`<button class="fab" data-action="new-expense" aria-label="Добавить операцию">${r75Icon('plus','actions',43)}</button>`:`<button class="${view===id||(id==='analytics'&&view==='analytics')?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${r75Icon(id,'nav',31)}<span>${labels[id]}</span></button>`).join('');
+ const mobileDock=document.getElementById('mobile-nav');
+ // Reuse nav controls across all views; replacing their nodes breaks in-flight
+ // spring animation and can briefly collapse the dock on Android WebView.
+ if(mobileDock.childElementCount!==tabs.length)mobileDock.innerHTML=tabs.map(id=>id==='new'?`<button class="fab" data-action="new-expense" aria-label="Добавить операцию">${r75Icon('plus','actions',43)}</button>`:`<button class="${view===id||(id==='analytics'&&view==='analytics')?'active':''}" data-view="${id}" ${view===id?'aria-current="page"':''}>${r75Icon(id,'nav',31)}<span>${labels[id]}</span></button>`).join('');
+ for(const tab of mobileDock.querySelectorAll('button[data-view]')){
+  const selected=tab.dataset.view===view;
+  tab.classList.toggle('active',selected);
+  if(selected)tab.setAttribute('aria-current','page');else tab.removeAttribute('aria-current');
+ }
 }
 function renderTop(){let heading=view==='dashboard'?'':view==='transactions'?'История':view==='analytics'?'Аналитика':'Настройки';document.getElementById('topbar').className=`topbar ${view==='dashboard'?'dashboard-topbar':'subpage-topbar'}`;document.getElementById('topbar').innerHTML=(view==='dashboard'||view==='analytics')?'':`<div class="topbar-heading"><button class="icon-btn screen-back" data-action="navigate-back" aria-label="Назад">${svg('chevronLeft',22)}</button><div><div class="topline">ФИНАНСОВЫЙ ДНЕВНИК</div><h1>${heading}</h1></div></div><div class="topbar-right">${view==='transactions'?`<button type="button" class="header-csv" data-action="export-csv" aria-label="Экспортировать операции в CSV">${svg('download',16)}<span>CSV</span></button>`:''}<button class="primary-btn add-desktop" data-action="new-expense">${svg('plus',17)} Добавить</button></div>`}
 function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});window.RashodySculptedMotion?.afterRender({view});}
