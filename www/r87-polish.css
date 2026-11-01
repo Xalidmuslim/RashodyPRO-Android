@@ -63,7 +63,7 @@ html body.matte-editorial button.trend-card.r88-expand-card::after{
  display:none!important;content:none!important;
 }
 html body.matte-editorial button.trend-card.r88-expand-card > :not(.r88-expanded-contents){
- opacity:0!important;pointer-events:none!important;
+ opacity:0;pointer-events:none!important;
 }
 .r88-expanded-contents{
  box-sizing:border-box;position:absolute;inset:19px 16px;
@@ -159,4 +159,25 @@ html body.matte-editorial .r88-expand-card .r77-detail-eyebrow{
 }
 @media(prefers-reduced-motion:reduce){
  html body.matte-editorial .mobile-nav > button[data-view]{transform:none!important}
+}
+
+/* v9.1: the dock is a static viewport fixture, never a page transition.
+   Only individual tab contents may use perspective/tilt animations. */
+html body.matte-editorial #mobile-nav.mobile-nav{
+ box-sizing:border-box!important;
+ height:calc(74px + env(safe-area-inset-bottom,0px))!important;
+ min-height:0!important;
+ max-height:none!important;
+ overflow:visible!important;
+ bottom:calc(4px + env(safe-area-inset-bottom,0px))!important;
+ transform:none!important;animation:none!important;transition:none!important;
+}
+html body.matte-editorial #mobile-nav.mobile-nav > button[data-view]{
+ height:58px!important;min-height:58px!important;
+ flex-shrink:1!important;
+}
+/* The real KPI's original text remains visible during the first part of
+   the physical expansion and crossfades to the matching-color detail ink. */
+html body.matte-editorial button.trend-card.r88-expand-card > :not(.r88-expanded-contents){
+ opacity:0;
 }
