@@ -11,12 +11,12 @@ assert.match(nav,/function directionalNav\(/,'Single navigation movement owner')
 assert.match(nav,/translate3d\([^)]*0,0\) scale/,'Horizontal-only movement; no vertical bounce');
 assert.match(navCss,/bottom navigation reverted/i);
 assert.match(style,/\.mobile-nav\s*>\s*button\[data-view\]/);
-assert.match(style,/min-width:0!important/,'All four tabs must be contained');
-assert.match(style,/\.mobile-nav button\.active:not\(\.fab\)/);
-assert.match(style,/font-size:clamp\(/,'Settings label must fit on 320px screen');
+assert.match(navCss,/min-width:0!important/,'All four tabs must be contained');
+assert.match(navCss,/\.mobile-nav button\.active:not\(\.fab\)/);
+assert.match(navCss,/font-size:clamp\(/,'Settings label must fit on 320px screen');
 assert.match(detail,/sourceTravel='perspective\(900px\)/,'The actual KPI card zooms toward the user');
 assert.match(detail,/scale\(1\.15\)/,'KPI spring overshoot');
-assert.match(detail,/translateZ\(68px\)/,'Spatial near-camera motion');
+assert.match(detail,/translate3d\(0,-10px,68px\)/,'Spatial near-camera motion');
 assert.match(detail,/delay:240/,'Let the card zoom before opening the sheet');
 assert.match(detail,/source\.style\.removeProperty\('transform'\)/);
 assert.match(detail,/source\.style\.removeProperty\('pointer-events'\)/);
