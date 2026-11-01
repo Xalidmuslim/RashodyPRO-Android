@@ -81,14 +81,21 @@
   // then interpolate its visual bounds from the tapped source. Animating left,
   // top, width and height caused layout work and was masked by !important.
   const scaleX=from.width/to.width,scaleY=from.height/to.height;
-  sourceAnimation=animate(card,[
+  // A persistent WAAPI animation can be reversed at ANY current time.
+  if(ok()&&card.animate){
+   sourceAnimation=card.animate([
    {transform:'translate3d('+(from.left-to.left)+'px,'+(from.top-to.top)+'px,0) scale('+scaleX+','+scaleY+')',borderRadius:'18px'},
    {transform:'translate3d(0,0,0) scale(1)',borderRadius:'25px'}
-  ],{duration:430,easing:'cubic-bezier(.22,.8,.24,1)'});
+   ],{duration:680,easing:'cubic-bezier(.20,.82,.22,1)',fill:'both'});
+   sourceAnimation.finished.catch(()=>{});
+  }else sourceAnimation=null;
+  // Original KPI labels ride the surface before transitioning to detailed content.
+  for(const child of [...card.children])if(child!==contents)
+   animate(child,[{opacity:1,offset:0},{opacity:1,offset:.32},{opacity:0,offset:1}],{duration:460,easing:'linear'});
   animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.28)'}],
    {duration:360,easing});
   animate(contents,[{opacity:0,transform:'translate3d(0,8px,0)'},{opacity:1,transform:'none'}],
-   {duration:260,delay:110,easing});
+   {duration:320,delay:230,easing});
   animate(close,[{opacity:0},{opacity:1}],{duration:200,delay:170,easing});
   if(sourceAnimation)sourceAnimation.finished.then(()=>{
    if(detailState==='opening')detailState='open';
@@ -107,7 +114,7 @@
   // Capture in-flight geometry BEFORE cancelling the opening transition so
   // even an immediate close returns from the currently visible card position.
   const from=source?.getBoundingClientRect(),target=slot?.getBoundingClientRect();
-  sourceAnimation?.cancel();sourceAnimation=null;
+  // Preserve the current visible transform for seamless reverse playback.
   animate(contents,[{opacity:1,transform:'none'},{opacity:0,transform:'translateY(10px)'}],
    {duration:165,easing});
   const close=layer.querySelector('.r88-morph-close');
@@ -115,6 +122,7 @@
   animate(layer,[{backgroundColor:'rgba(19,36,34,.28)'},{backgroundColor:'rgba(19,36,34,0)'}],
    {duration:410,easing});
   const finish=()=>{
+   sourceAnimation?.cancel();sourceAnimation=null;
    if(slot?.isConnected&&source){slot.replaceWith(source)}
    if(source){
     contents?.remove();
@@ -129,16 +137,11 @@
    document.body.classList.remove('r77-detail-open');
    if(source?.isConnected)source.focus({preventScroll:true});
   };
-  const baseLeft=Number.parseFloat(source?.style.left)||0;
-  const baseTop=Number.parseFloat(source?.style.top)||0;
-  const baseWidth=Number.parseFloat(source?.style.width)||1;
-  const baseHeight=Number.parseFloat(source?.style.height)||1;
-  const returnScaleX=target?.width/baseWidth,returnScaleY=target?.height/baseHeight;
-  const back=(source&&target&&from&&ok())?animate(source,[
-   {transform:'translate3d('+(from.left-baseLeft)+'px,'+(from.top-baseTop)+'px,0) scale('+(from.width/baseWidth)+','+(from.height/baseHeight)+')',borderRadius:'29px'},
-   {transform:'translate3d('+(target.left-baseLeft)+'px,'+(target.top-baseTop)+'px,0) scale('+returnScaleX+','+returnScaleY+')',borderRadius:'18px'}
-  ],{duration:410,easing:'cubic-bezier(.36,0,.24,1)'}):null;
-  if(back)back.finished.then(finish,finish);else finish();
+  // Rewind the same physical FLIP timeline. Closing during an incomplete
+  // expansion returns from its exact current frame without a geometry snap.
+  const back=source&&target&&ok()?sourceAnimation:null;
+  if(back){sourceAnimation.reverse();sourceAnimation.finished.then(finish,finish)}
+  else finish();
   if(overlayHistory&&!fromHistory){overlayHistory=false;try{history.back()}catch(_){}}
   else overlayHistory=false;
  }
@@ -169,8 +172,8 @@
    details.style.willChange='transform,opacity';
    selectionAnimation=animate(details,[
     {transform:'translate3d(0,0,0) scale(1)',opacity:1,borderRadius:'22px'},
-    {transform:'translate3d('+dx+'px,'+dy+'px,0) scale('+sx+','+sy+')',opacity:.12,borderRadius:'50%'}
-   ],{duration:360,easing});
+    {transform:'translate3d('+dx+'px,'+dy+'px,0) scale('+sx+','+sy+')',opacity:1,borderRadius:'22px'}
+   ],{duration:760,easing:'cubic-bezier(.25,.04,.3,1)'});
    const done=()=>{if(selectionToken!==token)return;update();clear();selectionAnimation=null;};
    selectionAnimation?.finished.then(done,done);
    if(!selectionAnimation)done();
@@ -188,10 +191,9 @@
   details.style.overflow='hidden';
   details.style.willChange='transform,opacity';
   selectionAnimation=animate(details,[
-   {transform:'translate3d('+dx+'px,'+dy+'px,0) scale('+sx+','+sy+')',opacity:.22,borderRadius:'50%',offset:0},
-   {transform:'translate3d(-2px,-4px,0) scale(1.012)',opacity:1,borderRadius:'19px',offset:.80},
+   {transform:'translate3d('+dx+'px,'+dy+'px,0) scale('+sx+','+sy+')',opacity:1,borderRadius:'22px',offset:0},
    {transform:'translate3d(0,0,0) scale(1)',opacity:1,borderRadius:'22px',offset:1}
-  ],{duration:610,easing:settling});
+  ],{duration:760,easing:'cubic-bezier(.18,.78,.22,1)'});
   const done=()=>{if(selectionToken!==token)return;clear();selectionAnimation=null;};
   selectionAnimation?.finished.then(done,done);
   if(!selectionAnimation)done();
