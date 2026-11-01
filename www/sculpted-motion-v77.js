@@ -35,16 +35,16 @@
   const rect=card.getBoundingClientRect();
   // The real KPI tile exits upwards: no cloned card or extra compositor layer.
   if(ok()){
-   const rise=Math.min(Math.max(rect.bottom+20,110),window.innerHeight*.78);
-   sourceTravel='translate3d(0,-'+rise.toFixed(1)+'px,0) perspective(800px) rotateX(-6deg) scale(.94)';
+   // Animate the original card toward the viewer (not upward out of the page).
+   // The sheet starts only after the expansion becomes visible.
+   sourceTravel='perspective(900px) translate3d(0,-10px,68px) scale(1.10)';
    card.style.transform=sourceTravel;
-   card.style.opacity='.12';
    card.style.pointerEvents='none';
    sourceAnimation=animate(card,[
-    {transform:'none',opacity:1,borderRadius:'18px',offset:0},
-    {transform:'translate3d(0,-19px,0) scale(1.08,.86)',opacity:.88,borderRadius:'32px 12px 32px 12px',offset:.28},
-    {transform:sourceTravel,opacity:.12,borderRadius:'32px 12px 32px 12px',offset:1}
-   ],{duration:540,easing:settling});
+    {transform:'perspective(900px) translate3d(0,0,0) scale(1)',borderRadius:'18px',offset:0},
+    {transform:'perspective(900px) translate3d(0,-13px,82px) scale(1.15)',borderRadius:'27px 16px 27px 16px',offset:.72},
+    {transform:sourceTravel,borderRadius:'21px',offset:1}
+   ],{duration:380,easing:settling});
   }
   modal=document.createElement('div');
   modal.className='r77-detail-scrim';
@@ -53,12 +53,12 @@
   const panel=modal.querySelector('.r77-detail-panel');
   document.body.classList.add('r77-detail-open');
   // One compositor translate for the bottom sheet; avoid old 3D FLIP layers.
-  animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.26)'}],{duration:460,easing});
+  animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.26)'}],{duration:420,delay:240,easing});
   inFlight=animate(panel,[
    {transform:'translate3d(0,100%,0)',opacity:.98,offset:0},
    {transform:'translate3d(0,-5px,0)',opacity:1,offset:.84},
    {transform:'translate3d(0,0,0)',opacity:1,offset:1}
-  ],{duration:560,easing:settling});
+  ],{duration:480,delay:240,easing:settling});
   if(inFlight)inFlight.finished.then(()=>{if(detailState==='opening')detailState='open'},()=>{});
   else detailState='open';
   modal.querySelector('.r77-detail-close').addEventListener('click',()=>closeDetail());
@@ -75,10 +75,10 @@
   sourceAnimation?.cancel();sourceAnimation=null;
   const source=origin;
   const back=source?.isConnected?animate(source,[
-   {transform:sourceTravel||'none',opacity:.12,borderRadius:'32px 12px 32px 12px'},
-   {transform:'translate3d(0,4px,0) scale(1.035,.97)',opacity:1,borderRadius:'14px 25px 14px 25px',offset:.78},
-   {transform:'none',opacity:1,borderRadius:'18px'}
-  ],{duration:390,easing}):null;
+   {transform:sourceTravel||'none',borderRadius:'21px'},
+   {transform:'perspective(900px) translate3d(0,-3px,15px) scale(1.035)',borderRadius:'17px',offset:.74},
+   {transform:'none',borderRadius:'18px'}
+  ],{duration:390,delay:180,easing:settling}):null;
   if(source){
    source.style.transform='none';source.style.opacity='1';
   }
