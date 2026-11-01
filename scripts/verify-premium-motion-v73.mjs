@@ -11,7 +11,8 @@ for(const term of ["pointerdown","pointermove","pointerup","pointercancel","clic
 }
 assert.match(source,/prefers-reduced-motion: reduce/);
 assert.match(source,/requestAnimationFrame/);
-assert.match(source,/const groups = '.period-toggle,.trend-mode-toggle,.font-toggle,.filter-group,.mobile-nav'/);
+assert.match(source,/const groups = '.period-toggle,.trend-mode-toggle,.font-toggle,.filter-group'/);
+assert.match(source,/el\?\.matches\('\.week-day,\.trend-card'\)/,'Interactive KPI and calendar are owned by expressive motion');
 assert.match(source,/\.trend-card/);
 assert.match(source,/\.history-tally/);
 assert.doesNotMatch(source,/preventDefault|setPointerCapture|stopPropagation|touch-action\s*:/);
