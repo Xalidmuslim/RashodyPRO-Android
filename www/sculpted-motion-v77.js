@@ -131,22 +131,58 @@
   else overlayHistory=false;
  }
  function transitionSector(previous,next,details,update){
+  // One animation owner for the expense breakdown. Its source is the selected
+  // SVG donut sector, not an arbitrary fade/slide from below.
+  const token=++selectionToken;
   selectionAnimation?.cancel();selectionAnimation=null;
-  const now=details.getBoundingClientRect().height;
+  const sourceId=next||previous;
+  const source=[...document.querySelectorAll('#page .day-donut-sector[data-day-chart-category]')]
+   .find(el=>el.dataset.dayChartCategory===sourceId);
+  const from=source?.getBoundingClientRect();
+  const reduced=!ok()||!from||!details?.animate;
+  const clear=()=>{
+   details.style.removeProperty('transform-origin');
+   details.style.removeProperty('overflow');
+   details.style.removeProperty('will-change');
+  };
+  if(next===null){
+   if(reduced||details.hidden){update();clear();return}
+   const to=details.getBoundingClientRect();
+   const dx=from.left+from.width/2-(to.left+to.width/2);
+   const dy=from.top+from.height/2-(to.top+to.height/2);
+   const sx=Math.max(.2,Math.min(.65,from.width/Math.max(1,to.width)));
+   const sy=Math.max(.2,Math.min(.65,from.height/Math.max(1,to.height)));
+   details.style.transformOrigin='center center';
+   details.style.overflow='hidden';
+   details.style.willChange='transform,opacity';
+   selectionAnimation=animate(details,[
+    {transform:'translate3d(0,0,0) scale(1)',opacity:1,borderRadius:'22px'},
+    {transform:'translate3d('+dx+'px,'+dy+'px,0) scale('+sx+','+sy+')',opacity:.12,borderRadius:'50%'}
+   ],{duration:360,easing});
+   const done=()=>{if(selectionToken!==token)return;update();clear();selectionAnimation=null;};
+   selectionAnimation?.finished.then(done,done);
+   if(!selectionAnimation)done();
+   return;
+  }
   update();
-  if(!ok())return;
-  const h=details.getBoundingClientRect().height;
-  details.style.overflow='clip';
-  details.style.height=h+'px';
-  details.style.transformOrigin='center top';
+  if(reduced){clear();return}
+  const to=details.getBoundingClientRect();
+  if(!to.width||!to.height){clear();return}
+  const dx=from.left+from.width/2-(to.left+to.width/2);
+  const dy=from.top+from.height/2-(to.top+to.height/2);
+  const sx=Math.max(.2,Math.min(.65,from.width/Math.max(1,to.width)));
+  const sy=Math.max(.2,Math.min(.65,from.height/Math.max(1,to.height)));
+  details.style.transformOrigin='center center';
+  details.style.overflow='hidden';
+  details.style.willChange='transform,opacity';
   selectionAnimation=animate(details,[
-   {height:now+'px',opacity:previous?.65:.25,transform:'translateY(8px) scale(.976)'},
-   {height:h+'px',opacity:1,transform:'none'}
-  ],{duration:760,easing:settling});
-  const remove=()=>{details.style.height='';details.style.overflow='';details.style.transformOrigin=''};
-  if(selectionAnimation)selectionAnimation.finished.then(remove,remove);else remove();
-  const center=document.querySelector('.day-donut-center');
-  animate(center,[{transform:'translate3d(0,4px,0) scale(.89)'},{transform:'translate3d(0,-4px,0) scale(1.06)',offset:.65},{transform:'none'}],{duration:780,easing:settling});
+   {transform:'translate3d('+dx+'px,'+dy+'px,0) scale('+sx+','+sy+')',opacity:.22,borderRadius:'50%',offset:0},
+   {transform:'translate3d(-2px,-4px,0) scale(1.012)',opacity:1,borderRadius:'19px',offset:.80},
+   {transform:'translate3d(0,0,0) scale(1)',opacity:1,borderRadius:'22px',offset:1}
+  ],{duration:610,easing:settling});
+  const done=()=>{if(selectionToken!==token)return;clear();selectionAnimation=null;};
+  selectionAnimation?.finished.then(done,done);
+  if(!selectionAnimation)done();
  }
  function afterRender({view}={}){
   const newView=view||'';
