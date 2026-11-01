@@ -6,7 +6,7 @@ const styles=fs.readFileSync('www/r87-polish.css','utf8');
 const index=fs.readFileSync('www/index.html','utf8');
 
 // KPI must expand the SAME colored DOM element, rather than opening a second sheet.
-assert.match(motion,/cardSlot\.replaceWith\(source\)/);
+assert.match(motion,/slot\.replaceWith\(source\)/);
 assert.match(motion,/card\.classList\.add\('r88-expand-card'\)/);
 assert.doesNotMatch(motion,/translate3d\(0,100%,0\)/);
 assert.doesNotMatch(motion,/modal\.innerHTML\s*=\s*'<section class="r77-detail-panel"/);
