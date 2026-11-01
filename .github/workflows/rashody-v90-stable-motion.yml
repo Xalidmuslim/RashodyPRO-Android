@@ -1,7 +1,7 @@
 name: Rashody PRO v9.1 Reversible KPI and Pinned Dock APK
 on:
   push:
-    branches: [fix/rashody-v91-nav-tilt-compact-kpi-2026-11-01]
+    branches: [fix/rashody-v91-reversible-card-pinned-dock-2026-11-02]
   workflow_dispatch:
 permissions:
   contents: write
