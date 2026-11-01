@@ -19,7 +19,7 @@ assert.match(navCss,/font-size:clamp\(/,'Settings label must fit on 320px screen
 assert.match(detail,/cardSlot=document.createElement\('div'\)/,'The original KPI card expands into the detail host');
 assert.match(detail,/modal.appendChild\(card\)/,'No second colored KPI panel');
 assert.match(detail,/slot.replaceWith\(source\)/,'KPI morph must restore its exact grid slot');
-assert.match(detail,/duration:430/,'Smooth continuous original card morph');
+assert.match(detail,/duration:680/,'v9.1 smooth reversible original-card morph');
 assert.match(detail,/source.style.cssText=cardStyle/,'Restore the exact original card style');
 assert.match(detail,/detailState==='closing'/);
 assert.match(detail,/close\.addEventListener\('pointerdown'/,'The close target handles early taps before movement');
