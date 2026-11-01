@@ -32,6 +32,7 @@
   if(!data)return;
   const from=card.getBoundingClientRect();
   if(!from.width||!from.height)return;
+  window.RashodyGrandMotion?.stop();
   detailState='opening';origin=card;
   cardStyle=card.style.cssText;
   // Keep the original grid position occupied; move the REAL colored card,
@@ -49,7 +50,6 @@
   modal.appendChild(card);
   card.classList.add('r88-expand-card');
   card.setAttribute('aria-expanded','true');
-  const computed=window.getComputedStyle(card);
   const color=card.classList.contains('amber')?'#28251f':'#fff9f0';
   const fill=card.classList.contains('coral')?'#CF7864':card.classList.contains('teal')?'#4D908A':'#D8A34F';
   const viewport=window.visualViewport;
