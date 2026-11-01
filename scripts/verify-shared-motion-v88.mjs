@@ -27,7 +27,7 @@ assert.doesNotMatch(expressive,/function liquidNav\(/);
  // and must not lose to inline !important declarations.
 assert.doesNotMatch(motion,/card\.style\.setProperty\(property,value,'important'\)/);
 assert.match(motion,/const scaleX=from\.width\/to\.width/);
-assert.match(motion,/const returnScaleX=target\?\.width\/baseWidth/);
+assert.match(motion,/sourceAnimation\.reverse\(\)/,'v9.1 must reverse the physical KPI expansion');
 assert.doesNotMatch(motion,/sourceAnimation=animate\(card,\[\s*\{left:/);
 assert.match(styles,/\/\* v8\.9: keep the navigation dock pinned/);
 assert.match(styles,/animation:none!important;\s*transform:none!important;\s*translate:none!important;/);
