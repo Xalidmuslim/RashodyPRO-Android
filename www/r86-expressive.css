@@ -1,5 +1,5 @@
 /* Rashody v8.6 | Matte Expressive Motion
- * Liquid indicator is a single transient layer; static shadows are retained.
+ * Horizontal navigation owns its own transient transform, without liquid overlays.
  * Calendar press and content springs are owned by r86-expressive-motion.js.
  */
 html body.matte-editorial #page .week-strip .week-day{
