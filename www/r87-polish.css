@@ -101,8 +101,14 @@ html body.matte-editorial .mobile-nav > button.fab{
  margin:0!important;align-self:center!important;transform:none!important;
 }
 html body.matte-editorial .mobile-nav > button[data-view]:active{
- translate:none!important;
+ transform:none!important;
 }
 @media(prefers-reduced-motion:reduce){
  html body.matte-editorial button.trend-card.r88-expand-card{transition:none!important}
+}
+
+/* The primary day-summary surface is warm mineral greige, not blank white. */
+html body.matte-editorial #page .feature-day{
+ background:#e9dfd2!important;background-image:none!important;
+ border:0!important;box-shadow:0 3px 6px rgba(65,52,40,.11),0 17px 32px -16px rgba(67,50,37,.23)!important;
 }
