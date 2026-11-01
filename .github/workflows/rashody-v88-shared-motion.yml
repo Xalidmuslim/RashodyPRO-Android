@@ -1,7 +1,7 @@
-name: Rashody PRO v8.8 Navigation & KPI Fixes Android APK
+name: Rashody PRO v8.8 Shared Card and Chart Motion APK
 on:
   push:
-    branches: [fix/rashody-v88-nav-kpi-categories-2026-11-01]
+    branches: [fix/rashody-v88-shared-card-chart-motion-2026-11-01]
   workflow_dispatch:
 permissions:
   contents: write
@@ -75,7 +75,7 @@ jobs:
           unzip -p "$APK" assets/public/r80-theme.css | grep -q 'v8.5 — Single-icon surfaces'
           unzip -l "$APK" | grep -q 'assets/public/r86-expressive-motion.js'
           unzip -p "$APK" assets/public/r80-theme.css | grep -q 'Rashody v8.6'
-          unzip -p "$APK" assets/public/r80-theme.css | grep -q 'v8.8 — selected custom category'
+          unzip -p "$APK" assets/public/r80-theme.css | grep -q 'v8.7 — selected custom category'
           unzip -p "$APK" assets/public/index.html | grep -q 'const factoryCategories='
           unzip -p "$APK" assets/public/r80-theme.css | grep -q 'RASHODY PRO 8.1'
           unzip -l "$APK" | grep -q 'assets/public/r78-runtime.js'
@@ -101,12 +101,12 @@ jobs:
         run: |
           set -euo pipefail
           cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-v8.8-Shared-Motion-TEST.apk
-          if gh release view rashody-studio-v8.8-motion-fixes-preview >/dev/null 2>&1; then
+          if gh release view rashody-studio-v8.8-shared-motion-preview >/dev/null 2>&1; then
             gh release upload rashody-studio-v8.8-motion-fixes-preview RashodyPRO-v8.8-Shared-Motion-TEST.apk --clobber
           else
             gh release create rashody-studio-v8.8-motion-fixes-preview RashodyPRO-v8.8-Shared-Motion-TEST.apk \
               --target "$GITHUB_SHA" \
-              --title "Расходы PRO — v8.8 Navigation & KPI Fixes (тест)" \
-              --notes "v8.8: KPI source cards physically slide upward and return, single-layer category icons, compact numeric keypad, animated expense close and restrained transformer presses across controls. Finance storage and navigation retained. Hardware FPS unmeasured. Isolated ru.rashody.pro.preview88. Device QA remains required." \
+              --title "Расходы PRO — v8.8 Shared Card and Chart Motion (тест)" \
+              --notes "v8.8: The actual coral/teal/amber KPI card expands to a half-screen detail view and returns to the same grid slot. Expense category details animate from the selected donut sector. Lower navigation is placed closer to the bottom, with old vertical tap offsets removed. Warm mineral greige main card. Expense calculations, persistence and SQLite unchanged. Android performance and actual haptics require physical device QA. Isolated ru.rashody.pro.preview88." \
               --prerelease --latest=false
           fi
