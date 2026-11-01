@@ -154,6 +154,8 @@
     if (!target || reduced?.matches) return;
     const group=target.closest(groups);
     if (!group) return;
+     // Only r86 controls the dock: avoid a second simultaneous selected-tab animation.
+     if(group?.classList.contains('mobile-nav'))return;
     const before=[...group.querySelectorAll(':scope > button')];
     const from=before.findIndex(el=>el.matches('.active'));
     const to=before.indexOf(target);
