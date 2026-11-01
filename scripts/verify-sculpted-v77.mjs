@@ -39,7 +39,7 @@ assert.match(css,/\.trend-cards button\.trend-card/);
 assert.match(css,/height:113px!important/);
 assert.match(motion,/modal.appendChild\(card\)/,'The expanded KPI is the original card');
 assert.match(css,/prefers-reduced-motion/);
-assert.match(motion,/duration:480/,'The original KPI card should smoothly expand');
+assert.match(motion,/duration:430/,'The original KPI card should smoothly expand');
 assert.match(motion,/duration:610/,'Sector details should spring out of the diagram');
 assert.match(motion,/history\.pushState/,'Back navigation should close expanded stats');
 assert.match(motion,/window\.addEventListener\('popstate'/);
