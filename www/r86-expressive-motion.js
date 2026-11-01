@@ -1,4 +1,4 @@
-/* v8.6 Expressive Motion — one owner for week press/haptics and liquid tabs.
+/* v8.7 Expressive Motion — spring calendar, haptics and approved horizontal tabs.
  * App state, SQLite, menu actions and accessibility semantics remain in core.
  * Animate transforms/opacity for transient states; no persistent GPU layers. */
 (()=>{
@@ -52,7 +52,7 @@
   const active=nav?.querySelector('button.active[data-view]');
   if(!active)return;
   navAnimation?.cancel();navAnimation=null;
-  nav.querySelector('.r86-liquid-indicator')?.remove(); // clean upgrades from v8.6
+  // The nav is re-rendered on every view change; no overlay cleanup is needed.
   if(changed&&previousView&&allowed()){
    const previous=nav.querySelector('button[data-view="'+previousView+'"]');
    if(previous){
