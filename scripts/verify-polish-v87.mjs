@@ -8,7 +8,7 @@ const html=read('www/index.html'),base=read('www/r85-interactions.css'),legacy=r
 assert.doesNotMatch(nav,/function liquidNav\(/);
 assert.doesNotMatch(nav,/r86-liquid-indicator/);
 assert.match(nav,/function directionalNav\(/,'Single navigation movement owner');
-assert.match(nav,/translate3d\([^)]*0,0\) scale/,'Horizontal-only movement; no vertical bounce');
+assert.match(nav,/rotateY\(/,'Tabs retain animated 3D directional feedback without moving dock');
 assert.match(navCss,/bottom navigation reverted/i);
 assert.match(legacy,/if\(el\?\.matches\('\.week-day,\.trend-card'\)\|\|el\?\.closest\('\.mobile-nav'\)\)return/,'Old depth handler must not reset the new owner transforms');
 assert.doesNotMatch(legacy,/const groups\s*=\s*'[^']*\.mobile-nav/,'Old selection choreography cannot stack over nav spring');
@@ -19,7 +19,7 @@ assert.match(navCss,/font-size:clamp\(/,'Settings label must fit on 320px screen
 assert.match(detail,/cardSlot=document.createElement\('div'\)/,'The original KPI card expands into the detail host');
 assert.match(detail,/modal.appendChild\(card\)/,'No second colored KPI panel');
 assert.match(detail,/slot.replaceWith\(source\)/,'KPI morph must restore its exact grid slot');
-assert.match(detail,/duration:480/,'Smooth continuous original card morph');
+assert.match(detail,/duration:430/,'Smooth continuous original card morph');
 assert.match(detail,/source.style.cssText=cardStyle/,'Restore the exact original card style');
 assert.match(detail,/detailState==='closing'/);
 assert.match(detail,/close\.addEventListener\('pointerdown'/,'The close target handles early taps before movement');
