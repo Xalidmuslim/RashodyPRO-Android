@@ -169,14 +169,6 @@ html body.matte-editorial #page .ledger-actions button:active{transform:translat
  padding:max(34px,env(safe-area-inset-top,18px)) 18px max(35px,env(safe-area-inset-bottom,18px));
  background:rgba(19,36,34,.30);overflow:auto;perspective:1200px;
 }
-.r77-detail-panel{
- position:relative;width:min(100%,425px);max-height:min(84vh,690px);
- overflow:auto;overscroll-behavior:contain;
- background:#f8efe4;color:#273b40;border-radius:32px;padding:22px;
- border:0;outline:none;box-shadow:0 7px 12px rgba(29,37,36,.16),0 23px 40px -18px rgba(29,37,36,.26),
- inset 0 2px 1px rgba(255,255,255,.30);
- transform-origin:50% 50%;-webkit-font-smoothing:antialiased;
-}
 .r77-detail-head{display:flex;align-items:center;justify-content:space-between}
 .r77-detail-icon{display:block;width:76px;height:76px;transform-style:preserve-3d}
 .r77-detail-icon img{width:76px;height:76px;object-fit:contain}
