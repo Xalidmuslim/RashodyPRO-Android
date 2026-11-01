@@ -19,7 +19,11 @@ assert.match(fix,/\.mobile-nav[\s\S]*?max-width:min\(500px/,'Do not expand botto
 assert.match(fix,/\.r78-brand h1[\s\S]*?font-weight:800!important/,'Brand title must be visually grounded');
 assert.match(fix,/\.day-donut-sector:not\(\.is-selected\)/,'Restore chart visual contrast');
 assert.match(ref,/function pageTransformer\(direction/,'Existing transformer must remain');
-assert.match(motion,/duration:480/,'KPI detail now slides smoothly from the bottom');
+assert.match(motion,/modal.appendChild\\(card\\)/,'KPI expansion must use the actual card instead of a new bottom sheet');
+assert.match(motion,/sourceAnimation=animate\\(card/,'Opening animates the original KPI card');
+assert.match(motion,/duration:430/,'Compact KPI FLIP opening duration must be 430ms');
+assert.doesNotMatch(motion,/translate3d\\(0,100%,0\\)/,'KPI card must not slide from the bottom');
+assert.match(motion,/slot.replaceWith\\(source\\)/,'Closing must return KPI to its original position');
 assert.match(html,/data-action="new-expense-day"/);
 assert.match(read('native/FinanceStoragePlugin.java'),/class FinanceStoragePlugin/);
 execFileSync('node',['--check','www/r78-runtime.js'],{stdio:'inherit'});
