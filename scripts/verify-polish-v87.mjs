@@ -22,7 +22,7 @@ assert.match(detail,/slot.replaceWith\(source\)/,'KPI morph must restore its exa
 assert.match(detail,/duration:480/,'Smooth continuous original card morph');
 assert.match(detail,/source.style.cssText=cardStyle/,'Restore the exact original card style');
 assert.match(detail,/detailState==='closing'/);
-assert.match(detail,/\.r77-detail-close'\)\.addEventListener\('pointerdown'/,'The animated close target handles early taps before movement');
+assert.match(detail,/close\.addEventListener\('pointerdown'/,'The close target handles early taps before movement');
 assert.match(style,/\.r77-day-selection \.record-row > span:first-child/);
 assert.match(style,/\.r77-day-selection \.record-row \.category-icon/);
 assert.match(style,/border-radius:12px!important/,'No square category picture backplates');
