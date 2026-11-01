@@ -14,7 +14,7 @@
     'body.matte-editorial #page .history-tally',
     'body.matte-editorial #page .color-category-card'
   ].join(',');
-  const groups = '.period-toggle,.trend-mode-toggle,.font-toggle,.filter-group,.mobile-nav';
+  const groups = '.period-toggle,.trend-mode-toggle,.font-toggle,.filter-group';
   let active = null;
   let raf = 0;
   let releaseTimer = 0;
@@ -122,6 +122,8 @@
   function onDown(e) {
     if (reduced?.matches || active || e.isPrimary===false || e.button!==0) return;
     const el=e.target.closest?.(selector);
+    // v8.7 owns these transformations. Do not clear their inline transforms on pointer-up.
+    if(el?.matches('.week-day,.trend-card')||el?.closest('.mobile-nav'))return;
     if (!visible(el)) return;
     cancelTimers();
     const m=profile(el);
