@@ -10,7 +10,7 @@
  const easing='cubic-bezier(.2,.78,.22,1)';
  const settling='cubic-bezier(.16,1.03,.26,1)';
  let modal=null,origin=null,overlayHistory=false,inFlight=null,lastView=null,previousNav=null,detailState='closed';
- let sourceTravel='',sourceAnimation=null;
+ let sourceAnimation=null,cardSlot=null,cardStyle=null,detailPanel=null,selectionToken=0;
  let selectionAnimation=null,txChange=null,dayChange=null,oldSelectedRect=null,openSourceRect=null;
  const animate=(node,frames,options)=>{
   if(!ok()||!node?.animate)return null;
@@ -30,81 +30,103 @@
   if(detailState!=='closed'||modal||document.getElementById('overlay')?.hidden===false)return;
   const data=window.RashodySculptedDetails?.(card.dataset.sculptedDetail);
   if(!data)return;
-  detailState='opening';
-  origin=card;
-  const rect=card.getBoundingClientRect();
-  // The real KPI tile exits upwards: no cloned card or extra compositor layer.
-  if(ok()){
-   // Animate the original card toward the viewer (not upward out of the page).
-   // The sheet starts only after the expansion becomes visible.
-   sourceTravel='perspective(900px) translate3d(0,-10px,68px) scale(1.10)';
-   card.style.transform=sourceTravel;
-   card.style.pointerEvents='none';
-   sourceAnimation=animate(card,[
-    {transform:'perspective(900px) translate3d(0,0,0) scale(1)',borderRadius:'18px',offset:0},
-    {transform:'perspective(900px) translate3d(0,-13px,82px) scale(1.15)',borderRadius:'27px 16px 27px 16px',offset:.72},
-    {transform:sourceTravel,borderRadius:'21px',offset:1}
-   ],{duration:380,easing:settling});
-  }
+  const from=card.getBoundingClientRect();
+  if(!from.width||!from.height)return;
+  detailState='opening';origin=card;
+  cardStyle=card.style.cssText;
+  // Keep the original grid position occupied; move the REAL colored card,
+  // not a duplicate panel, to a temporary full-screen dialog host.
+  cardSlot=document.createElement('div');
+  cardSlot.className='r88-card-slot';
+  cardSlot.style.height=from.height+'px';
+  card.before(cardSlot);
   modal=document.createElement('div');
-  modal.className='r77-detail-scrim';
-  modal.innerHTML='<section class="r77-detail-panel" role="dialog" aria-modal="true" aria-labelledby="r77-detail-title" tabindex="-1">'+detailsHtml(data)+'</section>';
+  modal.className='r77-detail-scrim r88-morph-scrim';
+  modal.setAttribute('role','dialog');
+  modal.setAttribute('aria-modal','true');
+  modal.setAttribute('aria-labelledby','r77-detail-title');
   document.body.appendChild(modal);
-  const panel=modal.querySelector('.r77-detail-panel');
+  modal.appendChild(card);
+  card.classList.add('r88-expand-card');
+  card.setAttribute('aria-expanded','true');
+  const computed=window.getComputedStyle(card);
+  const color=card.classList.contains('amber')?'#28251f':'#fff9f0';
+  const fill=card.classList.contains('coral')?'#CF7864':card.classList.contains('teal')?'#4D908A':'#D8A34F';
+  const viewport=window.visualViewport;
+  const vw=viewport?.width||window.innerWidth,vh=viewport?.height||window.innerHeight;
+  const x=viewport?.offsetLeft||0,y=viewport?.offsetTop||0;
+  const width=Math.min(vw-24,520),height=Math.min(Math.max(290,vh*.54),Math.max(290,vh-48),540);
+  const to={left:x+(vw-width)/2,top:y+(vh-height)/2,width,height};
+  for(const [property,value] of Object.entries({
+   position:'fixed',left:to.left+'px',top:to.top+'px',
+   width:to.width+'px',height:to.height+'px',
+   zIndex:'16002',background:fill,color,margin:'0',
+   transform:'none',borderRadius:'29px',pointerEvents:'auto'
+  }))card.style.setProperty(property,value,'important');
+  const contents=document.createElement('div');
+  contents.className='r88-expanded-contents';
+  // The old close BUTTON must not be nested inside the real KPI button.
+  contents.innerHTML=detailsHtml(data).replace(/<button type="button" class="r77-detail-close"[^>]*>✕<\/button>/,'');
+  card.appendChild(contents);
+  detailPanel=contents;
+  const close=document.createElement('button');
+  close.type='button';close.className='r77-detail-close r88-morph-close';
+  close.setAttribute('aria-label','Закрыть подробности');close.textContent='✕';
+  modal.appendChild(close);
+  close.style.left=(to.left+width-54)+'px';close.style.top=(to.top+12)+'px';
   document.body.classList.add('r77-detail-open');
-  // One compositor translate for the bottom sheet; avoid old 3D FLIP layers.
-  animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.26)'}],{duration:420,delay:240,easing});
-  inFlight=animate(panel,[
-   {transform:'translate3d(0,100%,0)',opacity:.98,offset:0},
-   {transform:'translate3d(0,-5px,0)',opacity:1,offset:.84},
-   {transform:'translate3d(0,0,0)',opacity:1,offset:1}
-  ],{duration:480,delay:240,easing:settling});
-  if(inFlight)inFlight.finished.then(()=>{if(detailState==='opening')detailState='open'},()=>{});
+  sourceAnimation=animate(card,[
+   {left:from.left+'px',top:from.top+'px',width:from.width+'px',height:from.height+'px',borderRadius:'18px',offset:0},
+   {left:(to.left+(from.left-to.left)*.06)+'px',top:(to.top+(from.top-to.top)*.06)+'px',width:(to.width*.98)+'px',height:(to.height*.98)+'px',borderRadius:'31px',offset:.83},
+   {left:to.left+'px',top:to.top+'px',width:to.width+'px',height:to.height+'px',borderRadius:'29px',offset:1}
+  ],{duration:480,easing:settling});
+  animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.28)'}],
+   {duration:360,easing});
+  animate(contents,[{opacity:0,transform:'translate3d(0,15px,0)'},{opacity:1,transform:'none'}],
+   {duration:280,delay:185,easing});
+  animate(close,[{opacity:0},{opacity:1}],{duration:220,delay:250,easing});
+  if(sourceAnimation)sourceAnimation.finished.then(()=>{
+   if(detailState==='opening')detailState='open';
+  },()=>{});
   else detailState='open';
-  // Close on pointerdown while the sheet is moving; preserve click for keyboard users.
-  modal.querySelector('.r77-detail-close').addEventListener('pointerdown',e=>{if(e.button===0)closeDetail()});
-  modal.querySelector('.r77-detail-close').addEventListener('click',()=>closeDetail());
+  close.addEventListener('pointerdown',e=>{if(e.button===0){e.preventDefault();closeDetail()}});
+  close.addEventListener('click',()=>closeDetail());
   modal.addEventListener('click',e=>{if(e.target===modal)closeDetail()});
   try{history.pushState({__r77Detail:true},'');overlayHistory=true}catch(_){overlayHistory=false}
-  requestAnimationFrame(()=>panel.focus({preventScroll:true}));
+  requestAnimationFrame(()=>close.focus({preventScroll:true}));
  }
  function closeDetail(fromHistory=false){
   if(!modal||detailState==='closing')return;
   detailState='closing';
-  const closing=modal;
-  const pane=closing.querySelector('.r77-detail-panel');
-  inFlight?.cancel();inFlight=null;
   sourceAnimation?.cancel();sourceAnimation=null;
-  const source=origin;
-  const back=source?.isConnected?animate(source,[
-   {transform:sourceTravel||'none',borderRadius:'21px'},
-   {transform:'perspective(900px) translate3d(0,-3px,15px) scale(1.035)',borderRadius:'17px',offset:.74},
-   {transform:'none',borderRadius:'18px'}
-  ],{duration:390,delay:180,easing:settling}):null;
-  if(source){
-   source.style.transform='none';source.style.opacity='1';
-  }
-  const clearSource=()=>{
-   if(!source)return;
-   source.style.removeProperty('transform');
-   source.style.removeProperty('opacity');
-   source.style.removeProperty('pointer-events');
-   sourceTravel='';
-  };
-  if(back)back.finished.then(clearSource,clearSource);else clearSource();
+  const layer=modal,source=origin,slot=cardSlot,contents=detailPanel;
+  const from=source?.getBoundingClientRect(),target=slot?.getBoundingClientRect();
+  animate(contents,[{opacity:1,transform:'none'},{opacity:0,transform:'translateY(10px)'}],
+   {duration:165,easing});
+  const close=layer.querySelector('.r88-morph-close');
+  animate(close,[{opacity:1},{opacity:0}],{duration:140,easing});
+  animate(layer,[{backgroundColor:'rgba(19,36,34,.28)'},{backgroundColor:'rgba(19,36,34,0)'}],
+   {duration:410,easing});
   const finish=()=>{
-   closing.remove();
-   if(modal===closing)modal=null;
+   if(slot?.isConnected&&source){slot.replaceWith(source)}
+   if(source){
+    contents?.remove();
+    source.classList.remove('r88-expand-card');
+    source.style.cssText=cardStyle||'';
+    source.removeAttribute('aria-expanded');
+   }
+   layer.remove();
+   if(modal===layer)modal=null;
+   origin=null;cardSlot=null;detailPanel=null;cardStyle=null;
    detailState='closed';
    document.body.classList.remove('r77-detail-open');
-   if(origin?.isConnected)origin.focus({preventScroll:true});
+   if(source?.isConnected)source.focus({preventScroll:true});
   };
-  const a=animate(pane,[
-   {transform:'translate3d(0,0,0)',opacity:1},
-   {transform:'translate3d(0,105%,0)',opacity:.96}
-  ],{duration:400,easing});
-  animate(closing,[{backgroundColor:'rgba(19,36,34,.26)'},{backgroundColor:'rgba(19,36,34,0)'}],{duration:400,easing});
-  if(a)a.finished.then(finish,finish);else finish();
+  const back=(source&&target&&from&&ok())?animate(source,[
+   {left:from.left+'px',top:from.top+'px',width:from.width+'px',height:from.height+'px',borderRadius:'29px'},
+   {left:target.left+'px',top:target.top+'px',width:target.width+'px',height:target.height+'px',borderRadius:'18px'}
+  ],{duration:425,easing}):null;
+  if(back)back.finished.then(finish,finish);else finish();
   if(overlayHistory&&!fromHistory){overlayHistory=false;try{history.back()}catch(_){}}
   else overlayHistory=false;
  }
