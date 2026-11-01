@@ -7,9 +7,9 @@ const motion=read('www/sculpted-motion-v77.js');
 const html=read('www/index.html');
 const build=read('scripts/bundle-runtime-theme-v80.mjs');
 const expense=html.slice(html.indexOf('function openModal(){'),html.indexOf('function startTx('));
-assert.match(motion,/sourceTravel/,'KPI cards themselves must move, not just a separate sheet');
-assert.match(motion,/animate\(source/,'Source card should be returned on close');
-assert.match(motion,/source\.style\.removeProperty\('transform'\)/,'KPI transform cleanup to avoid retained compositor layers');
+assert.match(motion,/modal.appendChild\(card\)/,'The original KPI card moves, never a duplicate sheet');
+assert.match(motion,/slot.replaceWith\(source\)/,'Source card should return to its actual grid slot');
+assert.match(motion,/source.style.cssText=cardStyle/,'Original inline styles restored after the card returns');
 assert.match(motion,/detailState==='closing'/,'No double close');
 assert.match(motion,/window\.RashodyFactorySvg/,'Factory icons preserved in KPI panels');
 assert.match(css,/\.cat-choice \.category-icon[^\{]*\{/,'Category icon wrapper must be single layer');
@@ -29,4 +29,4 @@ assert.match(read('native/FinanceStoragePlugin.java'),/class FinanceStoragePlugi
 assert.match(read('www/r78-runtime.js'),/function pageTransformer\(direction/,'Page Transformer preserved');
 execFileSync('node',['--check','www/sculpted-motion-v77.js'],{stdio:'inherit'});
 execFileSync('node',['scripts/bundle-runtime-theme-v80.mjs'],{stdio:'inherit'});
-console.log('PASS v8.5 KPI source-card lift, nested backplate removal, compact keypad, animated close, regressions');
+console.log('PASS v8.8 KPI shared-element morph, category icon cleanup, compact keypad, animated close, regressions');
