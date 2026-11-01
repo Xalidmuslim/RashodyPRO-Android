@@ -39,7 +39,7 @@ assert.match(css,/\.trend-cards button\.trend-card/);
 assert.match(css,/height:113px!important/);
 assert.match(css,/\.r77-detail-panel/);
 assert.match(css,/prefers-reduced-motion/);
-assert.match(motion,/duration:560/,'Compact KPI sheets should slide up smoothly');
+assert.match(motion,/duration:480/,'Compact KPI sheets should slide up smoothly');
 assert.match(motion,/duration:760/,'Sector details transition should last ~760ms');
 assert.match(motion,/history\.pushState/,'Back navigation should close expanded stats');
 assert.match(motion,/window\.addEventListener\('popstate'/);
