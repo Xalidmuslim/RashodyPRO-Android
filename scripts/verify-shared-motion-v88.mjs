@@ -23,4 +23,13 @@ assert.match(expressive,/function directionalNav\(view,changed\)/);
 assert.match(styles,/bottom:calc\(4px \+ env\(safe-area-inset-bottom,0px\)\)/);
 assert.match(styles,/\.mobile-nav\s*>\s*button\.fab\s*\{/);
 assert.doesNotMatch(expressive,/function liquidNav\(/);
-console.log('PASS v8.8 shared-element KPI, donut-origin selection and settled bottom navigation');
+// v8.9 regression: geometry must animate the surface rather than its shadow,
+ // and must not lose to inline !important declarations.
+assert.doesNotMatch(motion,/card\.style\.setProperty\(property,value,'important'\)/);
+assert.match(motion,/const scaleX=from\.width\/to\.width/);
+assert.match(motion,/const returnScaleX=target\?\.width\/baseWidth/);
+assert.doesNotMatch(motion,/sourceAnimation=animate\(card,\[\s*\{left:/);
+assert.match(styles,/\/\* v8\.9: keep the navigation dock pinned/);
+assert.match(styles,/animation:none!important;\s*transform:none!important;\s*translate:none!important;/);
+assert.match(styles,/\.mobile-nav > button:not\(:disabled\):active\{\s*translate:none!important;/);
+console.log('PASS v8.9 compositor KPI card expansion, reversible close and stable bottom dock');

@@ -112,3 +112,19 @@ html body.matte-editorial #page .feature-day{
  background:#e9dfd2!important;background-image:none!important;
  border:0!important;box-shadow:0 3px 6px rgba(65,52,40,.11),0 17px 32px -16px rgba(67,50,37,.23)!important;
 }
+
+/* v8.9: keep the navigation dock pinned and remove inherited vertical press
+   translation. The tab icon can still animate horizontally in Expressive Motion. */
+html.rashody-native-android body.matte-editorial .mobile-nav,
+html body.matte-editorial .mobile-nav{
+ position:fixed!important;
+ animation:none!important;
+ transform:none!important;
+ translate:none!important;
+ transition:none!important;
+ will-change:auto!important;
+}
+html body.matte-editorial .mobile-nav > button,
+html body.matte-editorial .mobile-nav > button:not(:disabled):active{
+ translate:none!important;
+}

@@ -61,8 +61,8 @@
    position:'fixed',left:to.left+'px',top:to.top+'px',
    width:to.width+'px',height:to.height+'px',
    zIndex:'16002',background:fill,color,margin:'0',
-   transform:'none',borderRadius:'29px',pointerEvents:'auto'
-  }))card.style.setProperty(property,value,'important');
+   transformOrigin:'top left',borderRadius:'29px',pointerEvents:'auto'
+  }))card.style.setProperty(property,value);
   const contents=document.createElement('div');
   contents.className='r88-expanded-contents';
   // The old close BUTTON must not be nested inside the real KPI button.
@@ -75,11 +75,15 @@
   modal.appendChild(close);
   close.style.left=(to.left+width-54)+'px';close.style.top=(to.top+12)+'px';
   document.body.classList.add('r77-detail-open');
+  // Compositor-only FLIP: keep the real card at its final layout position,
+  // then interpolate its visual bounds from the tapped source. Animating left,
+  // top, width and height caused layout work and was masked by !important.
+  const scaleX=from.width/to.width,scaleY=from.height/to.height;
   sourceAnimation=animate(card,[
-   {left:from.left+'px',top:from.top+'px',width:from.width+'px',height:from.height+'px',borderRadius:'18px',offset:0},
-   {left:(to.left+(from.left-to.left)*.06)+'px',top:(to.top+(from.top-to.top)*.06)+'px',width:(to.width*.98)+'px',height:(to.height*.98)+'px',borderRadius:'31px',offset:.83},
-   {left:to.left+'px',top:to.top+'px',width:to.width+'px',height:to.height+'px',borderRadius:'29px',offset:1}
-  ],{duration:480,easing:settling});
+   {transform:'translate3d('+(from.left-to.left)+'px,'+(from.top-to.top)+'px,0) scale('+scaleX+','+scaleY+')',borderRadius:'18px',offset:0},
+   {transform:'translate3d(0,-3px,0) scale(1.008,1.008)',borderRadius:'30px',offset:.84},
+   {transform:'translate3d(0,0,0) scale(1)',borderRadius:'29px',offset:1}
+  ],{duration:520,easing:settling});
   animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.28)'}],
    {duration:360,easing});
   animate(contents,[{opacity:0,transform:'translate3d(0,15px,0)'},{opacity:1,transform:'none'}],
@@ -98,9 +102,11 @@
  function closeDetail(fromHistory=false){
   if(!modal||detailState==='closing')return;
   detailState='closing';
-  sourceAnimation?.cancel();sourceAnimation=null;
   const layer=modal,source=origin,slot=cardSlot,contents=detailPanel;
+  // Capture in-flight geometry BEFORE cancelling the opening transition so
+  // even an immediate close returns from the currently visible card position.
   const from=source?.getBoundingClientRect(),target=slot?.getBoundingClientRect();
+  sourceAnimation?.cancel();sourceAnimation=null;
   animate(contents,[{opacity:1,transform:'none'},{opacity:0,transform:'translateY(10px)'}],
    {duration:165,easing});
   const close=layer.querySelector('.r88-morph-close');
@@ -122,9 +128,14 @@
    document.body.classList.remove('r77-detail-open');
    if(source?.isConnected)source.focus({preventScroll:true});
   };
+  const baseLeft=Number.parseFloat(source?.style.left)||0;
+  const baseTop=Number.parseFloat(source?.style.top)||0;
+  const baseWidth=Number.parseFloat(source?.style.width)||1;
+  const baseHeight=Number.parseFloat(source?.style.height)||1;
+  const returnScaleX=target?.width/baseWidth,returnScaleY=target?.height/baseHeight;
   const back=(source&&target&&from&&ok())?animate(source,[
-   {left:from.left+'px',top:from.top+'px',width:from.width+'px',height:from.height+'px',borderRadius:'29px'},
-   {left:target.left+'px',top:target.top+'px',width:target.width+'px',height:target.height+'px',borderRadius:'18px'}
+   {transform:'translate3d('+(from.left-baseLeft)+'px,'+(from.top-baseTop)+'px,0) scale('+(from.width/baseWidth)+','+(from.height/baseHeight)+')',borderRadius:'29px'},
+   {transform:'translate3d('+(target.left-baseLeft)+'px,'+(target.top-baseTop)+'px,0) scale('+returnScaleX+','+returnScaleY+')',borderRadius:'18px'}
   ],{duration:425,easing}):null;
   if(back)back.finished.then(finish,finish);else finish();
   if(overlayHistory&&!fromHistory){overlayHistory=false;try{history.back()}catch(_){}}
