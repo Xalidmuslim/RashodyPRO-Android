@@ -13,15 +13,15 @@ assert.match(html,/function r75Icon[\s\S]*?group==='nav'/,'Factory icons except 
 assert.match(html,/const factoryCategories=/);
 assert.doesNotMatch(html.slice(html.indexOf('function dashboard(){'),html.indexOf('function txRow(t)')),/assets\/icons\/kpi\/kpi-/,'KPI must use app factory icons');
 assert.doesNotMatch(runtime,/img\('calendar','actions'|img\('transactions','nav'/,'Decorative PNG injection must be disabled');
-assert.match(motion,/translate3d\(0,100%,0\)/,'KPI panel opens upward from bottom');
-assert.match(motion,/translate3d\(0,105%,0\)/,'KPI panel closes down offscreen');
+assert.match(motion,/modal.appendChild\(card\)/,'KPI original card opens directly instead of a bottom sheet');
+assert.match(motion,/slot.replaceWith\(source\)/,'KPI returns to original grid slot');
 assert.match(motion,/detailState/,'KPI sheet guards duplicate open and close');
 assert.match(motion,/Escape/);
 assert.match(motion,/popstate/);
 assert.match(motion,/prefers-reduced-motion/);
 assert.match(style,/\.calendar-shell/);
 assert.match(style,/\.trend-cards button\.trend-card[\s\S]*?height:68px!important/,'KPI size should be reduced');
-assert.match(style,/\.r77-detail-scrim[\s\S]*?align-items:end/,'Sheet is attached to lower edge');
+assert.doesNotMatch(style,/\.r77-detail-panel/,'Old separate KPI panel must be deleted');
 assert.match(style,/\.feature-day \.day-donut::before[\s\S]*?display:none!important/,'Gray ring background removed');
 assert.match(style,/\.day-donut-base[\s\S]*?display:none!important/,'SVG gray ring removed');
 assert.match(style,/\.feature-day:has\(\.day-donut-empty-legend\) \.day-donut/,'Empty chart hidden');
@@ -36,4 +36,4 @@ assert.match(runtime,/function pageTransformer\(direction/,'Navigation transform
 execFileSync('node',['--check','www/sculpted-motion-v77.js'],{stdio:'inherit'});
 execFileSync('node',['--check','www/r78-runtime.js'],{stdio:'inherit'});
 execFileSync('node',['scripts/bundle-runtime-theme-v80.mjs'],{stdio:'inherit'});
-console.log('PASS v8.4: week-first, factory icons except nav, slide-up KPI sheets, no gray outline, animation/data invariants');
+console.log('PASS v8.8: week-first, factory icons, shared-element KPI, no gray donut outline, data invariants');
