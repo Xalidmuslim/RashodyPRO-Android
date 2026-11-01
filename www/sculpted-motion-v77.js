@@ -83,7 +83,7 @@
    {transform:'translate3d('+(from.left-to.left)+'px,'+(from.top-to.top)+'px,0) scale('+scaleX+','+scaleY+')',borderRadius:'18px',offset:0},
    {transform:'translate3d(0,-3px,0) scale(1.008,1.008)',borderRadius:'30px',offset:.84},
    {transform:'translate3d(0,0,0) scale(1)',borderRadius:'29px',offset:1}
-  ],{duration:520,easing:settling});
+  ],{duration:480,easing:settling});
   animate(modal,[{backgroundColor:'rgba(19,36,34,0)'},{backgroundColor:'rgba(19,36,34,.28)'}],
    {duration:360,easing});
   animate(contents,[{opacity:0,transform:'translate3d(0,15px,0)'},{opacity:1,transform:'none'}],
