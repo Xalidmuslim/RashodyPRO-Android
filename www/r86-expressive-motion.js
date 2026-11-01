@@ -5,7 +5,7 @@
  'use strict';
  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)');
  const allowed=()=>!reduced?.matches&&!document.hidden;
- let previousView=null,previousDay=null,navAnimation=null;
+ let previousView=null,previousDay=null,navAnimation=null,navRelease=null;
  const pressed=new WeakMap();
  function nativeHaptic(){
   // Device feedback only; respects OS feedback settings and failure is nonfatal.
@@ -52,6 +52,7 @@
   const active=nav?.querySelector('button.active[data-view]');
   if(!active)return;
   navAnimation?.cancel();navAnimation=null;
+  navRelease?.cancel();navRelease=null;
   // Raise and tilt the selected tab; NEVER animate or move the dock itself.
   if(changed&&previousView&&allowed()){
    const tabs=[...nav.querySelectorAll('button[data-view]')];
@@ -75,7 +76,7 @@
  let heldTab=null,heldAnimation=null;
  function tabDown(tab,e){
   if(!allowed())return;
-  heldTab=tab;heldAnimation?.cancel();
+  heldTab=tab;heldAnimation?.cancel();navRelease?.cancel();navRelease=null;
   const rect=tab.getBoundingClientRect();
   const local=((e.clientX-rect.left)/Math.max(1,rect.width)-.5)*2;
   const tilt=Math.max(-5,Math.min(5,local*5));
@@ -89,7 +90,7 @@
   const tab=heldTab;
   const pose=getComputedStyle(tab).transform;
   heldAnimation?.cancel();heldAnimation=null;heldTab=null;
-  if(tab.isConnected)animate(tab,[
+  if(tab.isConnected)navRelease=animate(tab,[
    {transform:pose==='none'?'translateY(-3px) scale(1.02)':pose},
    {transform:'none'}
   ],{duration:310,easing:'cubic-bezier(.22,.82,.24,1)'});
