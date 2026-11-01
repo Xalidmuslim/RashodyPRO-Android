@@ -43,3 +43,66 @@ html body.matte-editorial .mobile-nav > button[data-view] > span{
   font-size:10px!important;padding-inline:0!important;
  }
 }
+
+/* v8.8: one actual KPI surface morphs; legacy bottom sheet is not used. */
+.r88-card-slot{visibility:hidden!important;pointer-events:none!important}
+html body.matte-editorial .r77-detail-scrim.r88-morph-scrim{
+ display:block!important;place-items:initial!important;
+ padding:0!important;overflow:hidden!important;perspective:none!important;
+ background:rgba(19,36,34,.28)!important;
+}
+html body.matte-editorial button.trend-card.r88-expand-card{
+ display:block!important;box-sizing:border-box!important;min-width:0!important;
+ min-height:0!important;max-height:none!important;overflow:hidden!important;
+ padding:0!important;transition:none!important;contain:layout style!important;
+ text-align:left!important;box-shadow:0 20px 54px rgba(31,37,34,.22)!important;
+ -webkit-tap-highlight-color:transparent!important;
+}
+html body.matte-editorial button.trend-card.r88-expand-card::before,
+html body.matte-editorial button.trend-card.r88-expand-card::after{
+ display:none!important;content:none!important;
+}
+html body.matte-editorial button.trend-card.r88-expand-card > :not(.r88-expanded-contents){
+ opacity:0!important;pointer-events:none!important;
+}
+.r88-expanded-contents{
+ box-sizing:border-box;position:absolute;inset:19px 16px;
+ overflow:auto;overscroll-behavior:contain;color:inherit;
+ text-align:left;white-space:normal;z-index:1;
+}
+.r88-expanded-contents .r77-detail-head{padding-right:45px;min-height:49px}
+.r88-expanded-contents .r77-detail-icon{
+ width:48px!important;height:48px!important;
+ background:rgba(255,255,255,.18)!important;box-shadow:none!important;
+}
+.r88-expanded-contents .r77-detail-icon svg{width:30px!important;height:30px!important;stroke:currentColor!important}
+.r88-expanded-contents .r77-detail-eyebrow,
+.r88-expanded-contents .r77-detail-sub,
+.r88-expanded-contents .r77-detail-name small{color:inherit!important;opacity:.78}
+.r88-expanded-contents .r77-detail-number{color:inherit!important;font-size:clamp(27px,8vw,40px)!important}
+.r88-expanded-contents .r77-detail-row{
+ background:rgba(255,255,255,.16)!important;
+ color:inherit!important;box-shadow:none!important;border:0!important;
+}
+.r88-expanded-contents .r77-detail-row strong{color:inherit!important}
+html body.matte-editorial .r88-morph-close{
+ position:fixed!important;z-index:16004!important;
+ width:42px!important;height:42px!important;
+ border-radius:14px!important;cursor:pointer!important;
+ background:#f2e7d8!important;color:#33443b!important;
+ box-shadow:0 4px 12px rgba(33,40,33,.18)!important;
+}
+/* Downward position is static; there are no active-state Y offsets. */
+html body.matte-editorial .mobile-nav{
+ bottom:calc(4px + env(safe-area-inset-bottom,0px))!important;
+ padding:8px!important;
+}
+html body.matte-editorial .mobile-nav > button.fab{
+ margin:0!important;align-self:center!important;transform:none!important;
+}
+html body.matte-editorial .mobile-nav > button[data-view]:active{
+ translate:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+ html body.matte-editorial button.trend-card.r88-expand-card{transition:none!important}
+}
