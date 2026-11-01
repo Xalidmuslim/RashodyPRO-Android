@@ -20,8 +20,8 @@ assert.match(fix,/\.r78-brand h1[\s\S]*?font-weight:800!important/,'Brand title 
 assert.match(fix,/\.day-donut-sector:not\(\.is-selected\)/,'Restore chart visual contrast');
 assert.match(ref,/function pageTransformer\(direction/,'Existing transformer must remain');
 assert.ok(motion.includes("modal.appendChild(card)"),"KPI expansion must use the actual card instead of a new bottom sheet");
-assert.ok(motion.includes("sourceAnimation=animate(card"),"Opening animates the original KPI card");
-assert.match(motion,/duration:430/,"Compact KPI FLIP opening duration must be 430ms");
+assert.ok(motion.includes("sourceAnimation=card.animate("),"Opening animates the original KPI card on a reversible timeline");
+assert.match(motion,/duration:680/,"v9.1 same-surface KPI FLIP uses a visible 680ms duration");
 assert.ok(!motion.includes("translate3d(0,100%,0)"),"KPI card must not slide from the bottom");
 assert.ok(motion.includes("slot.replaceWith(source)"),"Closing must return KPI to its original position");
 assert.match(html,/data-action="new-expense-day"/);
