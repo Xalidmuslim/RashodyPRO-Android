@@ -61,6 +61,8 @@
   ],{duration:480,delay:240,easing:settling});
   if(inFlight)inFlight.finished.then(()=>{if(detailState==='opening')detailState='open'},()=>{});
   else detailState='open';
+  // Close on pointerdown while the sheet is moving; preserve click for keyboard users.
+  modal.querySelector('.r77-detail-close').addEventListener('pointerdown',e=>{if(e.button===0)closeDetail()});
   modal.querySelector('.r77-detail-close').addEventListener('click',()=>closeDetail());
   modal.addEventListener('click',e=>{if(e.target===modal)closeDetail()});
   try{history.pushState({__r77Detail:true},'');overlayHistory=true}catch(_){overlayHistory=false}
