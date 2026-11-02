@@ -14,14 +14,14 @@ assert.match(legacy,/if\(group\?\.classList\.contains\('mobile-nav'\)\)return;/,
   'Legacy depth motion must not independently animate the mobile dock');
 assert.match(nav,/navRelease\?\.cancel\(\)/,
   'Cancel outgoing press animation before directional tilt begins');
-assert.match(card,/sourceAnimation=card\.animate\(/,
-  'KPI surface itself must animate, with a persistent reversible timeline');
-assert.match(card,/sourceAnimation\.reverse\(\)/,
-  'Closing must reverse the opening timeline, even during partial opening');
-assert.doesNotMatch(card,/sourceAnimation=animate\(card,/,
-  'Do not auto-cancel the opening timeline at completion');
-assert.match(card,/duration:6[3-9]0/,
-  'Opening motion must last long enough to clearly perceive the enlargement');
+assert.match(card,/animation=row\.animate\(/,
+  'Individual KPI rows animate without moving the source card');
+assert.match(card,/Promise\.all\(exits\)\.then\(finish,finish\)/,
+  'Closing returns each row to its origin even during partial opening');
+assert.doesNotMatch(card,/modal\.appendChild\(card\)/,
+  'Do not move the source KPI into an enlarged enclosing panel');
+assert.match(card,/duration:960/,
+  'Individual rows must move slowly enough to see their full travel');
 assert.match(card,/duration:7[2-9]0/,
   'Chart transform must have a deliberate, visible duration');
 assert.doesNotMatch(card,/opacity:\.22,borderRadius:'50%'/,
