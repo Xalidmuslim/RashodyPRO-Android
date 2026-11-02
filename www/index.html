@@ -2502,7 +2502,7 @@ function renderNav(){document.getElementById('sidebar').innerHTML=`<div class="b
  }
 }
 function renderTop(){let heading=view==='dashboard'?'':view==='transactions'?'История':view==='analytics'?'Аналитика':'Настройки';document.getElementById('topbar').className=`topbar ${view==='dashboard'?'dashboard-topbar':'subpage-topbar'}`;document.getElementById('topbar').innerHTML=(view==='dashboard'||view==='analytics')?'':`<div class="topbar-heading"><button class="icon-btn screen-back" data-action="navigate-back" aria-label="Назад">${svg('chevronLeft',22)}</button><div><div class="topline">ФИНАНСОВЫЙ ДНЕВНИК</div><h1>${heading}</h1></div></div><div class="topbar-right">${view==='transactions'?`<button type="button" class="header-csv" data-action="export-csv" aria-label="Экспортировать операции в CSV">${svg('download',16)}<span>CSV</span></button>`:''}<button class="primary-btn add-desktop" data-action="new-expense">${svg('plus',17)} Добавить</button></div>`}
-function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboard():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});window.RashodySculptedMotion?.afterRender({view});}
+function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboardV96():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});window.RashodySculptedMotion?.afterRender({view});}
 function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  // Direction-aware spring content is owned by RashodyReferenceV78; never stack a second fade.
@@ -2535,6 +2535,7 @@ function compactWeekWidget(selectedDay){
 function currentExpenseStreak(){const set=new Set(data.transactions.filter(t=>t.type==='expense').map(t=>t.date));const cursor=new Date(dateLocal()+'T12:00:00');let days=0;while(set.has(dateLocal(cursor)) && days<3650){days++;cursor.setDate(cursor.getDate()-1)}return days}
 function expenseCountLabel(n){const k=n%10,m=n%100;return `${n} ${m>=11&&m<=14?'операций':k===1?'операция':k>=2&&k<=4?'операции':'операций'}`}
 let dayChartSelection=null;
+let dashboardPeriodV96='month';
 function dayChartBreakdown(items){
  const totals=Object.entries(F.expenseCategories(items)).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
  const all=totals.reduce((sum,[,v])=>sum+v,0);
@@ -2639,6 +2640,80 @@ function dashboard(){
  <section class="feature-day"><div class="feature-copy"><div class="eyebrow">ВЫБРАННЫЙ ДЕНЬ</div><h2>${esc(matteDateLabel(chosen))}</h2><div class="feature-amount num" title="${esc(money(picked))}">${summaryMoney(picked)}</div><p>${chosenItems.length?`${expenseCountLabel(chosenItems.length)} · Категорий: ${Object.keys(F.expenseCategories(chosenItems)).length}`:'Расходов за этот день нет'}</p><button class="feature-link" data-action="view-focus-day">Смотреть операции ${svg('chevronRight',18)}</button></div><div class="day-category-graphic">${daySummaryRing(chosenItems)}</div><div class="r77-day-selection" id="r77DaySelection" ${dayChartSelection?"":"hidden"}>${dayChartSelection?daySelectedOperations(chosenItems,dayChartSelection):""}</div></section>
  <section class="panel day-ledger"><div class="section-heading ledger-heading"><h2>Операции за день</h2><span class="ledger-count">${expenseCountLabel(chosenItems.length)}</span></div>${chosenItems.length?`<div class="day-items">${chosenItems.slice(0,5).map(txRow).join('')}</div><div class="ledger-actions"><button class="ghost-btn" data-action="view-focus-day">${chosenItems.length>5?'Все операции':'История'} →</button>${data.transactions.some(t=>t.type==='expense')?`<button class="repeat-inline" data-action="quick-repeat">${svg('repeat',16)} Повторить</button>`:''}<button class="subtle-add" data-action="new-expense-day" aria-label="Добавить расход за выбранный день">${svg('plus',20)}</button></div>`:`<div class="fancy-empty"><div class="empty-receipt" aria-hidden="true"><span></span><span></span><span></span><i>${svg('plus',23)}</i></div><strong>Пока нет операций</strong><p>Добавьте первый расход за этот день.</p><button class="empty-add" data-action="new-expense-day">${svg('plus',20)} Добавить расход</button></div>`}</section>
 `;
+}
+function dashboardV96(){
+ const today=dateLocal(),latest=F.latestExpenseDay(data.transactions,today).day;
+ const chosen=dashboardFocusDay||(latest.startsWith(monthKey(month))?latest:(monthKey(month)===today.slice(0,7)?today:monthKey(month)+'-01'));
+ if(!dashboardFocusDay)dashboardFocusDay=chosen;
+ if(!dashboardWeekAnchor)dashboardWeekAnchor=chosen;
+ const anchor=dashboardPeriodV96==='month'?monthKey(month)+'-01':dashboardPeriodV96==='week'?dashboardWeekAnchor:chosen;
+ const range=F.periodRange(anchor,dashboardPeriodV96);
+ const periodItems=data.transactions.filter(t=>t.date>=range.start&&t.date<=range.end);
+ const expense=F.money(periodItems.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0));
+ const income=F.money(periodItems.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0));
+ const periodLabel={day:'день',week:'неделю',month:'месяц'}[dashboardPeriodV96];
+ const compared=F.compareExpenses(data.transactions,anchor,dashboardPeriodV96);
+ const pct=compared.changePercent;
+ const comparison=pct===null||!Number.isFinite(pct)?'Нет данных для сравнения':pct===0?'Без изменений к прошлому периоду':`${pct>0?'+':''}${new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(pct)}% к прошлому периоду`;
+ const chosenItems=expensesOfDay(chosen),map=monthExpenseMap(data.transactions),week=weekRangeFor(dashboardWeekAnchor);
+ const weekTotal=F.money(week.reduce((s,d)=>s+(map[d]||0),0));
+ const weekly=data.transactions.filter(t=>t.type==='expense'&&week.includes(t.date));
+ const largestExpense=weekly.reduce((n,t)=>Math.max(n,t.amount),0);
+ const picked=F.money(chosenItems.reduce((s,t)=>s+t.amount,0));
+ const top=Object.entries(F.expenseCategories(periodItems)).sort((a,b)=>b[1]-a[1]).slice(0,4);
+ const allTotal=top.reduce((sum,[,v])=>sum+v,0);
+ const lastItems=sortTx(data.transactions.filter(t=>data.settings.incomeEnabled||t.type==='expense')).slice(0,5);
+ const heading=dashboardPeriodV96==='month'?ruMonth(new Date(range.start+'T12:00:00')):dashboardPeriodV96==='day'?matteDateLabel(chosen):`${range.start.slice(8)}.${range.start.slice(5,7)} — ${range.end.slice(8)}.${range.end.slice(5,7)}`;
+ let graphicWeeks=[];
+ if(dashboardPeriodV96==='month'){
+  const start=new Date(range.start+'T12:00:00');
+  const totalDays=new Date(start.getFullYear(),start.getMonth()+1,0).getDate();
+  for(let i=0;i<totalDays;i+=7){
+   const dates=Array.from({length:Math.min(7,totalDays-i)},(_,j)=>dateLocal(new Date(start.getFullYear(),start.getMonth(),i+j+1)));
+   graphicWeeks.push({label:`${i+1}–${i+dates.length}`,date:dates[0],total:F.money(dates.reduce((s,d)=>s+(map[d]||0),0)),weekly:true});
+  }
+ }else{
+  const days=weekRangeFor(dashboardPeriodV96==='day'?chosen:dashboardWeekAnchor);
+  graphicWeeks=days.map(day=>({label:String(Number(day.slice(-2))),date:day,total:map[day]||0,weekly:false}));
+ }
+ const maxBar=Math.max(1,...graphicWeeks.map(t=>t.total));
+ const bars=graphicWeeks.map(bar=>{
+  const height=bar.total<=0?4:Math.max(8,Math.round(bar.total/maxBar*100));
+  const active=bar.weekly?bar.date<=chosen&&chosen<=dateLocal(new Date(new Date(bar.date+'T12:00:00').getTime()+6*86400000)):bar.date===chosen;
+  const target=bar.weekly?`data-dashboard-trend-week="${esc(bar.date)}"`:`data-jump-day="${esc(bar.date)}"`;
+  return `<button type="button" class="r96-bar-column ${active?'active':''}" ${target} aria-label="${esc(bar.label)}: ${esc(money(bar.total))}"><span class="r96-bar" style="--bar-height:${height}%"></span><span class="r96-bar-label">${esc(bar.label)}</span></button>`;
+ }).join('');
+ const sortedPeriodCats=Object.entries(F.expenseCategories(periodItems)).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+ const ringTotal=sortedPeriodCats.reduce((a,[,v])=>a+v,0),circ=2*Math.PI*67;let consumed=0;
+ const slices=sortedPeriodCats.map(([id,amount])=>{
+  const part=amount/ringTotal*circ;const dash=Math.max(.04,part-(sortedPeriodCats.length>1?Math.min(part*.13,2.4):0));
+  const markup=`<circle cx="100" cy="100" r="67" fill="none" stroke="${categoryColor(id)}" stroke-width="25" stroke-dasharray="${dash.toFixed(3)} ${(circ-dash).toFixed(3)}" stroke-dashoffset="${(-consumed).toFixed(3)}" transform="rotate(-90 100 100)"><title>${esc(getCat(id).name)}: ${esc(money(amount))}</title></circle>`;
+  consumed+=part;return markup;
+ }).join('');
+ const legend=sortedPeriodCats.slice(0,4).map(([id,total])=>`<button class="r96-category-line" type="button" data-r96-category="${esc(id)}" aria-label="${esc(getCat(id).name)}. ${esc(money(total))}. Открыть операции"><i style="background:${categoryColor(id)}" aria-hidden="true"></i><span>${esc(getCat(id).name)}</span><strong>${ringTotal?Math.round(total/ringTotal*100):0}%</strong></button>`).join('');
+ return `<div class="r96-dashboard">
+ <header class="r96-brand"><div class="r96-brand-icon" aria-hidden="true">${svg('wallet',22)}</div><div class="r96-brand-name"><h1>Расходы PRO</h1><p>Личные финансы</p></div><button type="button" class="r96-gear" data-view="settings" aria-label="Настройки">${svg('settings',22)}</button></header>
+ <section class="r96-summary" aria-label="Финансовая сводка"><div class="r96-summary-main"><span>Расходы за ${periodLabel}</span><strong class="num" title="${esc(money(expense))}">${esc(summaryMoney(expense))}</strong><small class="${pct>0?'r96-up':pct<0?'r96-down':''}">${esc(comparison)}</small></div>
+ ${data.settings.incomeEnabled?`<div class="r96-summary-side"><span>Доходы</span><strong title="${esc(money(income))}">${esc(summaryMoney(income))}</strong><span>Разница доходов и расходов</span><strong title="${esc(money(income-expense))}">${esc(summaryMoney(income-expense))}</strong></div>`:''}
+ <div class="r96-period-select" role="group" aria-label="Период финансовой сводки">${[['day','День'],['week','Неделя'],['month','Месяц']].map(([id,label])=>`<button type="button" data-dashboard-period="${id}" aria-pressed="${dashboardPeriodV96===id}" class="${dashboardPeriodV96===id?'active':''}">${label}</button>`).join('')}</div>
+ </section>
+ <section class="r96-calendar"><div class="r96-section-heading"><h2>Календарь расходов</h2><div class="r96-calendar-tools"><button data-action="week-prev" type="button" aria-label="Предыдущая неделя">${svg('chevronLeft',19)}</button><span>${esc(heading)}</span><button data-action="week-next" type="button" aria-label="Следующая неделя">${svg('chevronRight',19)}</button></div></div>${compactWeekWidget(chosen)}</section>
+ <section class="r96-kpis" aria-label="Основные показатели"><div class="trend-cards">
+ <button type="button" class="trend-card coral" data-sculpted-detail="week" aria-label="Подробные расходы за неделю"><span class="trend-icon">${svg('wallet',32)}</span><strong class="num" title="${esc(money(weekTotal))}">${summaryMoney(weekTotal)}</strong><span>За неделю</span></button>
+ <button type="button" class="trend-card teal" data-sculpted-detail="daily" aria-label="Подробные операции за день"><span class="trend-icon">${svg('receipt',32)}</span><strong class="num">${chosenItems.length}</strong><span>Операций за день</span></button>
+ <button type="button" class="trend-card amber" data-sculpted-detail="max" aria-label="Максимальная покупка за неделю"><span class="trend-icon">${svg('shirt',32)}</span><strong class="num" title="${esc(money(largestExpense))}">${summaryMoney(largestExpense)}</strong><span>Макс. покупка</span></button>
+ </div></section>
+ <div class="r96-insights"><section class="r96-panel r96-spending" aria-label="Структура расходов"><div class="r96-section-heading"><h2>Структура расходов</h2><span>За ${periodLabel}</span></div>
+ <div class="r96-ring-layout"><div class="r96-ring" role="img" aria-label="Категории расходов за ${periodLabel}"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="67" fill="none" stroke="#d7d3c8" stroke-width="25"/>${slices}</svg><div class="r96-ring-label"><strong>${esc(summaryMoney(ringTotal))}</strong><small>Расходы</small></div></div>
+ <div class="r96-category-list">${legend||'<p class="r96-empty">Расходов за период нет</p>'}</div></div><button class="r96-see-all" type="button" data-view="analytics">Все категории ${svg('chevronRight',16)}</button></section>
+ <section class="r96-panel r96-trend" aria-label="Динамика расходов"><div class="r96-section-heading"><h2>Динамика расходов</h2><span>${dashboardPeriodV96==='month'?'По неделям':'По дням'}</span></div>
+ <div class="r96-bar-chart">${bars}</div><div class="r96-chart-baseline"><small>0</small><small>${esc(axisMoney(maxBar))}</small></div></section></div>
+ <section class="r96-panel r96-day-detail feature-day"><div class="r96-section-heading"><h2>Выбранный день</h2><span>${esc(matteDateLabel(chosen))}</span></div><div class="r96-day-grid"><div class="feature-copy"><div class="eyebrow">РАСХОДЫ ЗА ДЕНЬ</div><div class="feature-amount num" title="${esc(money(picked))}">${summaryMoney(picked)}</div><p>${chosenItems.length?`${expenseCountLabel(chosenItems.length)}`:'Расходов нет'}</p><button class="feature-link" data-action="view-focus-day">Операции за день ${svg('chevronRight',18)}</button></div><div class="day-category-graphic">${daySummaryRing(chosenItems)}</div></div>
+ <div class="r77-day-selection" id="r77DaySelection" ${dayChartSelection?'':'hidden'}>${dayChartSelection?daySelectedOperations(chosenItems,dayChartSelection):''}</div></section>
+ <section class="r96-panel r96-latest"><div class="r96-section-heading"><h2>Последние операции</h2><button class="r96-see-all" type="button" data-view="transactions">Все операции ${svg('chevronRight',16)}</button></div>
+ ${lastItems.length?`<div class="day-items">${lastItems.map(txRow).join('')}</div>`:`<div class="fancy-empty"><strong>Пока нет операций</strong><p>Добавьте первый расход.</p><button data-action="new-expense" class="empty-add">Добавить расход</button></div>`}
+ <div class="r96-quick-actions"><button type="button" data-action="new-expense-day">${svg('plus',18)} Расход за день</button>${data.settings.incomeEnabled?`<button type="button" data-action="new-income">${svg('plus',18)} Доход</button>`:''}</div>
+ </section></div>`;
 }
 function txRow(t){const c=getCat(t.category),income=t.type==='income';return `<button class="record-row" data-tx="${esc(t.id)}" aria-label="Открыть операцию ${esc(t.note||c.name)}"><span>${categoryIcon(c,19)}</span><div class="record-main"><div class="record-title truncate">${esc(c.name)}</div><div class="record-meta truncate">${t.note?esc(t.note)+' · ':''}${esc(t.date.slice(8,10))}.${esc(t.date.slice(5,7))}${t.time?' · '+esc(t.time):''}</div></div><div class="record-end"><div class="record-amount num ${income?'income':''}">${income?'+':'−'}${money(t.amount)}</div><span class="record-chevron">${svg('chevronRight',16)}</span></div></button>`}
 function periodCaption(){const range=F.periodRange(historyAnchor,historyPeriod),pretty=s=>new Intl.DateTimeFormat('ru-RU',{day:'numeric',month:'short',year:'numeric'}).format(new Date(s+'T12:00:00'));if(historyPeriod==='day')return pretty(range.start);if(historyPeriod==='week')return `${pretty(range.start)} — ${pretty(range.end)}`;return ruMonth(new Date(range.start+'T12:00:00'))}
@@ -3068,6 +3143,9 @@ case 'tx-more-categories':{const picker=document.getElementById('txCategories');
 case 'save-tx':return saveTx();case 'delete-tx':return deleteTx();case 'repeat-tx':return repeatTx();case 'quick-repeat':return quickRepeatLast();case 'reset-corrupt':return resetCorruptStorage();case 'storage-dismiss':storagePartialDismissed=true;storageWarning(null);return;case 'new-category':return startCat();case 'tx-add-category':return startCatFromTx();case 'save-category':return saveCat();case 'delete-category':return deleteCat();case 'export-json':return exportJSON();case 'export-csv':return exportCSV();case 'import-json':return document.getElementById('importFile').click();case 'import-old-csv':return openLegacyCSV();case 'confirm-old-csv':return importLegacyCSV();case 'load-month-demo':return loadMonthlyDemo();case 'remove-month-demo':return removeMonthlyDemo();case 'clear-data':return clearData()}}
 document.addEventListener('click',e=>{const dayPiece=e.target.closest('[data-day-chart-category]');if(dayPiece){updateDayChartSelection(dayPiece.dataset.dayChartCategory);return}if(e.target.closest('[data-day-chart-reset]')){updateDayChartSelection(null);return}const slice=e.target.closest('.ring-slice');if(slice){updateChartSelection(slice.dataset.chartCategory);slice.blur?.();return}const btn=e.target.closest('button');if(!btn)return;
  if(btn.hasAttribute('data-numpad')&&draft){enterAmountDigit(btn.dataset.numpad);return}
+ if(btn.dataset.dashboardPeriod){dashboardPeriodV96=btn.dataset.dashboardPeriod;return view==='dashboard'?render():undefined}
+ if(btn.dataset.dashboardTrendWeek){dashboardPeriodV96='week';dashboardWeekAnchor=btn.dataset.dashboardTrendWeek;dashboardFocusDay=btn.dataset.dashboardTrendWeek;dayChartSelection=null;return render()}
+ if(btn.dataset.r96Category){filters={type:'expense',category:btn.dataset.r96Category,search:'',allDates:false};historyPeriod=dashboardPeriodV96;historyAnchor=dashboardPeriodV96==='month'?monthKey(month)+'-01':dashboardPeriodV96==='week'?dashboardWeekAnchor:dashboardFocusDay;return go('transactions')}
  if(btn.dataset.jumpDay){window.RashodySculptedMotion?.beforeDayChange(btn.dataset.jumpDay);dayChartSelection=null;dashboardFocusDay=btn.dataset.jumpDay;dashboardWeekAnchor=btn.dataset.jumpDay;return view==='dashboard'?render():undefined}
  if(btn.hasAttribute('data-chart-open')){const id=btn.dataset.category;filters={type:'expense',category:id,search:'',allDates:false};historyPeriod=view==='analytics'?analyticsPeriod:'month';historyAnchor=view==='analytics'?analyticsAnchor:dateLocal(month);go('transactions');return render()}
  if(btn.dataset.quickAmount&&draft){const amount=document.getElementById('txAmount');amount.value=btn.dataset.quickAmount;draft.amount=amount.value;updateTxConfirm();return}
