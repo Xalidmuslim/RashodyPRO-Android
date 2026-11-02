@@ -228,3 +228,21 @@ html body.matte-editorial .r88-expand-card .r88-expanded-contents .r77-detail-li
 @media(prefers-reduced-motion:reduce){
  html body.matte-editorial .r94-detached-row{animation:none!important;transition:none!important}
 }
+
+/* v9.5 — only independent matte detail rows appear; no enlarged KPI header. */
+html body.matte-editorial .r77-detail-scrim.r88-morph-scrim.r95-rows-only-scrim{
+ padding:0!important;
+ background:rgba(19,36,34,.23)!important;
+}
+html body.matte-editorial .r77-detail-scrim.r88-morph-scrim .r94-detached-stack.r95-rows-only-stack{
+ background:transparent!important;box-shadow:none!important;border:0!important;
+ padding:3px 2px 5px!important;gap:12px!important;
+}
+html body.matte-editorial .r77-detail-scrim.r88-morph-scrim .r94-detached-row.r95-rows-only-row{
+ min-height:58px!important;border-radius:17px!important;
+ background:#e9dfd2!important;
+ box-shadow:0 3px 5px rgba(43,43,36,.10),0 13px 25px -13px rgba(37,41,36,.24)!important;
+}
+html body.matte-editorial .r95-rows-only-scrim .r95-rows-close{
+ border-radius:14px!important;
+}
