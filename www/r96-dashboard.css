@@ -59,6 +59,7 @@ html body.matte-editorial #page .r96-summary-side>strong{
  color:#26463a;font-size:16px;font-weight:750;min-width:0;overflow-wrap:anywhere;
  font-variant-numeric:tabular-nums;
 }
+html body.matte-editorial #page .r96-summary-side>strong:nth-child(2){grid-column:1;grid-row:2}
 html body.matte-editorial #page .r96-summary-side>span:nth-child(3){grid-column:2;grid-row:1}
 html body.matte-editorial #page .r96-summary-side>strong:nth-child(4){grid-column:2;grid-row:2}
 html body.matte-editorial #page .r96-period-select{
@@ -241,6 +242,7 @@ html body.matte-editorial #page .r96-quick-actions button{
  html body.matte-editorial #page .r96-insights{grid-template-columns:1fr 1fr}
  html body.matte-editorial #page .r96-summary{grid-template-columns:1.4fr 1fr}
  html body.matte-editorial #page .r96-summary-side{grid-template-columns:1fr;align-content:center;border-top:0;border-left:1px solid #c8cec4;padding:0 0 0 18px}
+ html body.matte-editorial #page .r96-summary-side>strong:nth-child(2),
  html body.matte-editorial #page .r96-summary-side>span:nth-child(3),
  html body.matte-editorial #page .r96-summary-side>strong:nth-child(4){grid-column:auto;grid-row:auto}
  html body.matte-editorial #page .r96-period-select{grid-column:1/-1;max-width:480px}
