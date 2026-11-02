@@ -13,8 +13,8 @@ assert.match(html,/function r75Icon[\s\S]*?group==='nav'/,'Factory icons except 
 assert.match(html,/const factoryCategories=/);
 assert.doesNotMatch(html.slice(html.indexOf('function dashboard(){'),html.indexOf('function txRow(t)')),/assets\/icons\/kpi\/kpi-/,'KPI must use app factory icons');
 assert.doesNotMatch(runtime,/img\('calendar','actions'|img\('transactions','nav'/,'Decorative PNG injection must be disabled');
-assert.match(motion,/modal.appendChild\(card\)/,'KPI original card opens directly instead of a bottom sheet');
-assert.match(motion,/slot.replaceWith\(source\)/,'KPI returns to original grid slot');
+assert.match(motion,/modal.appendChild\(detailStack\)/,'Only independent KPI rows open, without the original card moving');
+assert.match(motion,/source\?\.removeAttribute\('aria-expanded'\)/,'Original KPI remains in its existing grid slot');
 assert.match(motion,/detailState/,'KPI sheet guards duplicate open and close');
 assert.match(motion,/Escape/);
 assert.match(motion,/popstate/);
