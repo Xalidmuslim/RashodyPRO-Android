@@ -10,7 +10,7 @@
  const easing='cubic-bezier(.2,.78,.22,1)';
  const settling='cubic-bezier(.16,1.03,.26,1)';
  let modal=null,origin=null,overlayHistory=false,inFlight=null,lastView=null,previousNav=null,detailState='closed';
- let sourceAnimation=null,cardSlot=null,cardStyle=null,detailPanel=null,selectionToken=0;
+ let sourceAnimation=null,cardSlot=null,cardStyle=null,detailPanel=null,detailStack=null,rowMotion=[],selectionToken=0;
  let selectionAnimation=null,txChange=null,dayChange=null,oldSelectedRect=null,openSourceRect=null;
  const animate=(node,frames,options)=>{
   if(!ok()||!node?.animate)return null;
@@ -56,9 +56,13 @@
   const viewport=window.visualViewport;
   const vw=viewport?.width||window.innerWidth,vh=viewport?.height||window.innerHeight;
   const x=viewport?.offsetLeft||0,y=viewport?.offsetTop||0;
-  // Compact morph: details remain scrollable instead of filling half the screen.
-  const width=Math.min(vw-36,440),height=Math.min(Math.max(228,vh*.40),vh-42,360);
-  const to={left:x+(vw-width)/2,top:y+(vh-height)/2,width,height};
+  // v9.4: the original KPI becomes the heading; each detail is a separate
+  // physical tile BELOW it, never part of a large enclosing card.
+  const rowCount=Math.max(1,(data.rows||[]).length);
+  const width=Math.min(vw-36,440),height=Math.min(182,Math.max(152,vh*.24));
+  const stackSpace=Math.max(65,vh-height-72);
+  const stackHeight=Math.min(stackSpace,rowCount*58+Math.max(0,rowCount-1)*9);
+  const to={left:x+(vw-width)/2,top:Math.max(y+18,y+(vh-height-12-stackHeight)/2),width,height};
   for(const [property,value] of Object.entries({
    position:'fixed',left:to.left+'px',top:to.top+'px',
    width:to.width+'px',height:to.height+'px',
@@ -71,6 +75,22 @@
   contents.innerHTML=detailsHtml(data).replace(/<button type="button" class="r77-detail-close"[^>]*>✕<\/button>/,'');
   card.appendChild(contents);
   detailPanel=contents;
+  // Move the existing escaped rows out of the header into independent siblings.
+  // Each has its own material, frame and shadow and an individual timeline.
+  const list=contents.querySelector('.r77-detail-list');
+  const rows=[...list.children];
+  detailStack=document.createElement('div');
+  detailStack.className='r94-detached-stack';
+  detailStack.setAttribute('role','list');
+  detailStack.setAttribute('aria-label','Операции и показатели');
+  detailStack.style.left=to.left+'px';
+  detailStack.style.top=(to.top+to.height+12)+'px';
+  detailStack.style.width=to.width+'px';
+  detailStack.style.maxHeight=Math.max(65,y+vh-to.top-to.height-22)+'px';
+  if(stackSpace>=rowCount*58+Math.max(0,rowCount-1)*9)detailStack.style.overflow='visible';
+  for(const row of rows){row.classList.add('r94-detached-row');row.setAttribute('role','listitem');detailStack.appendChild(row)}
+  list.remove();
+  modal.appendChild(detailStack);
   const close=document.createElement('button');
   close.type='button';close.className='r77-detail-close r88-morph-close';
   close.setAttribute('aria-label','Закрыть подробности');close.textContent='✕';
@@ -89,6 +109,25 @@
    ],{duration:680,easing:'cubic-bezier(.20,.82,.22,1)',fill:'both'});
    sourceAnimation.finished.catch(()=>{});
   }else sourceAnimation=null;
+  // Each separate framed row starts at the SAME original KPI coordinates.
+  // The stagger is capped for long histories so no item waits many seconds.
+  rowMotion=rows.map((row,i)=>{
+   const rect=row.getBoundingClientRect();
+   const dx=Math.round(from.left+from.width/2-rect.left-rect.width/2);
+   const dy=Math.round(from.top+from.height/2-rect.top-rect.height/2);
+   const originTransform='translate3d('+dx+'px,'+dy+'px,0) scale(.42)';
+   let animation=null;
+   if(ok()&&row.animate){
+    animation=row.animate([
+     {transform:originTransform,opacity:0,offset:0},
+     {transform:'translate3d(0,-5px,0) scale(1.018)',opacity:1,offset:.77},
+     {transform:'none',opacity:1,offset:1}
+    ],{duration:480,delay:270+Math.min(i,8)*92,
+      easing:'cubic-bezier(.17,.8,.22,1)',fill:'both'});
+    animation.finished.catch(()=>{});
+   }
+   return {row,dx,dy,originTransform,animation};
+  });
   // Original KPI labels ride the surface before transitioning to detailed content.
   for(const child of [...card.children])if(child!==contents)
    animate(child,[{opacity:1,offset:0},{opacity:1,offset:.32},{opacity:0,offset:1}],{duration:460,easing:'linear'});
@@ -110,7 +149,7 @@
  function closeDetail(fromHistory=false){
   if(!modal||detailState==='closing')return;
   detailState='closing';
-  const layer=modal,source=origin,slot=cardSlot,contents=detailPanel;
+  const layer=modal,source=origin,slot=cardSlot,contents=detailPanel,closingRows=rowMotion.slice();
   // Capture in-flight geometry BEFORE cancelling the opening transition so
   // even an immediate close returns from the currently visible card position.
   const from=source?.getBoundingClientRect(),target=slot?.getBoundingClientRect();
@@ -123,6 +162,7 @@
    {duration:410,easing});
   const finish=()=>{
    sourceAnimation?.cancel();sourceAnimation=null;
+   for(const item of closingRows){item.animation?.cancel();item.exit?.cancel()}
    if(slot?.isConnected&&source){slot.replaceWith(source)}
    if(source){
     contents?.remove();
@@ -132,16 +172,35 @@
    }
    layer.remove();
    if(modal===layer)modal=null;
-   origin=null;cardSlot=null;detailPanel=null;cardStyle=null;
+   origin=null;cardSlot=null;detailPanel=null;detailStack=null;rowMotion=[];cardStyle=null;
    detailState='closed';
    document.body.classList.remove('r77-detail-open');
    if(source?.isConnected)source.focus({preventScroll:true});
   };
-  // Rewind the same physical FLIP timeline. Closing during an incomplete
-  // expansion returns from its exact current frame without a geometry snap.
-  const back=source&&target&&ok()?sourceAnimation:null;
-  if(back){sourceAnimation.reverse();sourceAnimation.finished.then(finish,finish)}
-  else finish();
+  // The rows travel back into their source in the SAME top-to-bottom order.
+  // Rewind the header only when the last individual row has returned.
+  const rewindHeader=()=>{
+   if(detailState!=='closing'||modal!==layer)return;
+   const back=source&&target&&ok()?sourceAnimation:null;
+   if(back){sourceAnimation.reverse();sourceAnimation.finished.then(finish,finish)}
+   else finish();
+  };
+  if(ok()&&closingRows.length){
+   const exits=closingRows.map((item,i)=>{
+    const current=getComputedStyle(item.row);
+    const currentTransform=current.transform==='none'?'none':current.transform;
+    const opacity=Number.parseFloat(current.opacity);
+    item.animation?.cancel();
+    const frames=[
+     {transform:currentTransform,opacity:Number.isFinite(opacity)?opacity:1},
+     {transform:item.originTransform,opacity:0}
+    ];
+    item.exit=item.row.animate(frames,{duration:360,delay:Math.min(i,8)*65,
+      easing:'cubic-bezier(.32,0,.48,.95)',fill:'both'});
+    return item.exit.finished.catch(()=>{});
+   });
+   Promise.all(exits).then(rewindHeader,rewindHeader);
+  }else rewindHeader();
   if(overlayHistory&&!fromHistory){overlayHistory=false;try{history.back()}catch(_){}}
   else overlayHistory=false;
  }
