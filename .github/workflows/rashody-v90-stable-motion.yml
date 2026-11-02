@@ -1,7 +1,7 @@
-name: Rashody PRO v9.3 Horizontal and Vertical Stable Dock APK
+name: Rashody PRO v9.4 Sequential Detached KPI Rows APK
 on:
   push:
-    branches: [fix/rashody-v93-lock-dock-horizontal-2026-11-02]
+    branches: [feat/rashody-v94-staggered-detached-kpi-rows-2026-11-02]
   workflow_dispatch:
 permissions:
   contents: write
@@ -39,6 +39,7 @@ jobs:
           node scripts/verify-motion-v91.mjs
           node scripts/verify-nav-dock-v92.mjs
           node scripts/verify-nav-dock-v93.mjs
+          node scripts/verify-detached-rows-v94.mjs
       - name: Install Android SDK 36
         run: |
           set -euo pipefail
@@ -52,7 +53,7 @@ jobs:
           node scripts/prepare-android.mjs
           node scripts/bundle-runtime-theme-v80.mjs
           npx cap sync android
-          node scripts/build-studio-v93.mjs
+          node scripts/build-studio-v94.mjs
       - name: Compile Android debug APK
         working-directory: android
         run: |
@@ -64,8 +65,8 @@ jobs:
           set -euo pipefail
           APK=android/app/build/outputs/apk/debug/app-debug.apk
           test -s "$APK"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview93'"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='9.3-studio-matte-preview'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview94'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='9.4-studio-matte-preview'"
           unzip -t "$APK" >/dev/null
           unzip -l "$APK" | grep -q 'assets/public/assets/icons/categories/food.png'
           unzip -l "$APK" | grep -q 'assets/public/assets/icons/nav/dashboard.png'
@@ -80,6 +81,8 @@ jobs:
           unzip -l "$APK" | grep -q 'assets/public/r86-expressive-motion.js'
           unzip -l "$APK" | grep -q 'assets/public/nav-dock-stability-v92.js'
           unzip -p "$APK" assets/public/nav-dock-stability-v92.js | grep -q 'const horizontalFrame='
+          unzip -p "$APK" assets/public/sculpted-motion-v77.js | grep -q 'r94-detached-stack'
+          unzip -p "$APK" assets/public/r80-theme.css | grep -q 'r94-detached-row'
           unzip -p "$APK" assets/public/r80-theme.css | grep -q 'Rashody v8.6'
           unzip -p "$APK" assets/public/r80-theme.css | grep -q 'v8.7 — selected custom category'
           unzip -p "$APK" assets/public/index.html | grep -q 'const factoryCategories='
@@ -94,23 +97,23 @@ jobs:
           unzip -p "$APK" assets/public/index.html | grep -q 'sculpted-motion-v77.js'
           sha256sum "$APK"
           git diff --exit-code -- www native package.json
-      - name: Publish directly installable v9.3 APK
+      - name: Publish directly installable v9.4 APK
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-v9.3-Stable-Nav-TEST.apk
-          TAG=rashody-studio-v9.3-horizontal-stable-preview
-          APK=RashodyPRO-v9.3-Stable-Nav-TEST.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-v9.4-Detached-KPI-Rows-TEST.apk
+          TAG=rashody-studio-v9.4-detached-kpi-rows-preview
+          APK=RashodyPRO-v9.4-Detached-KPI-Rows-TEST.apk
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "$APK" --clobber
           else
-            gh release create "$TAG" "$APK" --target "$GITHUB_SHA" --title "Расходы PRO v9.3 — Stable X/Y Dock TEST" --notes "Stable persistent navigation dock, lift and directional tilt on buttons, compact FLIP KPI animation with same matte colors and dark text. Financial data and SQLite logic are unchanged. On-device behavior remains to verify." --prerelease --latest=false
+            gh release create "$TAG" "$APK" --target "$GITHUB_SHA" --title "Расходы PRO v9.4 — Sequential Matte KPI Rows TEST" --notes "Preserved v9.3 stable dock; KPI opens real source header and individually framed matte rows in staggered order; returns rows to source before header closes. Financial data and SQLite logic are unchanged. On-device behavior remains to verify." --prerelease --latest=false
           fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: RashodyPRO-v93-Stable-Nav-TEST-APK
+          name: RashodyPRO-v94-Detached-KPI-Rows-TEST-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
           if-no-files-found: error
