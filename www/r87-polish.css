@@ -194,3 +194,37 @@ html.rashody-native-android body.matte-editorial #mobile-nav.mobile-nav {
  backface-visibility:hidden!important;
  contain:layout style!important;
 }
+
+/* v9.4: individually sculpted matte detail rows. NOT an inner shared panel.
+   Their independent surfaces follow the clicked KPI, with motion in JS. */
+html body.matte-editorial .r77-detail-scrim.r88-morph-scrim .r94-detached-stack{
+ position:fixed;z-index:16003;display:flex;flex-direction:column;gap:9px;
+ overflow-y:auto;overscroll-behavior:contain;
+ scrollbar-width:thin;box-sizing:border-box;
+ background:transparent!important;border:0!important;
+ box-shadow:none!important;padding:1px 2px 3px!important;
+ perspective:900px;pointer-events:auto;
+}
+html body.matte-editorial .r77-detail-scrim.r88-morph-scrim .r94-detached-row{
+ position:relative;display:flex;align-items:center;justify-content:space-between;
+ flex:0 0 auto;min-height:54px;gap:10px;box-sizing:border-box;
+ padding:11px 14px;border-radius:17px!important;
+ background:#e8ded0!important;color:#293932!important;
+ border:1px solid rgba(83,75,62,.11)!important;
+ box-shadow:0 3px 5px rgba(37,41,36,.095),
+   0 13px 22px -14px rgba(37,41,36,.30)!important;
+ backface-visibility:hidden;transform-origin:center center;
+}
+html body.matte-editorial .r94-detached-row .r77-detail-name,
+html body.matte-editorial .r94-detached-row .r77-detail-name small{
+ color:#36463e!important;min-width:0;overflow-wrap:anywhere;
+}
+html body.matte-editorial .r94-detached-row strong{
+ color:#243a34!important;flex-shrink:0;font-variant-numeric:tabular-nums;
+}
+html body.matte-editorial .r88-expand-card .r88-expanded-contents .r77-detail-list{
+ display:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+ html body.matte-editorial .r94-detached-row{animation:none!important;transition:none!important}
+}
