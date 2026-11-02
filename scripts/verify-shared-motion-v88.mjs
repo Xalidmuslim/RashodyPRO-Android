@@ -6,8 +6,8 @@ const styles=fs.readFileSync('www/r87-polish.css','utf8');
 const index=fs.readFileSync('www/index.html','utf8');
 
 // KPI must expand the SAME colored DOM element, rather than opening a second sheet.
-assert.match(motion,/slot\.replaceWith\(source\)/);
-assert.match(motion,/card\.classList\.add\('r88-expand-card'\)/);
+assert.match(motion,/modal\.appendChild\(detailStack\)/);
+assert.match(motion,/row\.classList\.add\('r94-detached-row','r95-rows-only-row'\)/);
 assert.doesNotMatch(motion,/translate3d\(0,100%,0\)/);
 assert.doesNotMatch(motion,/modal\.innerHTML\s*=\s*'<section class="r77-detail-panel"/);
 assert.match(motion,/function closeDetail\(fromHistory=false\)/);
@@ -26,8 +26,8 @@ assert.doesNotMatch(expressive,/function liquidNav\(/);
 // v8.9 regression: geometry must animate the surface rather than its shadow,
  // and must not lose to inline !important declarations.
 assert.doesNotMatch(motion,/card\.style\.setProperty\(property,value,'important'\)/);
-assert.match(motion,/const scaleX=from\.width\/to\.width/);
-assert.match(motion,/sourceAnimation\.reverse\(\)/,'v9.1 must reverse the physical KPI expansion');
+assert.match(motion,/const originTransform=/);
+assert.match(motion,/Promise\.all\(exits\)\.then\(finish,finish\)/,'v9.5 reverses independently framed rows');
 assert.doesNotMatch(motion,/sourceAnimation=animate\(card,\[\s*\{left:/);
 assert.match(styles,/\/\* v8\.9: keep the navigation dock pinned/);
 assert.match(styles,/animation:none!important;\s*transform:none!important;\s*translate:none!important;/);
