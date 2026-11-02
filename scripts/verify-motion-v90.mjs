@@ -19,7 +19,7 @@ assert.match(navSource,/function tabUp\(\)/);
 assert.match(motion,/const sourcePaint=getComputedStyle\(card\)/);
 assert.match(motion,/const fill=sourcePaint\.backgroundColor,color=sourcePaint\.color/);
 assert.doesNotMatch(motion,/const color=card\.classList\.contains\('amber'\)/);
-assert.match(motion,/height=Math\.min\(Math\.max\(228,vh\*\.40\),vh-42,360\)/);
+assert.match(motion,/height=Math\.min\(182,Math\.max\(152,vh\*\.24\)\)/,'KPI now expands as a compact source header with separate rows');
 assert.match(motion,/const from=source\?\.getBoundingClientRect\(\),target=slot\?\.getBoundingClientRect\(\)/);
 assert.match(motion,/sourceAnimation\?\.cancel\(\)/);
 assert.match(motion,/slot\.replaceWith\(source\)/);
