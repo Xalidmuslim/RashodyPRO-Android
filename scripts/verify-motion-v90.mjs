@@ -16,13 +16,13 @@ assert.doesNotMatch(css,/\.mobile-nav > button\[data-view\]:active\{\s*transform
 assert.match(css,/\.mobile-nav\{[\s\S]*?position:fixed!important;/);
 assert.match(navSource,/function tabDown\(tab,e\)/);
 assert.match(navSource,/function tabUp\(\)/);
-assert.match(motion,/const sourcePaint=getComputedStyle\(card\)/);
-assert.match(motion,/const fill=sourcePaint\.backgroundColor,color=sourcePaint\.color/);
+assert.match(motion,/const from=card\.getBoundingClientRect\(\)/);
+assert.match(motion,/const host=document\.createElement\('div'\)/);
 assert.doesNotMatch(motion,/const color=card\.classList\.contains\('amber'\)/);
-assert.match(motion,/height=Math\.min\(182,Math\.max\(152,vh\*\.24\)\)/,'KPI now expands as a compact source header with separate rows');
-assert.match(motion,/const from=source\?\.getBoundingClientRect\(\),target=slot\?\.getBoundingClientRect\(\)/);
-assert.match(motion,/sourceAnimation\?\.cancel\(\)/);
-assert.match(motion,/slot\.replaceWith\(source\)/);
+assert.match(motion,/detailStack\.className='r94-detached-stack r95-rows-only-stack'/,'No expanded KPI header, only individual rows');
+assert.match(motion,/const layer=modal,source=origin,closingRows=rowMotion\.slice\(\)/);
+assert.match(motion,/item\.animation\?\.cancel\(\)/);
+assert.match(motion,/source\?\.removeAttribute\('aria-expanded'\)/);
 assert.doesNotMatch(motion,/transform:'translate3d\(0,-3px,0\) scale\(1\.008/);
 assert.match(css,/\.r88-expand-card \.r88-expanded-contents :is\(h2,strong,span,small,p,div\)/);
 // Runtime smoke test: directional motion touches selected BUTTON only, not dock.
