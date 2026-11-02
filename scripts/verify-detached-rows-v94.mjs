@@ -10,10 +10,10 @@ assert.match(html,/data-sculpted-detail="daily"/);
 assert.match(html,/data-sculpted-detail="max"/);
 assert.match(motion,/const rows=\[\.\.\.list\.children\]/,'Use all actual financial detail rows');
 assert.match(motion,/detailStack=document\.createElement\('div'\)/);
-assert.match(motion,/detailStack\.className='r94-detached-stack'/);
-assert.match(motion,/row\.classList\.add\('r94-detached-row'\)/);
+assert.match(motion,/detailStack\.className='r94-detached-stack r95-rows-only-stack'/);
+assert.match(motion,/row\.classList\.add\('r94-detached-row','r95-rows-only-row'\)/);
 assert.match(motion,/detailStack\.appendChild\(row\)/);
-assert.match(motion,/list\.remove\(\)/,'No second common enclosing list inside KPI header');
+assert.doesNotMatch(motion,/modal\.appendChild\(card\)/,'No shared enlarged KPI panel');
 assert.match(motion,/modal\.appendChild\(detailStack\)/);
 assert.match(css,/\.r94-detached-stack\s*\{/);
 assert.match(css,/\.r94-detached-row\s*\{/);
@@ -21,14 +21,14 @@ assert.match(css,/background:#e8ded0!important/,'Rows need their own visible mat
 assert.match(css,/border-radius:17px!important/,'Rows need individual boundaries');
 assert.match(css,/box-shadow:0 3px 5px/,'Independent rows have separate depth');
 assert.match(motion,/rowMotion=rows\.map\(\(row,i\)=>/);
-assert.match(motion,/delay:270\+Math\.min\(i,8\)\*92/,'Entry sequence must be ordered');
+assert.match(motion,/delay:120\+i\*185/,'Each row enters with a deliberate stagger');
 assert.match(motion,/const exits=closingRows\.map\(\(item,i\)=>/);
-assert.match(motion,/delay:Math\.min\(i,8\)\*65/,'Exit sequence must use the SAME index ordering');
+assert.match(motion,/delay:i\*125/,'Exit uses the same row index order');
 assert.match(motion,/item\.animation\?\.cancel\(\)/,'Fast back cancels in-progress row entrances');
-assert.match(motion,/Promise\.all\(exits\)\.then\(rewindHeader,rewindHeader\)/,
- 'Original KPI must shrink only after individual rows return');
-assert.match(motion,/sourceAnimation\.reverse\(\)/,'Keep the original card FLIP return');
-assert.match(motion,/slot\.replaceWith\(source\)/);
+assert.match(motion,/Promise\.all\(exits\)\.then\(finish,finish\)/,
+ 'Rows return without growing or shrinking the original KPI card');
+assert.match(motion,/card\.setAttribute\('aria-expanded','true'\)/,'Source KPI remains in place');
+assert.match(motion,/source\?\.removeAttribute\('aria-expanded'\)/);
 assert.match(motion,/escapeHtml\(r\.name\)/,'Keep XSS escaping of editable category names');
 assert.match(motion,/escapeHtml\(r\.value\)/,'Financial values remain escaped');
 assert.match(motion,/if\(ok\(\)&&closingRows\.length\)/,'Reduced-motion fallback');
