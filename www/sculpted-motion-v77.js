@@ -53,7 +53,7 @@
   const viewport=window.visualViewport;
   const vw=viewport?.width||window.innerWidth,vh=viewport?.height||window.innerHeight;
   const x=viewport?.offsetLeft||0,y=viewport?.offsetTop||0;
-  const width=Math.min(Math.max(240,vw-32),440);
+  const width=Math.min(440,Math.max(1,vw-32));
   const maxHeight=Math.max(90,vh-106);
   const estimatedHeight=rows.length*60+Math.max(0,rows.length-1)*12+8;
   const visibleHeight=Math.min(maxHeight,estimatedHeight);
