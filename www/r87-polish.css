@@ -181,3 +181,16 @@ html body.matte-editorial #mobile-nav.mobile-nav > button[data-view]{
 html body.matte-editorial button.trend-card.r88-expand-card > :not(.r88-expanded-contents){
  opacity:0;
 }
+
+/* v9.2: Android WebView keeps the dock on one independent compositor layer.
+   Only button transforms animate; the viewport anchor is set by the JS module. */
+html.rashody-native-android body.matte-editorial #mobile-nav.mobile-nav {
+ position:fixed!important;
+ transform:translate3d(0,0,0)!important;
+ translate:none!important;
+ transition:none!important;
+ animation:none!important;
+ will-change:transform!important;
+ backface-visibility:hidden!important;
+ contain:layout style!important;
+}
