@@ -79,7 +79,7 @@ const ctx={document:{querySelector:q=>q==='#page .r100-dashboard'?root:null},
 const pickCategory=vm.runInNewContext('('+cut('function dashboardCategoryPick(id){','function dashboardBarPick(button){')+')',ctx);
 pickCategory('food');
 assert.equal(ctx.dashboardSelectedCategory,'food');
-assert.equal(number.textContent,'120 ₽');
+assert.equal(number.textContent,'120.00 ₽','Sector displays precise currency amount');
 assert.equal(label.textContent,'Продукты');
 assert.equal(circles[0].attrs['aria-pressed'],'true');
 assert.ok(circles[0].classes.has('is-picked'));
