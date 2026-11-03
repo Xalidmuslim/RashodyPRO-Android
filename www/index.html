@@ -2562,7 +2562,7 @@ function dashboardCategoryPick(id){
  const number=root.querySelector('#r100-category-number'),label=root.querySelector('#r100-category-label');
  const total=root.querySelector('.r96-spending .r96-ring')?.dataset?.total||'0';
  const selectedAmount=dashboardSelectedCategory?selected.dataset.amount:null;
- if(number)number.textContent=dashboardSelectedCategory?compactMoney(Number(selectedAmount)):compactMoney(Number(total));
+ if(number){number.textContent=dashboardSelectedCategory?money(Number(selectedAmount)):compactMoney(Number(total));number.title=dashboardSelectedCategory?money(Number(selectedAmount)):money(Number(total));}
  if(label)label.textContent=dashboardSelectedCategory?getCat(dashboardSelectedCategory).name:'Расходы';
  const open=root.querySelector('#r100-category-open');
  if(open){
@@ -2721,7 +2721,7 @@ function dashboardV96(){
  const compared=F.compareExpenses(data.transactions,anchor,dashboardPeriodV96);
  const pct=compared.changePercent,delta=compared.difference;
  const comparison=delta===0?'Без изменений к прошлому периоду':compared.previous.expense===0
-   ?'В прошлом периоде расходов не было'
+   ?`+${money(Math.abs(delta))} · ранее 0 ₽`
    :`${delta>0?'+':'−'}${money(Math.abs(delta))} · ${pct>0?'+':''}${new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(pct)}%`;
  const comparisonDescription=delta===0?'Расходы не изменились относительно прошлого периода'
   :`На ${money(Math.abs(delta))} ${delta>0?'больше':'меньше'} расходов, чем за предыдущий аналогичный период`;
@@ -2776,7 +2776,7 @@ function dashboardV96(){
  <button type="button" class="trend-card amber" data-sculpted-detail="max" aria-label="Максимальная покупка за неделю"><span class="trend-icon">${svg('shirt',32)}</span><strong class="num" title="${esc(money(largestExpense))}">${summaryMoney(largestExpense)}</strong><span>Макс. покупка</span></button>
  </div></section>
  <div class="r96-insights"><section class="r96-panel r96-spending" aria-label="Структура расходов"><div class="r96-section-heading"><h2>Категории</h2><span>За ${periodLabel}</span></div>
- <div class="r96-ring-layout"><div class="r96-ring" role="group" aria-label="Выбор категории расходов за ${periodLabel}" data-total="${ringTotal}"><svg viewBox="0 0 200 200" aria-label="Нажмите на сектор, чтобы увидеть сумму"><circle cx="100" cy="100" r="67" fill="none" stroke="#d7d3c8" stroke-width="25"/>${slices}</svg><div class="r96-ring-label"><strong id="r100-category-number">${esc(compactMoney(selectedEntry?.[1]??ringTotal))}</strong><small id="r100-category-label">${selectedEntry?esc(getCat(selectedEntry[0]).name):'Расходы'}</small></div></div>
+ <div class="r96-ring-layout"><div class="r96-ring" role="group" aria-label="Выбор категории расходов за ${periodLabel}" data-total="${ringTotal}"><svg viewBox="0 0 200 200" aria-label="Нажмите на сектор, чтобы увидеть сумму"><circle cx="100" cy="100" r="67" fill="none" stroke="#d7d3c8" stroke-width="25"/>${slices}</svg><div class="r96-ring-label"><strong id="r100-category-number" title="${esc(money(selectedEntry?.[1]??ringTotal))}">${esc(selectedEntry?money(selectedEntry[1]):compactMoney(ringTotal))}</strong><small id="r100-category-label">${selectedEntry?esc(getCat(selectedEntry[0]).name):'Расходы'}</small></div></div>
  <div class="r96-category-list">${legend||'<p class="r96-empty">Расходов за период нет</p>'}</div></div><button class="r96-see-all" id="r100-category-open" type="button" ${selectedEntry?`data-dashboard-open-category="${esc(selectedEntry[0])}"`:'data-view="analytics"'}>${selectedEntry?'Операции категории':'Все категории'} ${svg('chevronRight',16)}</button></section>
  <section class="r96-panel r96-trend" aria-label="Динамика расходов"><div class="r96-section-heading"><h2>Динамика</h2><span id="r100-trend-readout" aria-live="polite">${dashboardPeriodV96==='month'?'По периодам месяца':'По дням'}</span></div>
  <div class="r96-bar-chart">${bars}</div><div class="r96-chart-baseline"><small>0</small><small>${esc(axisMoney(maxBar))}</small></div></section></div>
