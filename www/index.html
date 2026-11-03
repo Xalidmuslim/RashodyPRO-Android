@@ -2781,9 +2781,9 @@ function dashboardV96(){
  <div class="r96-category-list">${legend||'<p class="r96-empty">Расходов за период нет</p>'}</div></div><button class="r96-see-all" id="r100-category-open" type="button" ${selectedEntry?`data-dashboard-open-category="${esc(selectedEntry[0])}"`:'data-view="analytics"'}>${selectedEntry?'Операции категории':'Все категории'} ${svg('chevronRight',16)}</button></section>
  <section class="r96-panel r96-trend" aria-label="Динамика расходов"><div class="r96-section-heading"><h2>Динамика</h2><span id="r100-trend-readout" aria-live="polite">${dashboardPeriodV96==='month'?'По периодам месяца':'По дням'}</span></div>
  <div class="r96-bar-chart">${bars}</div><div class="r96-chart-baseline"><small>0</small><small>${esc(axisMoney(maxBar))}</small></div></section></div>
- <section class="r97-day-summary" aria-label="Выбранный день">
+ <button type="button" class="r97-day-summary" data-action="view-focus-day" aria-label="Открыть расходы за выбранный день ${esc(matteDateLabel(chosen))}">
  <div><small>Выбранный день · ${esc(matteDateLabel(chosen))}</small><strong class="num" title="${esc(money(picked))}">${summaryMoney(picked)}</strong></div>
- <button type="button" data-action="view-focus-day" aria-label="Открыть расходы за выбранный день">${svg('chevronRight',18)}</button></section>
+ <span class="r100-day-chevron" aria-hidden="true">${svg('chevronRight',18)}</span></button>
  <section class="r96-panel r96-latest"><div class="r96-section-heading"><h2>Последние операции</h2><button class="r96-see-all" type="button" data-view="transactions">Все операции ${svg('chevronRight',16)}</button></div>
  ${lastItems.length?`<div class="day-items">${lastItems.map(txRow).join('')}</div>`:`<div class="fancy-empty"><strong>Пока нет операций</strong><p>Добавьте первый расход.</p><button data-action="new-expense" class="empty-add">Добавить расход</button></div>`}
  <div class="r96-quick-actions"><button type="button" data-action="new-expense-day">${svg('plus',18)} Добавить</button></div>
