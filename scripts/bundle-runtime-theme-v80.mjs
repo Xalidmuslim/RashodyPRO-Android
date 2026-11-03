@@ -3,7 +3,7 @@
 // Keep editable source files under www/; ship only the compiled CSS in the APK.
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
-const sources=['r78-header.css','r78-hero.css','r78-details.css','r79-visual-qa.css','r81-premium.css','r82-refinement.css','r84-clean-motion.css','r85-interactions.css','r86-expressive.css','r87-polish.css','r96-dashboard.css','r97-one-screen-dashboard.css','r98-dashboard-refinement.css','r99-dashboard-balance.css'];
+const sources=['r78-header.css','r78-hero.css','r78-details.css','r79-visual-qa.css','r81-premium.css','r82-refinement.css','r84-clean-motion.css','r85-interactions.css','r86-expressive.css','r87-polish.css','r96-dashboard.css','r97-one-screen-dashboard.css','r98-dashboard-refinement.css','r99-dashboard-balance.css','r100-dashboard-interactive.css'];
 const output='www/r80-theme.css';
 const parts=sources.map(name=>{
  const file='www/'+name;
