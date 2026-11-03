@@ -12,7 +12,7 @@ execFileSync('node',['--check','www/premium-motion-v76.js'],{stdio:'inherit'});
 assert.match(html,/<link rel="stylesheet" href="studio-v77\.css">/);
 assert.match(html,/<script src="sculpted-motion-v77\.js" defer><\/script>/);
 assert.ok(html.indexOf('href="studio-v76.css"')<html.indexOf('href="studio-v77.css"'));
-assert.match(html,/data-sculpted-detail="week"/);
+assert.match(html,/data-sculpted-detail="average"/);
 assert.match(html,/data-sculpted-detail="daily"/);
 assert.match(html,/data-sculpted-detail="max"/);
 assert.match(html,/\$\{svg\('wallet',32\)\}/,'The first KPI uses native wallet SVG');
