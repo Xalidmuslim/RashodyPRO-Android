@@ -7,7 +7,7 @@ const bundle=fs.readFileSync('scripts/bundle-runtime-theme-v80.mjs','utf8');
 const nav=fs.readFileSync('www/nav-dock-stability-v92.js','utf8');
 const old=fs.readFileSync('www/sculpted-motion-v77.js','utf8');
 const d=html.slice(html.indexOf('function dashboardV96(){'),html.indexOf('function txRow(t){',html.indexOf('function dashboardV96(){')));
-assert.match(d,/class="r96-dashboard r97-dashboard"/);
+assert.match(d,/class="r96-dashboard r97-dashboard r98-dashboard"/);
 assert.match(d,/slice\(0,2\)/,'Show only two newest operations on overview');
 assert.match(d,/sortedPeriodCats\.slice\(0,2\)/,'Full donut stays, legend is compact');
 assert.match(d,/class="r97-day-summary"/);
