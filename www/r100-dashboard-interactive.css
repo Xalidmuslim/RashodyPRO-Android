@@ -91,3 +91,21 @@ html body.matte-editorial #page .r100-dashboard .r96-panel{
   transition:none!important;
  }
 }
+
+/* Full-width day drilldown and individually tappable max-purchase detail tile. */
+html body.matte-editorial #page .r100-dashboard .r97-day-summary{
+ display:flex!important;align-items:center;justify-content:space-between;
+ width:100%!important;border:0!important;text-align:left!important;
+ cursor:pointer;color:#234a37;
+}
+html body.matte-editorial #page .r100-dashboard .r100-day-chevron{
+ display:grid;place-items:center;
+ background:#d3dbcf;width:27px;height:27px;min-width:27px;
+ border-radius:9px;color:#355b4b;
+}
+html body.matte-editorial .r95-rows-only-scrim .r100-detail-link{
+ cursor:pointer;outline-offset:2px;
+}
+html body.matte-editorial .r95-rows-only-scrim .r100-detail-link:focus-visible{
+ outline:2px solid rgba(50,96,72,.6);
+}
