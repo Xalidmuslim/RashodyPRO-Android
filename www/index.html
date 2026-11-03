@@ -2182,6 +2182,7 @@ body.matte-editorial #page .day-donut-center .day-donut-caption{font-size:clamp(
 <script src="sculpted-motion-v77.js" defer></script>
 <script src="r86-expressive-motion.js" defer></script>
 <script src="nav-dock-stability-v92.js" defer></script>
+<script src="r98-dashboard-motion.js" defer></script>
 
 
 
@@ -2502,7 +2503,7 @@ function renderNav(){document.getElementById('sidebar').innerHTML=`<div class="b
  }
 }
 function renderTop(){let heading=view==='dashboard'?'':view==='transactions'?'История':view==='analytics'?'Аналитика':'Настройки';document.getElementById('topbar').className=`topbar ${view==='dashboard'?'dashboard-topbar':'subpage-topbar'}`;document.getElementById('topbar').innerHTML=(view==='dashboard'||view==='analytics')?'':`<div class="topbar-heading"><button class="icon-btn screen-back" data-action="navigate-back" aria-label="Назад">${svg('chevronLeft',22)}</button><div><div class="topline">ФИНАНСОВЫЙ ДНЕВНИК</div><h1>${heading}</h1></div></div><div class="topbar-right">${view==='transactions'?`<button type="button" class="header-csv" data-action="export-csv" aria-label="Экспортировать операции в CSV">${svg('download',16)}<span>CSV</span></button>`:''}<button class="primary-btn add-desktop" data-action="new-expense">${svg('plus',17)} Добавить</button></div>`}
-function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboardV96():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});window.RashodySculptedMotion?.afterRender({view});}
+function render(){if(!data.settings.incomeEnabled&&filters.type==='income')filters.type='all';if(!data.settings.incomeEnabled&&filters.category!=='all'&&getCat(filters.category).type==='income')filters.category='all';renderNav();renderTop();const html=view==='dashboard'?dashboardV96():view==='transactions'?transactions():view==='analytics'?analytics():settings();document.getElementById('page').innerHTML=html;window.RashodyGrandMotion?.afterRender({view});window.RashodySculptedMotion?.afterRender({view});window.RashodyDashboardMotion?.afterRender({view,period:dashboardPeriodV96});}
 function scrollTop(){window.scrollTo({top:0,behavior:'instant'})}
 function softNavEnter(){
  // Direction-aware spring content is owned by RashodyReferenceV78; never stack a second fade.
@@ -2663,7 +2664,7 @@ function dashboardV96(){
  const top=Object.entries(F.expenseCategories(periodItems)).sort((a,b)=>b[1]-a[1]).slice(0,4);
  const allTotal=top.reduce((sum,[,v])=>sum+v,0);
  const lastItems=sortTx(data.transactions.filter(t=>data.settings.incomeEnabled||t.type==='expense')).slice(0,2);
- const heading=dashboardPeriodV96==='month'?ruMonth(new Date(range.start+'T12:00:00')):dashboardPeriodV96==='day'?matteDateLabel(chosen):`${range.start.slice(8)}.${range.start.slice(5,7)} — ${range.end.slice(8)}.${range.end.slice(5,7)}`;
+ const heading=`${week[0].slice(8)}.${week[0].slice(5,7)} — ${week[6].slice(8)}.${week[6].slice(5,7)}`;
  let graphicWeeks=[];
  if(dashboardPeriodV96==='month'){
   const start=new Date(range.start+'T12:00:00');
@@ -2691,10 +2692,10 @@ function dashboardV96(){
   consumed+=part;return markup;
  }).join('');
  const legend=sortedPeriodCats.slice(0,2).map(([id,total])=>`<button class="r96-category-line" type="button" data-r96-category="${esc(id)}" aria-label="${esc(getCat(id).name)}. ${esc(money(total))}. Открыть операции"><i style="background:${categoryColor(id)}" aria-hidden="true"></i><span>${esc(getCat(id).name)}</span><strong>${ringTotal?Math.round(total/ringTotal*100):0}%</strong></button>`).join('');
- return `<div class="r96-dashboard r97-dashboard">
- <header class="r96-brand"><div class="r96-brand-icon" aria-hidden="true">${svg('wallet',22)}</div><div class="r96-brand-name"><h1>Расходы PRO</h1><p>Личные финансы</p></div><button type="button" class="r96-gear" data-view="settings" aria-label="Настройки">${svg('settings',22)}</button></header>
+ return `<div class="r96-dashboard r97-dashboard r98-dashboard" data-dashboard-period-active="${dashboardPeriodV96}">
+
  <section class="r96-summary" aria-label="Финансовая сводка"><div class="r96-summary-main"><span>Расходы за ${periodLabel}</span><strong class="num" title="${esc(money(expense))}">${esc(summaryMoney(expense))}</strong><small class="${pct>0?'r96-up':pct<0?'r96-down':''}">${esc(comparison)}</small></div>
- ${data.settings.incomeEnabled?`<div class="r96-summary-side"><span>Доходы</span><strong title="${esc(money(income))}">${esc(summaryMoney(income))}</strong><span>Разница доходов и расходов</span><strong title="${esc(money(income-expense))}">${esc(summaryMoney(income-expense))}</strong></div>`:''}
+ ${data.settings.incomeEnabled?`<div class="r96-summary-side r98-summary-side" aria-label="Доходы и разница доходов и расходов"><div class="r98-stat"><span>Доходы</span><strong title="${esc(money(income))}">${esc(summaryMoney(income))}</strong></div><div class="r98-stat"><span aria-label="Разница доходов и расходов">Разница</span><strong title="${esc(money(income-expense))}">${esc(summaryMoney(income-expense))}</strong></div></div>`:''}
  <div class="r96-period-select" role="group" aria-label="Период финансовой сводки">${[['day','День'],['week','Неделя'],['month','Месяц']].map(([id,label])=>`<button type="button" data-dashboard-period="${id}" aria-pressed="${dashboardPeriodV96===id}" class="${dashboardPeriodV96===id?'active':''}">${label}</button>`).join('')}</div>
  </section>
  <section class="r96-calendar"><div class="r96-section-heading"><h2>Календарь расходов</h2><div class="r96-calendar-tools"><button data-action="week-prev" type="button" aria-label="Предыдущая неделя">${svg('chevronLeft',19)}</button><span>${esc(heading)}</span><button data-action="week-next" type="button" aria-label="Следующая неделя">${svg('chevronRight',19)}</button></div></div>${compactWeekWidget(chosen)}</section>
