@@ -16,7 +16,7 @@ assert.match(bundle,/'r87-polish\.css','r96-dashboard\.css'/,'Dashboard styling 
 assert.match(css,/\.r96-summary/);assert.match(css,/\.r96-ring/);assert.match(css,/\.r96-trend/);
 assert.match(css,/@media\(min-width:680px\)/,'Responsive 1-column phone and 2-column wide chart layout');
 assert.doesNotMatch(src.slice(start,end),/modal\.appendChild\(card\)/,'KPI source card must not be moved');
-assert.match(src.slice(start,end),/data-sculpted-detail="week"/);
+assert.match(src.slice(start,end),/data-sculpted-detail="average"/);
 assert.match(src.slice(start,end),/data-sculpted-detail="daily"/);
 assert.match(src.slice(start,end),/data-sculpted-detail="max"/);
 assert.match(src.slice(start,end),/r97-day-summary/,'Compact day chip replaces redundant full-screen detail panel');
@@ -34,11 +34,11 @@ const F={
  money:n=>Math.round(n*100)/100,
  latestExpenseDay:()=>({day:dates[1]}),
  periodRange:(anchor,period)=>period==='month'?{start:'2026-11-01',end:'2026-11-30'}:period==='day'?{start:anchor,end:anchor}:{start:'2026-11-02',end:'2026-11-08'},
- compareExpenses:()=>({changePercent:12}),
+ compareExpenses:()=>({changePercent:12,difference:20,previous:{expense:160}}),
  expenseCategories:items=>items.filter(t=>t.type==='expense').reduce((acc,t)=>(acc[t.category]=(acc[t.category]||0)+t.amount,acc),{})
 };
 const state={data:{transactions:tx,settings:{incomeEnabled:true,currency:'₽'}},
- dashboardPeriodV96:'month',dashboardFocusDay:dates[1],dashboardWeekAnchor:dates[1],month:new Date(2026,10,1),dayChartSelection:null};
+ dashboardPeriodV96:'month',dashboardSelectedCategory:null,dashboardSelectedBar:null,dashboardFocusDay:dates[1],dashboardWeekAnchor:dates[1],month:new Date(2026,10,1),dayChartSelection:null};
 const fmt=n=>n.toFixed(2)+' ₽';
 const ctx={...state,F,Math,Number,Intl,Date,
  dateLocal:(d)=>d?new Date(d).toISOString().slice(0,10):dates[1],
