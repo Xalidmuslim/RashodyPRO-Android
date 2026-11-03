@@ -10,7 +10,7 @@
  const easing='cubic-bezier(.2,.78,.22,1)';
  const settling='cubic-bezier(.16,1.03,.26,1)';
  let modal=null,origin=null,overlayHistory=false,inFlight=null,lastView=null,previousNav=null,detailState='closed';
- let detailStack=null,rowMotion=[],selectionToken=0;
+ let detailStack=null,rowMotion=[],selectionToken=0,pendingTransactionId=null;
  let selectionAnimation=null,txChange=null,dayChange=null,oldSelectedRect=null,openSourceRect=null;
  const animate=(node,frames,options)=>{
   if(!ok()||!node?.animate)return null;
@@ -19,7 +19,7 @@
  };
  const escapeHtml=x=>String(x??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
  function detailsHtml(data) {
-  const rows=(data.rows||[]).map((r,i)=>'<div class="r77-detail-row" style="--r77-i:'+i+'"><span class="r77-detail-name">'+escapeHtml(r.name)+(r.note?'<small>'+escapeHtml(r.note)+'</small>':'')+'</span><strong>'+escapeHtml(r.value)+'</strong></div>').join('');
+  const rows=(data.rows||[]).map((r,i)=>'<div class="r77-detail-row" style="--r77-i:'+i+'"'+(r.txId?' data-r100-open-tx="'+escapeHtml(r.txId)+'"':'')+'><span class="r77-detail-name">'+escapeHtml(r.name)+(r.note?'<small>'+escapeHtml(r.note)+'</small>':'')+'</span><strong>'+escapeHtml(r.value)+'</strong></div>').join('');
   return '<header class="r77-detail-head"><span class="r77-detail-icon">'+(window.RashodyFactorySvg?.(data.icon==='kpi-receipt'?'receipt':data.icon==='kpi-bag'?'shirt':'wallet',42)||'')+'</span><button type="button" class="r77-detail-close" aria-label="Закрыть подробности">✕</button></header>'+
   '<div class="r77-detail-body"><span class="r77-detail-eyebrow">ФИНАНСОВЫЙ ДНЕВНИК</span><h2 id="r77-detail-title">'+escapeHtml(data.title)+'</h2>'+
   '<strong class="r77-detail-number">'+escapeHtml(data.number)+'</strong><p class="r77-detail-sub">'+escapeHtml(data.sub)+'</p>'+
@@ -67,8 +67,24 @@
   for(const row of rows){
    row.classList.add('r94-detached-row','r95-rows-only-row');
    row.setAttribute('role','listitem');
+   if(row.dataset.r100OpenTx){
+    row.classList.add('r100-detail-link');
+    row.setAttribute('role','button');
+    row.setAttribute('tabindex','0');
+    row.setAttribute('aria-label','Открыть исходную операцию');
+   }
    detailStack.appendChild(row);
   }
+  const openFromRow=e=>{
+   const target=e.target.closest?.('.r100-detail-link[data-r100-open-tx]');
+   if(!target||detailState==='closing')return;
+   if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;
+   e.preventDefault();e.stopPropagation();
+   pendingTransactionId=target.dataset.r100OpenTx;
+   closeDetail();
+  };
+  detailStack.addEventListener('click',openFromRow);
+  detailStack.addEventListener('keydown',openFromRow);
   modal.appendChild(detailStack);
   const close=document.createElement('button');
   close.type='button';close.className='r77-detail-close r88-morph-close r95-rows-close';
@@ -131,6 +147,8 @@
    detailState='closed';
    document.body.classList.remove('r77-detail-open');
    if(source?.isConnected)source.focus({preventScroll:true});
+   const txId=pendingTransactionId;pendingTransactionId=null;
+   if(txId)requestAnimationFrame(()=>window.RashodyDashboardOpenTransaction?.(txId));
   };
   // Top-to-bottom return order matches top-to-bottom entrance.
   // Capture the on-screen frame BEFORE cancelling entrance, so a quick Back
