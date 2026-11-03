@@ -1,0 +1,155 @@
+/* v9.9 — correct the actual layout regression seen on Android screenshot.
+   Root cause: minmax(96px,1fr) granted ALL spare portrait height to analytics.
+   Keep both charts contained and legible; spread spare space BETWEEN panels,
+   not INSIDE them. Dock remains controlled exclusively by v9.3. */
+@media (max-width:640px) and (orientation:portrait) {
+ html body.matte-editorial #page .r98-dashboard{
+  --r97-gap:5px;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:78px 98px 78px clamp(180px,26dvh,248px) 36px 88px!important;
+  gap:5px!important;
+  align-content:space-evenly!important;
+  overflow:hidden!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-insights{
+  height:100%!important;
+  min-height:0!important;max-height:100%!important;
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:6px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-insights .r96-panel{
+  min-height:0!important;height:100%!important;max-height:100%!important;
+  overflow:hidden!important;display:flex!important;flex-direction:column!important;
+  border-radius:14px!important;padding:8px 7px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-insights .r96-section-heading{
+  flex:0 0 auto!important;height:auto!important;min-height:17px!important;
+  margin:0 0 4px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-spending .r96-ring-layout{
+  flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+  display:flex!important;flex-direction:column!important;
+  justify-content:center!important;align-items:center!important;gap:4px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-spending .r96-ring{
+  width:clamp(82px,14dvh,124px)!important;height:auto!important;
+  aspect-ratio:1;flex:0 1 auto!important;max-width:100%!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-spending .r96-category-list{
+  width:100%!important;display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:2px 5px!important;
+  min-height:0!important;flex:0 0 auto!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-spending .r96-category-line{
+  min-width:0!important;min-height:17px!important;padding:1px 0!important;gap:3px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-insights .r96-see-all{
+  flex:0 0 auto!important;align-self:flex-start!important;
+  min-height:20px!important;margin:3px 0 0!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-trend .r96-bar-chart{
+  flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+  height:auto!important;padding:4px 1px 1px!important;gap:4px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-trend .r96-bar-column{
+  flex:1 1 0!important;min-width:0!important;height:100%!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-trend .r96-bar{
+  min-height:3px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-trend .r96-chart-baseline{
+  flex:0 0 auto!important;margin:3px 0 0!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar{
+  height:100%!important;min-height:0!important;
+  padding:7px 7px 5px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .r96-section-heading{
+  min-height:0!important;height:22px!important;margin:0 0 4px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .calendar-shell{
+  height:calc(100% - 26px)!important;max-height:calc(100% - 26px)!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .week-strip{
+  height:100%!important;min-height:0!important;gap:3px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .week-day{
+  height:100%!important;min-height:0!important;max-height:none!important;
+  grid-template-rows:10px 18px 3px 11px!important;
+  gap:2px!important;padding:3px 1px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-latest{
+  height:100%!important;max-height:100%!important;min-height:0!important;
+  overflow:hidden!important;padding:7px 9px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-latest .day-items{
+  flex:1 1 auto!important;min-height:0!important;overflow:hidden!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-latest .record-row{
+  min-height:0!important;max-height:100%!important;
+  padding:3px 0!important;gap:6px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r97-day-summary{
+  height:100%!important;min-height:0!important;
+  padding:4px 10px!important;
+ }
+}
+@media(max-width:640px) and (orientation:portrait) and (max-height:740px){
+ html body.matte-editorial #page .r98-dashboard{
+  --r97-gap:4px;
+  grid-template-rows:70px 86px 67px clamp(148px,25dvh,196px) 32px 73px!important;
+  gap:4px!important;align-content:space-evenly!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar{
+  padding:5px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .r96-section-heading{
+  height:18px!important;margin-bottom:2px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .calendar-shell{
+  height:calc(100% - 20px)!important;max-height:calc(100% - 20px)!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .week-day{
+  grid-template-rows:9px 15px 3px 10px!important;gap:1px!important;padding:2px 1px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-spending .r96-ring{
+  width:clamp(64px,13dvh,98px)!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-insights .r96-see-all{
+  min-height:17px!important;padding:2px 4px!important;
+ }
+}
+@media(max-width:640px) and (orientation:portrait) and (max-height:605px){
+ html body.matte-editorial #page .r98-dashboard{
+  --r97-gap:3px;
+  grid-template-rows:60px 70px 56px clamp(126px,25dvh,161px) 27px 59px!important;
+  gap:3px!important;align-content:space-evenly!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-spending .r96-ring{
+  width:clamp(48px,11dvh,75px)!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-spending .r96-ring-layout{gap:1px!important}
+ html body.matte-editorial #page .r98-dashboard .r96-insights .r96-see-all{
+  display:none!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .week-day{
+  grid-template-rows:8px 12px 2px 9px!important;gap:1px!important;
+ }
+ html body.matte-editorial #page .r98-dashboard .r96-calendar .week-day-date{
+  font-size:12px!important;line-height:12px!important;
+ }
+}
+/* If the usable height is physically smaller than six legible sections,
+ * permit scrolling instead of silently clipping transactions or labels. */
+@media(max-width:640px) and (orientation:portrait) and (max-height:525px){
+ html body.matte-editorial:has(#page .r98-dashboard),
+ html body.matte-editorial:has(#page .r98-dashboard) .shell,
+ html body.matte-editorial:has(#page .r98-dashboard) .workspace,
+ html body.matte-editorial:has(#page .r98-dashboard) #page{
+  height:auto!important;max-height:none!important;overflow-y:auto!important;
+ }
+ html body.matte-editorial #page .r98-dashboard{
+  height:auto!important;max-height:none!important;overflow:visible!important;
+  align-content:start!important;padding-bottom:92px!important;
+ }
+}
