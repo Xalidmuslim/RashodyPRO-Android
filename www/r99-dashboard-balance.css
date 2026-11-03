@@ -119,7 +119,7 @@
   min-height:17px!important;padding:2px 4px!important;
  }
 }
-@media(max-width:640px) and (orientation:portrait) and (max-height:605px){
+@media(max-width:640px) and (orientation:portrait) and (max-height:625px){
  html body.matte-editorial #page .r98-dashboard{
   --r97-gap:3px;
   grid-template-rows:60px 70px 56px clamp(126px,25dvh,161px) 27px 59px!important;
@@ -141,7 +141,7 @@
 }
 /* If the usable height is physically smaller than six legible sections,
  * permit scrolling instead of silently clipping transactions or labels. */
-@media(max-width:640px) and (orientation:portrait) and (max-height:525px){
+@media(max-width:640px) and (orientation:portrait) and (max-height:560px){
  html body.matte-editorial:has(#page .r98-dashboard),
  html body.matte-editorial:has(#page .r98-dashboard) .shell,
  html body.matte-editorial:has(#page .r98-dashboard) .workspace,
