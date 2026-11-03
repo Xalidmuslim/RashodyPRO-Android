@@ -58,9 +58,9 @@
  function afterRender({view,period}={}){
   const was=lastView,oldPeriod=lastPeriod;
   lastView=view;lastPeriod=period;
+  if(was==='dashboard'&&oldPeriod===period&&view==='dashboard')return; // keep pending first-frame animation
   generation++;
   if(view!=='dashboard'){clean();return}
-  if(was==='dashboard'&&oldPeriod===period)return; // day taps do not replay charts
   clean();
   const key=generation;
   requestAnimationFrame(()=>{
