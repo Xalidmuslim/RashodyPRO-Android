@@ -33,11 +33,20 @@
    root.querySelector('.r97-day-summary'),
    root.querySelector('.r96-latest')
   ].filter(Boolean);
+  const timings=[
+   {delay:0,duration:350},
+   {delay:80,duration:350},
+   {delay:150,duration:410},
+   {delay:240,duration:390},
+   {delay:300,duration:390},
+   {delay:350,duration:350},
+   {delay:480,duration:380}
+  ];
   panels.forEach((el,i)=>run(el,[
-   {transform:'translate3d(0,9px,0) scale(.991)',opacity:.78},
-   {transform:'translate3d(0,-1px,0) scale(1.002)',opacity:1,offset:.79},
+   {transform:'translate3d(0,8px,0) scale(.994)',opacity:.84},
+   {transform:'translate3d(0,-1px,0) scale(1.001)',opacity:1,offset:.8},
    {transform:'none',opacity:1}
-  ],{duration:460,delay:Math.min(i,6)*55}));
+  ],timings[i]));
   const circles=[...root.querySelectorAll('.r96-ring svg circle[stroke-dasharray]')];
   const circumference=(2*Math.PI*67).toFixed(3);
   circles.forEach((circle,i)=>{
@@ -46,14 +55,14 @@
    run(circle,[
     {strokeDasharray:'0 '+circumference,offset:0},
     {strokeDasharray:final,offset:1}
-   ],{duration:700+Math.min(i,5)*60,delay:120+i*85});
+   ],{duration:550,delay:230+i*35});
   });
   const bars=[...root.querySelectorAll('.r96-bar-chart .r96-bar-column .r96-bar')];
   bars.forEach((bar,i)=>run(bar,[
    {transform:'scaleY(.025)',offset:0},
    {transform:'scaleY(1.025)',offset:.78},
    {transform:'scaleY(1)',offset:1}
-  ],{duration:590+Math.min(i,6)*35,delay:200+i*68}));
+  ],{duration:460,delay:270+i*30}));
  }
  function afterRender({view,period}={}){
   const was=lastView,oldPeriod=lastPeriod;
