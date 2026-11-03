@@ -19,7 +19,7 @@ assert.doesNotMatch(src.slice(start,end),/modal\.appendChild\(card\)/,'KPI sourc
 assert.match(src.slice(start,end),/data-sculpted-detail="week"/);
 assert.match(src.slice(start,end),/data-sculpted-detail="daily"/);
 assert.match(src.slice(start,end),/data-sculpted-detail="max"/);
-assert.match(src.slice(start,end),/daySummaryRing\(chosenItems\)/);
+assert.match(src.slice(start,end),/r97-day-summary/,'Compact day chip replaces redundant full-screen detail panel');
 assert.match(src.slice(start,end),/data-view="transactions"/);
 assert.match(src.slice(start,end),/data-view="analytics"/);
 assert.match(src.slice(start,end),/data-action="new-expense-day"/);
@@ -47,7 +47,7 @@ const ctx={...state,F,Math,Number,Intl,Date,
  monthExpenseMap:items=>items.filter(t=>t.type==='expense').reduce((acc,t)=>(acc[t.date]=(acc[t.date]||0)+t.amount,acc),{}),
  expensesOfDay:d=>tx.filter(t=>t.date===d&&t.type==='expense'),
  sortTx:items=>items.slice().reverse(),getCat:id=>({name:{food:'Продукты',transport:'Транспорт',salary:'Зарплата'}[id]||id}),
- money:fmt,summaryMoney:fmt,axisMoney:fmt,esc:x=>String(x).replaceAll('<','&lt;').replaceAll('>','&gt;'),
+ money:fmt,summaryMoney:fmt,compactMoney:fmt,axisMoney:fmt,esc:x=>String(x).replaceAll('<','&lt;').replaceAll('>','&gt;'),
  ruMonth:()=> 'Ноябрь 2026',matteDateLabel:()=> 'вт, 3 ноября',
  compactWeekWidget:()=>'<div class="calendar-shell">Календарь</div>',
  svg:()=>'<svg/>',categoryColor:()=> '#456654',expenseCountLabel:n=>n+' операций',
