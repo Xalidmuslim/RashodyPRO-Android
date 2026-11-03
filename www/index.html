@@ -2690,10 +2690,11 @@ function sculptedDetails(kind){
  if(kind==='average')return {title:'Средний расход за день',number:money(weekTotal/7),sub:'Среднее за выбранную неделю (7 дней)',icon:'kpi-wallet',rows:week.map(d=>({name:matteDateLabel(d),value:money(weekly.filter(t=>t.date===d).reduce((sum,t)=>sum+t.amount,0))}))};
  if(kind==='week')return {title:'За неделю',number:money(weekTotal),sub:expenseCountLabel(weekly.length),icon:'kpi-wallet',rows:week.map(d=>({name:matteDateLabel(d),value:money(weekly.filter(t=>t.date===d).reduce((sum,t)=>sum+t.amount,0))}))};
  if(kind==='daily')return {title:'Операции за день',number:String(current.length),sub:matteDateLabel(day),icon:'kpi-receipt',rows:current.slice(0,6).map(t=>({name:getCat(t.category).name,value:money(t.amount),note:t.note||''}))};
- if(kind==='max')return {title:'Максимальная покупка',number:money(maximum?.amount||0),sub:maximum?matteDateLabel(maximum.date):'За неделю покупок нет',icon:'kpi-bag',rows:maximum?[{name:getCat(maximum.category).name,value:money(maximum.amount),note:maximum.note||''}]:[]};
+ if(kind==='max')return {title:'Максимальная покупка',number:money(maximum?.amount||0),sub:maximum?matteDateLabel(maximum.date):'За неделю покупок нет',icon:'kpi-bag',rows:maximum?[{name:getCat(maximum.category).name,value:money(maximum.amount),note:maximum.note||'',txId:maximum.id}]:[]};
  return null;
 }
 if(typeof window!=='undefined')window.RashodySculptedDetails=sculptedDetails;
+window.RashodyDashboardOpenTransaction=(id)=>{const tx=data.transactions.find(t=>t.id===id);if(tx)startTx(tx.type,tx)};
 
 function dashboard(){
  const summary=currentSummary(),today=dateLocal(),inThisMonth=monthKey(month)===today.slice(0,7),latest=F.latestExpenseDay(data.transactions,today).day,chosen=dashboardFocusDay||(latest.startsWith(monthKey(month))?latest:(inThisMonth?today:monthKey(month)+'-01'));
