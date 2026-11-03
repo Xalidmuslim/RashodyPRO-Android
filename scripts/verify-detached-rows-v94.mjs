@@ -5,7 +5,7 @@ const motion=fs.readFileSync('www/sculpted-motion-v77.js','utf8');
 const css=fs.readFileSync('www/r87-polish.css','utf8');
 const html=fs.readFileSync('www/index.html','utf8');
 execFileSync('node',['--check','www/sculpted-motion-v77.js']);
-assert.match(html,/data-sculpted-detail="week"/);
+assert.match(html,/data-sculpted-detail="average"/);
 assert.match(html,/data-sculpted-detail="daily"/);
 assert.match(html,/data-sculpted-detail="max"/);
 assert.match(motion,/const rows=\[\.\.\.list\.children\]/,'Use all actual financial detail rows');
