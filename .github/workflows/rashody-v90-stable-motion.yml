@@ -1,7 +1,7 @@
-name: Rashody PRO v9.9 Balanced No-Overflow Dashboard APK
+name: Rashody PRO v10.0 Interactive Sculpted Dashboard APK
 on:
   push:
-    branches: [fix/rashody-v99-balanced-dashboard-height-2026-11-03]
+    branches: [feat/rashody-v100-interactive-dashboard-motion-2026-11-03]
   workflow_dispatch:
 permissions:
   contents: write
@@ -45,6 +45,7 @@ jobs:
           node scripts/verify-dashboard-v97.mjs
           node scripts/verify-dashboard-v98.mjs
           node scripts/verify-dashboard-v99.mjs
+          node scripts/verify-dashboard-v100.mjs
       - name: Install Android SDK 36
         run: |
           set -euo pipefail
@@ -58,7 +59,7 @@ jobs:
           node scripts/prepare-android.mjs
           node scripts/bundle-runtime-theme-v80.mjs
           npx cap sync android
-          node scripts/build-studio-v99.mjs
+          node scripts/build-studio-v100.mjs
       - name: Compile Android debug APK
         working-directory: android
         run: |
@@ -70,8 +71,8 @@ jobs:
           set -euo pipefail
           APK=android/app/build/outputs/apk/debug/app-debug.apk
           test -s "$APK"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview99'"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='9.9-studio-matte-preview'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "package: name='ru.rashody.pro.preview100'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep "versionName='10.0-studio-matte-preview'"
           unzip -t "$APK" >/dev/null
           unzip -l "$APK" | grep -q 'assets/public/assets/icons/categories/food.png'
           unzip -l "$APK" | grep -q 'assets/public/assets/icons/nav/dashboard.png'
@@ -92,6 +93,9 @@ jobs:
           unzip -p "$APK" assets/public/r80-theme.css | grep -q 'SOURCE: r97-one-screen-dashboard.css'
           unzip -p "$APK" assets/public/r80-theme.css | grep -q 'SOURCE: r98-dashboard-refinement.css'
           unzip -p "$APK" assets/public/r80-theme.css | grep -q 'SOURCE: r99-dashboard-balance.css'
+          unzip -p "$APK" assets/public/r80-theme.css | grep -q 'SOURCE: r100-dashboard-interactive.css'
+          unzip -p "$APK" assets/public/index.html | grep -q 'data-sculpted-detail="average"'
+          unzip -p "$APK" assets/public/index.html | grep -q 'function dashboardCategoryPick(id)'
           unzip -p "$APK" assets/public/index.html | grep -q 'r98-dashboard'
           unzip -l "$APK" | grep -q 'assets/public/r98-dashboard-motion.js'
           unzip -p "$APK" assets/public/index.html | grep -q 'r97-dashboard'
@@ -110,23 +114,23 @@ jobs:
           unzip -p "$APK" assets/public/index.html | grep -q 'sculpted-motion-v77.js'
           sha256sum "$APK"
           git diff --exit-code -- www native package.json
-      - name: Publish directly installable v9.9 APK
+      - name: Publish directly installable v10.0 APK
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-v9.9-Balanced-Dashboard-TEST.apk
-          TAG=rashody-studio-v9.9-balanced-dashboard-preview
-          APK=RashodyPRO-v9.9-Balanced-Dashboard-TEST.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk RashodyPRO-v10.0-Interactive-Dashboard-TEST.apk
+          TAG=rashody-studio-v10.0-interactive-dashboard-preview
+          APK=RashodyPRO-v10.0-Interactive-Dashboard-TEST.apk
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "$APK" --clobber
           else
-            gh release create "$TAG" "$APK" --target "$GITHUB_SHA" --title "Расходы PRO v9.9 — Balanced Charts Dashboard TEST" --notes "Fix v9.8 regression: analytics panels no longer expand to fill remaining viewport. Category ring and trend charts are bounded, recent operations visible, original animations/navigation preserved. Financial data and SQLite logic are unchanged. On-device behavior remains to verify." --prerelease --latest=false
+            gh release create "$TAG" "$APK" --target "$GITHUB_SHA" --title "Расходы PRO v10.0 — Interactive Dashboard TEST" --notes "Interactive donut and trend values, selected-category history, average-per-day KPI, real expense period deltas, unified staged motion, subtle vibration. Compact single screen and fixed navigation preserved. Financial data and SQLite logic are unchanged. On-device behavior remains to verify." --prerelease --latest=false
           fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: RashodyPRO-v99-Balanced-Dashboard-TEST-APK
+          name: RashodyPRO-v100-Interactive-Dashboard-TEST-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
           if-no-files-found: error
