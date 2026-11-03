@@ -2694,7 +2694,7 @@ function sculptedDetails(kind){
  return null;
 }
 if(typeof window!=='undefined')window.RashodySculptedDetails=sculptedDetails;
-window.RashodyDashboardOpenTransaction=(id)=>{const tx=data.transactions.find(t=>t.id===id);if(tx)startTx(tx.type,tx)};
+if(typeof window!=='undefined')window.RashodyDashboardOpenTransaction=(id)=>{const tx=data.transactions.find(t=>t.id===id);if(tx)startTx(tx.type,tx)};
 
 function dashboard(){
  const summary=currentSummary(),today=dateLocal(),inThisMonth=monthKey(month)===today.slice(0,7),latest=F.latestExpenseDay(data.transactions,today).day,chosen=dashboardFocusDay||(latest.startsWith(monthKey(month))?latest:(inThisMonth?today:monthKey(month)+'-01'));
