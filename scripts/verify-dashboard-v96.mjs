@@ -56,7 +56,8 @@ const ctx={...state,F,Math,Number,Intl,Date,
 };
 const fn=vm.runInNewContext('('+src.slice(start,end).trim()+')',ctx);
 let html=fn();
-assert.match(html,/Расходы PRO/);
+assert.match(html,/r98-dashboard/,'Dashboard still present without duplicate app title');
+assert.doesNotMatch(html,/class="r96-brand"/,'Remove redundant dashboard app name and settings');
 assert.match(html,/180\.00 ₽/,'Summary must derive from actual expense transactions');
 assert.match(html,/500\.00 ₽/,'Income only from transactions');
 assert.match(html,/320\.00 ₽/,'Net income-minus-expense is not a fake bank balance');
