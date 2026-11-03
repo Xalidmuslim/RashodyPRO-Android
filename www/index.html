@@ -2662,7 +2662,7 @@ function dashboardV96(){
  const picked=F.money(chosenItems.reduce((s,t)=>s+t.amount,0));
  const top=Object.entries(F.expenseCategories(periodItems)).sort((a,b)=>b[1]-a[1]).slice(0,4);
  const allTotal=top.reduce((sum,[,v])=>sum+v,0);
- const lastItems=sortTx(data.transactions.filter(t=>data.settings.incomeEnabled||t.type==='expense')).slice(0,5);
+ const lastItems=sortTx(data.transactions.filter(t=>data.settings.incomeEnabled||t.type==='expense')).slice(0,2);
  const heading=dashboardPeriodV96==='month'?ruMonth(new Date(range.start+'T12:00:00')):dashboardPeriodV96==='day'?matteDateLabel(chosen):`${range.start.slice(8)}.${range.start.slice(5,7)} — ${range.end.slice(8)}.${range.end.slice(5,7)}`;
  let graphicWeeks=[];
  if(dashboardPeriodV96==='month'){
@@ -2690,8 +2690,8 @@ function dashboardV96(){
   const markup=`<circle cx="100" cy="100" r="67" fill="none" stroke="${categoryColor(id)}" stroke-width="25" stroke-dasharray="${dash.toFixed(3)} ${(circ-dash).toFixed(3)}" stroke-dashoffset="${(-consumed).toFixed(3)}" transform="rotate(-90 100 100)"><title>${esc(getCat(id).name)}: ${esc(money(amount))}</title></circle>`;
   consumed+=part;return markup;
  }).join('');
- const legend=sortedPeriodCats.slice(0,4).map(([id,total])=>`<button class="r96-category-line" type="button" data-r96-category="${esc(id)}" aria-label="${esc(getCat(id).name)}. ${esc(money(total))}. Открыть операции"><i style="background:${categoryColor(id)}" aria-hidden="true"></i><span>${esc(getCat(id).name)}</span><strong>${ringTotal?Math.round(total/ringTotal*100):0}%</strong></button>`).join('');
- return `<div class="r96-dashboard">
+ const legend=sortedPeriodCats.slice(0,2).map(([id,total])=>`<button class="r96-category-line" type="button" data-r96-category="${esc(id)}" aria-label="${esc(getCat(id).name)}. ${esc(money(total))}. Открыть операции"><i style="background:${categoryColor(id)}" aria-hidden="true"></i><span>${esc(getCat(id).name)}</span><strong>${ringTotal?Math.round(total/ringTotal*100):0}%</strong></button>`).join('');
+ return `<div class="r96-dashboard r97-dashboard">
  <header class="r96-brand"><div class="r96-brand-icon" aria-hidden="true">${svg('wallet',22)}</div><div class="r96-brand-name"><h1>Расходы PRO</h1><p>Личные финансы</p></div><button type="button" class="r96-gear" data-view="settings" aria-label="Настройки">${svg('settings',22)}</button></header>
  <section class="r96-summary" aria-label="Финансовая сводка"><div class="r96-summary-main"><span>Расходы за ${periodLabel}</span><strong class="num" title="${esc(money(expense))}">${esc(summaryMoney(expense))}</strong><small class="${pct>0?'r96-up':pct<0?'r96-down':''}">${esc(comparison)}</small></div>
  ${data.settings.incomeEnabled?`<div class="r96-summary-side"><span>Доходы</span><strong title="${esc(money(income))}">${esc(summaryMoney(income))}</strong><span>Разница доходов и расходов</span><strong title="${esc(money(income-expense))}">${esc(summaryMoney(income-expense))}</strong></div>`:''}
@@ -2703,16 +2703,17 @@ function dashboardV96(){
  <button type="button" class="trend-card teal" data-sculpted-detail="daily" aria-label="Подробные операции за день"><span class="trend-icon">${svg('receipt',32)}</span><strong class="num">${chosenItems.length}</strong><span>Операций за день</span></button>
  <button type="button" class="trend-card amber" data-sculpted-detail="max" aria-label="Максимальная покупка за неделю"><span class="trend-icon">${svg('shirt',32)}</span><strong class="num" title="${esc(money(largestExpense))}">${summaryMoney(largestExpense)}</strong><span>Макс. покупка</span></button>
  </div></section>
- <div class="r96-insights"><section class="r96-panel r96-spending" aria-label="Структура расходов"><div class="r96-section-heading"><h2>Структура расходов</h2><span>За ${periodLabel}</span></div>
- <div class="r96-ring-layout"><div class="r96-ring" role="img" aria-label="Категории расходов за ${periodLabel}"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="67" fill="none" stroke="#d7d3c8" stroke-width="25"/>${slices}</svg><div class="r96-ring-label"><strong>${esc(summaryMoney(ringTotal))}</strong><small>Расходы</small></div></div>
+ <div class="r96-insights"><section class="r96-panel r96-spending" aria-label="Структура расходов"><div class="r96-section-heading"><h2>Категории</h2><span>За ${periodLabel}</span></div>
+ <div class="r96-ring-layout"><div class="r96-ring" role="img" aria-label="Категории расходов за ${periodLabel}"><svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="67" fill="none" stroke="#d7d3c8" stroke-width="25"/>${slices}</svg><div class="r96-ring-label"><strong>${esc(compactMoney(ringTotal))}</strong><small>Расходы</small></div></div>
  <div class="r96-category-list">${legend||'<p class="r96-empty">Расходов за период нет</p>'}</div></div><button class="r96-see-all" type="button" data-view="analytics">Все категории ${svg('chevronRight',16)}</button></section>
- <section class="r96-panel r96-trend" aria-label="Динамика расходов"><div class="r96-section-heading"><h2>Динамика расходов</h2><span>${dashboardPeriodV96==='month'?'По неделям':'По дням'}</span></div>
+ <section class="r96-panel r96-trend" aria-label="Динамика расходов"><div class="r96-section-heading"><h2>Динамика</h2><span>${dashboardPeriodV96==='month'?'По неделям':'По дням'}</span></div>
  <div class="r96-bar-chart">${bars}</div><div class="r96-chart-baseline"><small>0</small><small>${esc(axisMoney(maxBar))}</small></div></section></div>
- <section class="r96-panel r96-day-detail feature-day"><div class="r96-section-heading"><h2>Выбранный день</h2><span>${esc(matteDateLabel(chosen))}</span></div><div class="r96-day-grid"><div class="feature-copy"><div class="eyebrow">РАСХОДЫ ЗА ДЕНЬ</div><div class="feature-amount num" title="${esc(money(picked))}">${summaryMoney(picked)}</div><p>${chosenItems.length?`${expenseCountLabel(chosenItems.length)}`:'Расходов нет'}</p><button class="feature-link" data-action="view-focus-day">Операции за день ${svg('chevronRight',18)}</button></div><div class="day-category-graphic">${daySummaryRing(chosenItems)}</div></div>
- <div class="r77-day-selection" id="r77DaySelection" ${dayChartSelection?'':'hidden'}>${dayChartSelection?daySelectedOperations(chosenItems,dayChartSelection):''}</div></section>
+ <section class="r97-day-summary" aria-label="Выбранный день">
+ <div><small>Выбранный день · ${esc(matteDateLabel(chosen))}</small><strong class="num" title="${esc(money(picked))}">${summaryMoney(picked)}</strong></div>
+ <button type="button" data-action="view-focus-day" aria-label="Открыть расходы за выбранный день">${svg('chevronRight',18)}</button></section>
  <section class="r96-panel r96-latest"><div class="r96-section-heading"><h2>Последние операции</h2><button class="r96-see-all" type="button" data-view="transactions">Все операции ${svg('chevronRight',16)}</button></div>
  ${lastItems.length?`<div class="day-items">${lastItems.map(txRow).join('')}</div>`:`<div class="fancy-empty"><strong>Пока нет операций</strong><p>Добавьте первый расход.</p><button data-action="new-expense" class="empty-add">Добавить расход</button></div>`}
- <div class="r96-quick-actions"><button type="button" data-action="new-expense-day">${svg('plus',18)} Расход за день</button>${data.settings.incomeEnabled?`<button type="button" data-action="new-income">${svg('plus',18)} Доход</button>`:''}</div>
+ <div class="r96-quick-actions"><button type="button" data-action="new-expense-day">${svg('plus',18)} Добавить</button></div>
  </section></div>`;
 }
 function txRow(t){const c=getCat(t.category),income=t.type==='income';return `<button class="record-row" data-tx="${esc(t.id)}" aria-label="Открыть операцию ${esc(t.note||c.name)}"><span>${categoryIcon(c,19)}</span><div class="record-main"><div class="record-title truncate">${esc(c.name)}</div><div class="record-meta truncate">${t.note?esc(t.note)+' · ':''}${esc(t.date.slice(8,10))}.${esc(t.date.slice(5,7))}${t.time?' · '+esc(t.time):''}</div></div><div class="record-end"><div class="record-amount num ${income?'income':''}">${income?'+':'−'}${money(t.amount)}</div><span class="record-chevron">${svg('chevronRight',16)}</span></div></button>`}
